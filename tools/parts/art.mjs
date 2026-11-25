@@ -1,4 +1,4 @@
-// npm run art — rebuilds the game graphics of every character whose files in ../custom-art changed
+// npm run art — rebuilds the game graphics of every character whose files in custom-art changed
 // (added, edited or deleted) since the last run. Then reload the game page.
 //   npm run art -- --all     rebuild every character that has custom files
 //   npm run art -- --kit     also regenerate custom-art/_originals and _catalog (after names.mjs changes)
@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { FOLDERS } from './names.mjs';
 
 const WEB = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
-const KIT = join(WEB, '..', 'custom-art');
+const KIT = join(WEB, 'custom-art');
 const STATE = join(KIT, '.build-state.json');
 const args = process.argv.slice(2);
 const node = (script, more) => {

@@ -20,11 +20,11 @@ const SVG_FONTS = [join(ROOT, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(ROO
 const ALL = ['screens', 'backgrounds', 'jinn', 'items', 'boss', 'combat_fx', 'loading', 'tutorials',
   'enemy1_normal', 'enemy1_fire', 'enemy1_ice', 'enemy2_normal', 'enemy2_fire', 'enemy2_ice', 'enemy2_snow'];
 
-// user art: ../custom-art/<character>/<part name>.png|svg replaces that part (names: tools/parts/parts.json)
+// user art: web/custom-art/<character>/<part name>.png|svg replaces that part (names: tools/parts/parts.json)
 const PARTS = existsSync(join(ROOT, 'web/tools/parts/parts.json')) ? JSON.parse(readFileSync(join(ROOT, 'web/tools/parts/parts.json'), 'utf8')) : {};
 function customFile(mod, id) {
   const name = PARTS[mod]?.[id]; if (!name) return null;
-  for (const ext of ['.png', '.svg', '.webp']) { const f = join(ROOT, 'custom-art', FOLDERS[mod] ?? mod, name + ext); if (existsSync(f)) return f; }
+  for (const ext of ['.png', '.svg', '.webp']) { const f = join(ROOT, 'web', 'custom-art', FOLDERS[mod] ?? mod, name + ext); if (existsSync(f)) return f; }
   return null;
 }
 export let customUsed = 0;

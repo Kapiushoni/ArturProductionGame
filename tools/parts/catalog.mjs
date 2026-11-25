@@ -1,7 +1,7 @@
 // Builds the custom art kit:
 //   tools/parts/parts.json                     module -> { shape id: "readable/name" }   (used by build-assets)
-//   ../custom-art/_originals/<folder>/<name>.png  every part exactly as the game draws it (templates to paint over)
-//   ../custom-art/_catalog/<folder>.png           contact sheet with the names
+//   custom-art/_originals/<folder>/<name>.png  every part exactly as the game draws it (templates to paint over)
+//   custom-art/_catalog/<folder>.png           contact sheet with the names
 // usage: node tools/parts/catalog.mjs [module ...]
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -11,7 +11,7 @@ import { FOLDERS, NAMES } from './names.mjs';
 
 const WEB = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
 const ASSETS = join(WEB, 'public', 'assets');
-const KIT = join(WEB, '..', 'custom-art');
+const KIT = join(WEB, 'custom-art');
 const OUT_JSON = join(WEB, 'tools', 'parts', 'parts.json');
 const ROOT = join(WEB, '..');
 const SVG_FONTS = [join(ROOT, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(ROOT, 'art/fonts/cyrillic/BalsamiqSans-Bold.ttf')];
