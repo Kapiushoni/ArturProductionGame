@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "assets": "node tools/build-assets.mjs"
+    "assets": "node tools/build-assets.mjs",
+    "art": "node tools/parts/art.mjs",
+    "art:kit": "node tools/parts/catalog.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",

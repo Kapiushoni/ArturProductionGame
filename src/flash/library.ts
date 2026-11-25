@@ -4,6 +4,7 @@ import { DisplayObject, MovieClip, Shape, MorphShape, AlphaRef } from './display
 import { TextField } from './text';
 import type { M } from './geom';
 import { frameScripts } from '../gen/frameScripts';
+import { lowPower } from './device';
 
 export interface PlaceState {
   key: string; c: number; m: M; cx?: number[]; n?: string; cd?: number; f?: any[]; b?: number; r?: number; v?: number;
@@ -163,9 +164,21 @@ export const lib = {
     let done = 0;
     await Promise.all(Array.from({ length: data.atlases }, async (_, i) => {
       const blob = await (await fetch(`${lib.base}${name}/atlas-${i}.webp`)).blob();
-      const bmp = await createImageBitmap(blob, { premultiplyAlpha: 'premultiply' });
-      mod.atlases[i] = new Texture({ source: new ImageSource({ resource: bmp, alphaMode: 'premultiplied-alpha' }) });
-      mod.alpha[i] = alphaMap(bmp);
+      let bmp = await createImageBitmap(blob, { premultiplyAlpha: 'premultiply' });
+      mod.alpha[i] = alphaMap(bmp); // hit-test map from the full-size image (frames stay in its coordinates)
+      const k = atlasScale;
+      if (k < 1) {
+        const small = await createImageBitmap(bmp, { resizeWidth: Math.max(1, Math.round(bmp.width * k)), resizeHeight: Math.max(1, Math.round(bmp.height * k)), resizeQuality: 'high' });
+        bmp.close(); bmp = small;
+      }
+      // resolution k keeps the source's logical size (and so every frame rectangle) unchanged
+      const source = new ImageSource({ resource: bmp, alphaMode: 'premultiplied-alpha', resolution: k });
+      // Pixi unloads image textures unused for a minute and re-uploads them later (a hitch mid-game, and impossible
+      // once the image is released): atlases stay on the GPU for the whole session instead
+      source.autoGarbageCollect = false;
+      mod.atlases[i] = new Texture({ source });
+      // upload to the GPU right away and drop the decoded copy in main memory
+      if (uploader) { uploader(source); bmp.close(); }
       onProgress?.(++done / data.atlases);
     }));
     for (const [cls, id] of Object.entries<number>(data.classes)) classByName.set(cls, { mod, id });
@@ -173,6 +186,16 @@ export const lib = {
     return mod;
   },
 };
+
+/** texel scale of loaded atlases: phones/tablets get 0.75 (about half the memory, hardly visible on small dense screens) */
+export const atlasScale = (() => {
+  const q = new URLSearchParams(location.search).get('atlas');
+  if (q) return Math.min(1, Math.max(0.25, +q || 1));
+  return lowPower ? 0.75 : 1;
+})();
+let uploader: ((s: ImageSource) => void) | null = null;
+/** set by the player: uploads a texture source to the GPU (then the CPU copy of the image is released) */
+export function setAtlasUploader(f: (s: ImageSource) => void) { uploader = f; }
 
 function alphaMap(bmp: ImageBitmap): AlphaMap {
   const k = AlphaMap.K;

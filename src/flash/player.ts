@@ -5,6 +5,8 @@ import { MouseEvent, KeyboardEvent } from './events';
 import { advanceClock, clock } from './clock';
 import { setFxScale } from './filters';
 import { setTextResolution } from './text';
+import { setAtlasUploader } from './library';
+import { lowPower } from './device';
 
 export const W = 700, H = 500;
 export const FPS = 30;
@@ -23,11 +25,16 @@ export class Player {
   async init(host: HTMLElement) {
     const app = new Application();
     await app.init({
-      background: '#0a0a0a', antialias: true, autoDensity: true,
-      resolution: Math.min(window.devicePixelRatio || 1, 2), resizeTo: window,
+      // phones/tablets: no full-screen MSAA (the atlases are already anti-aliased) and at most 1.5x pixel density
+      background: '#0a0a0a', antialias: !lowPower, autoDensity: true,
+      resolution: Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2), resizeTo: window,
       preference: 'webgl', powerPreference: 'high-performance',
     });
     this.app = app;
+    setAtlasUploader((s) => app.renderer.texture.initSource(s));
+    // atlas images are released from main memory after upload, so a lost GPU context cannot be restored in place:
+    // reload (progress is in localStorage)
+    app.canvas.addEventListener('webglcontextlost', () => location.reload());
     host.appendChild(app.canvas);
     this.root.addChild(this.stage._c);
     // like the Flash embed: nothing outside the 700x500 stage is visible
@@ -38,7 +45,8 @@ export class Player {
     window.addEventListener('resize', () => this.layout());
     this.layout();
     this.bindInput(app.canvas);
-    app.ticker.maxFPS = 0;
+    // logic runs at 30 fps and is interpolated: 60 rendered frames are plenty on 90-120 Hz phone screens
+    app.ticker.maxFPS = lowPower ? 60 : 0;
     app.ticker.add((t) => this.tick(t.deltaMS));
     document.addEventListener('visibilitychange', () => { clock.paused = document.hidden; this.acc = 0; });
   }
@@ -49,7 +57,7 @@ export class Player {
     this.scale = s; this.ox = (sw - W * s) / 2; this.oy = (sh - H * s) / 2;
     this.root.scale.set(s); this.root.position.set(this.ox, this.oy);
     const dpr = this.app.renderer.resolution;
-    setFxScale(s * dpr / 1);
+    setFxScale(s * (lowPower ? 1 : dpr)); // phones: glow/shadow filters render at 1x
     setTextResolution(s * dpr);
   }
 

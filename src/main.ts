@@ -5,6 +5,7 @@ import { paths } from './flash/as3';
 import { PreloaderAP } from './port/preloader';
 import { lang } from './port/i18n';
 import { installSettings } from './port/settings';
+import { installStats } from './port/stats';
 
 lib.define('assets.PreloaderAP', PreloaderAP);
 paths.rewrite['locale.txt'] = `locale_${lang}.txt`;
@@ -51,6 +52,7 @@ async function boot() {
 
 
   installSettings(app, { MainMenu: GM.MainMenu, Pause: GM.Pause });
+  installStats();
 
   if (import.meta.env.DEV) {
     const d = await import('./flash/display');

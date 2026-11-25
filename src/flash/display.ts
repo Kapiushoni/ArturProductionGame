@@ -461,8 +461,11 @@ export class MovieClip extends Sprite {
     this._tl = tl;
     this._born = tickNo;
     this._enter(0, false);
-    allClips.add(this);
+    if (this.stage) allClips.add(this);
   }
+  // only clips on the stage are ticked; off-stage ones are dropped from the registry so they can be garbage-collected
+  _addedToStage() { if (this._tl) allClips.add(this); super._addedToStage(); }
+  _removedFromStage() { allClips.delete(this); super._removedFromStage(); }
 
   addFrameScript(...args: any[]) {
     this._userScripts ??= {};

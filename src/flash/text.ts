@@ -73,7 +73,6 @@ export class TextField extends InteractiveObject {
     this._t = new Text({ text: '', style: new TextStyle({}) });
     this._t.resolution = textRes;
     this._c.addChild(this._t);
-    liveTexts.add(this);
     if (d.text) { if (d.html) this.htmlText = d.text; else this.text = d.text; } else this._layout();
   }
 
@@ -130,7 +129,20 @@ export class TextField extends InteractiveObject {
   get height() { return this._box.height * Math.abs(this.scaleY); }
   set height(v: number) { this._box.height = v / (Math.abs(this.scaleY) || 1); this._layout(); }
   _localBounds() { return this._box.clone(); }
-  _addedToStage() { super._addedToStage(); this._layout(); } // re-centre once the surrounding graphics exist
+  _addedToStage() { liveTexts.add(this); this._t.resolution = textRes; super._addedToStage(); this._layout(); } // re-centre once the surrounding graphics exist
+  // Pixi keeps a text's texture until the Text object is destroyed (garbage collection does not free it):
+  // swap in a fresh, not yet rendered Text when the field leaves the stage, so its texture is released.
+  _removedFromStage() {
+    liveTexts.delete(this);
+    const old = this._t;
+    const n = new Text({ text: old.text, style: old.style });
+    n.resolution = textRes; n.x = old.x; n.y = old.y;
+    this._c.addChildAt(n, this._c.getChildIndex(old));
+    this._c.removeChild(old);
+    this._t = n;
+    old.destroy();
+    super._removedFromStage();
+  }
   _hitLocal(x: number, y: number) { return this._box.contains(x, y); }
 
   _lineH() { const f = this._fmt; return (f.size ?? 12) * 1.18 + (f.leading ?? 0); }
@@ -172,9 +184,7 @@ export class TextField extends InteractiveObject {
       const fm = CanvasTextMetrics.measureFont((t.style as any)._fontString);
       const shift = Math.max(0, (lh - fm.fontSize) / 2);
       const asc = FLASH_ASCENT[(f.font ?? '').replace(/ Regular$/, '')] ?? 0.9;
-      // small text sits ~2px low in the browser compared to Flash (hinting/rounding); large text matches
-      const small = -2 * Math.max(0, Math.min(1, (30 - size) / 12));
-      t.y = this._box.y + 2 + asc * size + small - (fm.ascent + shift);
+      t.y = this._box.y + 2 + asc * size - (fm.ascent + shift);
       // one-line labels sitting on a bar/plate (HP, XP, level...): centre the glyphs on that graphic,
       // the invisible text box is often taller than the bar and placed differently from field to field
       if (!this.wordWrap && !this.multiline && this._autoSize === 'none' && this.parent) {
@@ -184,10 +194,41 @@ export class TextField extends InteractiveObject {
           const vis = this._c.visible; this._c.visible = false;
           const hb = host.getBounds(this);
           this._c.visible = vis;
-          if (hb.height > size * 0.9 && hb.height <= size * 2.2) t.y = hb.y + hb.height / 2 + size * 0.36 - (fm.ascent + shift);
+          const fits = (h: number) => h > size * 0.9 && h <= size * 2.2;
+          let plate: any = null;
+          if (!fits(hb.height) && size >= 30) {
+            // big button labels: the button's own clip also holds a shadow/glow taller than the plate itself;
+            // centre on the plate layer (a sibling graphic without text that lies under the label)
+            const cy = this._box.y + this._box.height / 2;
+            const hasText = (o: any): boolean => o instanceof TextField || (o._ch ?? []).some(hasText);
+            this._c.visible = false;
+            for (const c of host._ch) {
+              if (hasText(c)) continue;
+              const cb = c.getBounds(this);
+              if (fits(cb.height) && cb.y <= cy && cb.y + cb.height >= cy && (!plate || cb.height < plate.height)) plate = cb;
+            }
+            this._c.visible = vis;
+          }
+          if (fits(hb.height)) t.y = hb.y + hb.height / 2 + size * 0.36 - (fm.ascent + shift);
+          else if (plate) t.y = plate.y + plate.height / 2 + size * 0.36 - (fm.ascent + shift) - 6; // the plate's bevelled lower edge: optical centre a bit higher
           // the hero level label sits on a plate drawn inside the big stats panel: nudge it onto the plate's centre
-          else if (this.name === 'title_1' && this.parent?.name === 'level' && this.parent?.parent?.name === 'stats') t.y += 3;
+          else if (this.name === 'title_1' && this.parent?.name === 'level' && this.parent?.parent?.name === 'stats') t.y += 2;
         }
+      }
+    }
+    // item pop-up stat values (ItemPopUp: container.numbers_1/2.title): a little further from the stat icon
+    if (this.name === 'title' && /^numbers_[12]$/.test(this.parent?.name ?? '')) { t.x += 4; t.y += 2; }
+    // dungeon result window rows (info.combat_experience / hit_bonus / mix_bonus / total and their *_xp values)
+    {
+      let row: any = this.parent; if (row?.name === 'numbers') row = row.parent;
+      if (row?.parent?.name === 'info' && /^(combat_experience|hit_bonus|mix_bonus|total)(_xp)?$/.test(row.name ?? '')) {
+        // measured in the layout: labels end on one right edge, values start on one left edge,
+        // each value on its label's baseline (offsets in the field's own units)
+        const fix: Record<string, [number, number]> = {
+          total: [-12, 0], combat_experience_xp: [0, 3], hit_bonus_xp: [-3, 1.5], mix_bonus_xp: [0.5, -1], total_xp: [0, -1],
+        };
+        const [dx, dy] = fix[row.name] ?? [0, 0];
+        t.x += dx; t.y += 4 + dy;
       }
     }
     if (this._border || this._bg) {

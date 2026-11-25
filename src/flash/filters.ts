@@ -2,6 +2,7 @@
 import { ColorMatrixFilter, BlurFilter, Container, Filter } from 'pixi.js';
 import { GlowFilter, DropShadowFilter, BevelFilter } from 'pixi-filters';
 import type { ColorTransform } from './geom';
+import { lowPower } from './device';
 
 let fxScale = 1;
 const cache = new Map<string, Filter>();
@@ -53,6 +54,7 @@ export function makeFilters(defs: any[]): Filter[] {
       const b = build(d);
       if (!b) continue;
       f = b; (f as any)._def = d;
+      if (lowPower) f.resolution = 1; // a quarter of the pixels on 2x screens
       cache.set(key, f); live.push({ def: d, f });
     }
     out.push(f);

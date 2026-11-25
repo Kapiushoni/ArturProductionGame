@@ -2,7 +2,7 @@
 // in-game buttons (gear, x2), hotkeys, pause audio when the tab is hidden, rotate hint on phones.
 import { Sprite, Shape, DisplayObject } from '@/flash/display';
 import { modules } from '@/flash/library';
-import { Graphics as PGraphics } from 'pixi.js';
+import { Graphics as PGraphics, Text as PText, Container as PContainer } from 'pixi.js';
 import { TextField, TextFormat } from '@/flash/text';
 import { MouseEvent, KeyboardEvent, Event } from '@/flash/events';
 import { clock } from '@/flash/clock';
@@ -69,23 +69,6 @@ export async function toggleFullscreen() {
 }
 
 // ---------------- in-canvas buttons ----------------
-class IconButton extends Sprite {
-  label: TextField;
-  constructor(text: string, w: number, onClick: () => void) {
-    super();
-    const g = this.graphics;
-    g.lineStyle(2, 0xc9b27a, 1); g.beginFill(0x1f2b2e, 0.92); g.drawRoundRect(0, 0, w, 34, 12);
-    this.label = new TextField();
-    this.label.width = w; this.label.height = 30; this.label.y = 6;
-    const f = new TextFormat('Ander Hedge', 20, 0xf2dea5); f.align = 'center';
-    this.label.defaultTextFormat = f; this.label.text = text; this.label.mouseEnabled = false;
-    this.addChild(this.label);
-    this.buttonMode = true;
-    this.addEventListener(MouseEvent.CLICK, onClick);
-    this.addEventListener(MouseEvent.ROLL_OVER, () => { this.alpha = 0.85; });
-    this.addEventListener(MouseEvent.ROLL_OUT, () => { this.alpha = 1; });
-  }
-}
 
 /** part of a polygon (flat x,y list) above the line y = yCut (Sutherland–Hodgman against one half-plane) */
 function clipAbove(pts: number[], yCut: number): number[] {
@@ -135,6 +118,43 @@ function makeGearButton(onClick: () => void): DisplayObject {
   mc.addEventListener(MouseEvent.ROLL_OVER, () => mc.gotoAndPlay('mouseOver'));
   mc.addEventListener(MouseEvent.ROLL_OUT, () => mc.gotoAndPlay('mouseOut'));
   return mc;
+}
+
+/** "x1"/"x2" lettering in the style of the music note: white, light-blue upper half, soft blue shadow, thin dark outline */
+function speedGlyph(): { view: PContainer; set: (s: string) => void } {
+  const view = new PContainer();
+  const mk = (fill: number) => new PText({ text: 'x1', style: { fontFamily: ['Ander Hedge', 'Arial Black', 'sans-serif'], fontSize: 25, fill, stroke: { color: 0x1d4650, width: 2, join: 'round' }, padding: 4 } });
+  const shadow = mk(0x9fdcec); shadow.style.stroke = { color: 0x9fdcec, width: 2, join: 'round' }; shadow.alpha = 0.9;
+  const low = mk(0xffffff), high = mk(0xc9e7ef);
+  const cut = new PGraphics(); high.mask = cut;
+  view.addChild(shadow, low, high, cut);
+  const set = (str: string) => {
+    for (const t of [shadow, low, high]) { t.text = str; t.anchor.set(0.5); }
+    shadow.position.set(0.8, 0.8);
+    // upper half in the shaded tone
+    cut.clear().rect(-30, -30, 60, 30.5).fill(0xffffff);
+  };
+  set('x1');
+  return { view, set };
+}
+
+/** speed button: a copy of the game's own pause button with "x1"/"x2" lettering instead of its icon */
+function makeSpeedButton(pause: any, onClick: () => void): { mc: any; set: (s: string) => void } {
+  const mc: any = new pause.constructor();
+  // children: shadow, body, gold frame ("on"/"off"), and on top the pause-bars icon
+  const icon: any = mc._ch[mc._ch.length - 1];
+  const holder = new Shape();
+  const glyph = speedGlyph();
+  holder._c.addChild(glyph.view);
+  mc.addChild(holder);
+  const hideIcon = () => { if (icon) { icon.visible = false; holder.x = icon.x; holder.y = icon.y; } };
+  hideIcon();
+  mc.addEventListener(Event.ENTER_FRAME, hideIcon);
+  mc.mouseChildren = false; mc.buttonMode = true;
+  mc.addEventListener(MouseEvent.CLICK, onClick);
+  mc.addEventListener(MouseEvent.ROLL_OVER, () => mc.gotoAndPlay('mouseOver'));
+  mc.addEventListener(MouseEvent.ROLL_OUT, () => mc.gotoAndPlay('mouseOut'));
+  return { mc, set: glyph.set };
 }
 
 // ---------------- settings panel (DOM) ----------------
@@ -207,11 +227,11 @@ function closePanel() { if (panel) panel.style.display = 'none'; }
 const panelOpen = () => panel?.style.display === 'flex';
 
 // ---------------- battle speed ----------------
-let fastBtn: IconButton | null = null;
+let fastBtn: { mc: any; set: (s: string) => void } | null = null;
 let pauseBtn: any = null;
 let menuRef: any = null;
 let versionLabel: TextField | null = null;
-function refreshFastButton() { if (fastBtn) fastBtn.label.text = settings.fast ? 'x2' : 'x1'; }
+function refreshFastButton() { fastBtn?.set(settings.fast ? 'x2' : 'x1'); }
 
 // ---------------- hotkeys ----------------
 function drinkFromCell(n: number) {
@@ -246,9 +266,6 @@ export function installSettings(mainApp: any, gameClasses: { MainMenu: any; Paus
   app = mainApp; GC = gameClasses;
   // created once the game's graphics are loaded (it reuses the music button artwork)
   let gear: DisplayObject | null = null;
-  fastBtn = new IconButton('x1', 44, () => { settings.fast = !settings.fast; save(); refreshFastButton(); });
-  fastBtn.x = 80; fastBtn.y = 208;
-  refreshFastButton();
   player.onFrame.push(() => {
     trackPause();
     const st = appState();
@@ -287,12 +304,17 @@ export function installSettings(mainApp: any, gameClasses: { MainMenu: any; Paus
     // or reveals the pause button (recipe book, loading screen, windows) does the same to it
     if (battle) {
       if (!pauseBtn || !pauseBtn.stage) pauseBtn = findDO((o) => o.constructor._libName === 'assets.ButtonPause');
-      if (pauseBtn && fastBtn!.parent !== pauseBtn.parent) {
-        pauseBtn.parent.addChildAt(fastBtn!, pauseBtn.parent.getChildIndex(pauseBtn) + 1);
+      if (pauseBtn && !fastBtn) { fastBtn = makeSpeedButton(pauseBtn, () => { settings.fast = !settings.fast; save(); refreshFastButton(); }); refreshFastButton(); }
+      const fb = fastBtn?.mc;
+      if (pauseBtn && fb) {
+        if (fb.parent !== pauseBtn.parent) pauseBtn.parent.addChildAt(fb, pauseBtn.parent.getChildIndex(pauseBtn) + 1);
+        // right next to the pause button, same size
+        const w = pauseBtn._localBounds().width * Math.abs(pauseBtn.scaleX);
+        fb.x = pauseBtn.x + w + 2; fb.y = pauseBtn.y; fb.scaleX = pauseBtn.scaleX; fb.scaleY = pauseBtn.scaleY;
+        fb.visible = pauseBtn.visible;
       }
-      if (pauseBtn) { fastBtn!.x = pauseBtn.x + 30; fastBtn!.y = pauseBtn.y - 17; fastBtn!.visible = pauseBtn.visible; }
-    } else if (fastBtn!.parent) {
-      fastBtn!.parent.removeChild(fastBtn!); pauseBtn = null;
+    } else if (fastBtn?.mc.parent) {
+      fastBtn.mc.parent.removeChild(fastBtn.mc); pauseBtn = null;
     }
     clock.scale = battle && settings.fast ? 2 : 1;
   });

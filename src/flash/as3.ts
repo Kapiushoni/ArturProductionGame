@@ -269,13 +269,26 @@ export class SoundTransform { constructor(public volume = 1, public pan = 0) {} 
 /** music files are routed to the music bus (by file name) */
 const isMusic = (url: string) => /music/i.test(url);
 
+/** decode compressed audio (callback form works on old Safari too: no promise-returning decodeAudioData there) */
+function decode(ab: ArrayBuffer): Promise<AudioBuffer> {
+  return new Promise<AudioBuffer>((res, rej) => { const pr = audio().decodeAudioData(ab, res, rej); if (pr && (pr as any).then) (pr as any).then(res, rej); });
+}
+/** music is decoded one track at a time (decoded music is large: tens of MB per track) */
+let musicDecodeChain: Promise<unknown> = Promise.resolve();
+
 export class Sound extends EventDispatcher {
   buffer: AudioBuffer | null = null;
   url = '';
   bytesLoaded = 0; bytesTotal = 0;
   isBuffering = false;
+  /** music only: the compressed file, decoded on play and released when it stops (saves ~150 MB) */
+  _packed: ArrayBuffer | null = null;
+  _duration = 0;
+  private _decoding: Promise<AudioBuffer | null> | null = null;
+  private _users = 0;
+  private _releaseTimer = 0;
   constructor(req?: URLRequest) { super(); if (req) this.load(req); }
-  get length() { return this.buffer ? this.buffer.duration * 1000 : 0; }
+  get length() { return (this.buffer?.duration ?? this._duration) * 1000; }
   load(req: URLRequest) {
     this.url = paths.resolve(req.url);
     const done = () => {
@@ -284,22 +297,43 @@ export class Sound extends EventDispatcher {
     };
     const ctrl = new AbortController();
     const timeout = globalThis.setTimeout(() => ctrl.abort(), 30000);
+    const music = isMusic(this.url);
     fetch(this.url, { signal: ctrl.signal }).then((r) => { if (!r.ok) throw new Error(r.status + ' ' + this.url); return r.arrayBuffer(); })
       .then((ab) => {
         this.bytesTotal = this.bytesLoaded = ab.byteLength;
-        // callback form works on old Safari too (no promise-returning decodeAudioData there)
-        return new Promise<AudioBuffer>((res, rej) => { const pr = audio().decodeAudioData(ab, res, rej); if (pr && (pr as any).then) (pr as any).then(res, rej); });
+        if (!music) return decode(ab).then((b) => { this.buffer = b; });
+        // music: decode once to learn the length, then keep only the compressed file
+        this._packed = ab.slice(0); // decodeAudioData detaches its argument
+        const job = musicDecodeChain.then(() => decode(ab)).then((b) => { this._duration = b.duration; });
+        musicDecodeChain = job.catch(() => undefined);
+        return job;
       })
-      .then((b) => { this.buffer = b; done(); })
+      .then(() => done())
       .catch((e) => {
         // the original game waits for every sound before some levels (e.g. the boss): a failed sound must not
         // block it forever, so it counts as loaded (silent) after reporting the error
         console.warn('sound not loaded, continuing silently:', this.url, e);
+        this._packed = null;
         const ev = new IOErrorEvent(IOErrorEvent.IO_ERROR); ev.text = String(e);
         try { this.dispatchEvent(ev); } catch { /* the game throws in its handler */ }
         done();
       })
       .finally(() => globalThis.clearTimeout(timeout));
+  }
+  /** decoded audio for playback (music is decoded on demand) */
+  _acquire(): AudioBuffer | Promise<AudioBuffer | null> | null {
+    this._users++;
+    globalThis.clearTimeout(this._releaseTimer);
+    if (this.buffer || !this._packed) return this.buffer;
+    this._decoding ??= decode(this._packed.slice(0)).then((b) => { this.buffer = b; this._decoding = null; return b; }, () => { this._decoding = null; return null; });
+    return this._decoding;
+  }
+  /** a channel stopped: drop the decoded music a little later if nothing plays it any more */
+  _release() {
+    this._users = Math.max(0, this._users - 1);
+    if (this._users || !this._packed) return;
+    globalThis.clearTimeout(this._releaseTimer);
+    this._releaseTimer = globalThis.setTimeout(() => { if (!this._users) this.buffer = null; }, 5000) as unknown as number;
   }
   play(startTime = 0, loops = 0, st: SoundTransform | null = null): SoundChannel {
     return new SoundChannel(this, startTime, loops, st);
@@ -316,34 +350,61 @@ export class SoundChannel extends EventDispatcher {
   private t0 = 0; private offset = 0;
   private _st: SoundTransform;
   private stopped = false;
+  private held = false;
   constructor(private snd: Sound, start: number, loops: number, st: SoundTransform | null) {
     super();
     this._st = st ?? new SoundTransform();
-    const b = snd.buffer;
-    if (!b) return;
+    const got = snd._acquire();
+    if (!got && !snd._packed) { snd._release(); return; }
+    this.held = true;
     const ac = audio();
     this.gain = ac.createGain(); this.gain.gain.value = this._st.volume;
     this.gain.connect(isMusic(snd.url) ? audioBus.music! : audioBus.sfx!);
-    const src = ac.createBufferSource(); src.buffer = b;
-    if (loops > 0) { src.loop = true; src.loopStart = 0; src.loopEnd = b.duration; }
-    src.connect(this.gain);
     this.offset = Math.max(0, start / 1000);
     this.t0 = ac.currentTime;
+    activeChannels.add(this);
+    if (got instanceof AudioBuffer) this._start(got, loops);
+    else if (got) {
+      // music still decoding: start as soon as it is ready, at the position it would have reached by then
+      got.then((b) => {
+        if (this.stopped) return;
+        if (!b) { this._end(); return; }
+        this.offset += audio().currentTime - this.t0; this.t0 = audio().currentTime;
+        if (loops <= 0 && this.offset >= b.duration) { this._end(); return; }
+        this.offset %= b.duration;
+        this._start(b, loops);
+      });
+    }
+  }
+  private _start(b: AudioBuffer, loops: number) {
+    const ac = audio();
+    const src = ac.createBufferSource(); src.buffer = b;
+    if (loops > 0) { src.loop = true; src.loopStart = 0; src.loopEnd = b.duration; }
+    src.connect(this.gain!);
     src.start(0, Math.min(this.offset, b.duration));
     if (loops > 0 && loops < 1e6) src.stop(ac.currentTime + (b.duration - this.offset) + b.duration * loops);
-    activeChannels.add(this);
-    src.onended = () => { activeChannels.delete(this); if (!this.stopped) { this.stopped = true; this.dispatchEvent(new Event(SoundChannel.SOUND_COMPLETE)); } };
+    src.onended = () => this._end();
     this.src = src;
   }
+  private _end() {
+    activeChannels.delete(this);
+    if (this.held) { this.held = false; this.snd._release(); }
+    if (!this.stopped) { this.stopped = true; this.dispatchEvent(new Event(SoundChannel.SOUND_COMPLETE)); }
+  }
   get position() {
-    if (!this.src || !this.snd.buffer) return 0;
-    const t = (audio().currentTime - this.t0 + this.offset) % this.snd.buffer.duration;
+    const d = this.snd.length / 1000;
+    if (!this.gain || !d) return 0;
+    const t = (audio().currentTime - this.t0 + this.offset) % d;
     return t * 1000;
   }
   get soundTransform() { return this._st; }
   set soundTransform(st: SoundTransform) { this._st = st; if (this.gain) this.gain.gain.value = st.volume; }
   get leftPeak() { return 0; } get rightPeak() { return 0; }
-  stop() { this.stopped = true; activeChannels.delete(this); try { this.src?.stop(); } catch { /* */ } this.src?.disconnect(); }
+  stop() {
+    this.stopped = true; activeChannels.delete(this);
+    try { this.src?.stop(); } catch { /* */ } this.src?.disconnect();
+    if (this.held) { this.held = false; this.snd._release(); }
+  }
   get url() { return this.snd.url; }
 }
 export const SoundMixer = {

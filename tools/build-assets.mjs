@@ -6,6 +6,7 @@ import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { MaxRectsPacker } from 'maxrects-packer';
 import { parseSwf } from './swf.mjs';
+import { FOLDERS } from './parts/names.mjs';
 
 const ROOT = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
 const OUT = join(ROOT, 'web', 'public', 'assets');
@@ -18,6 +19,17 @@ const SVG_FONTS = [join(ROOT, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(ROO
 
 const ALL = ['screens', 'backgrounds', 'jinn', 'items', 'boss', 'combat_fx', 'loading', 'tutorials',
   'enemy1_normal', 'enemy1_fire', 'enemy1_ice', 'enemy2_normal', 'enemy2_fire', 'enemy2_ice', 'enemy2_snow'];
+
+// user art: ../custom-art/<character>/<part name>.png|svg replaces that part (names: tools/parts/parts.json)
+const PARTS = existsSync(join(ROOT, 'web/tools/parts/parts.json')) ? JSON.parse(readFileSync(join(ROOT, 'web/tools/parts/parts.json'), 'utf8')) : {};
+function customFile(mod, id) {
+  const name = PARTS[mod]?.[id]; if (!name) return null;
+  for (const ext of ['.png', '.svg', '.webp']) { const f = join(ROOT, 'custom-art', FOLDERS[mod] ?? mod, name + ext); if (existsSync(f)) return f; }
+  return null;
+}
+export let customUsed = 0;
+// third-party art moved to ../ip_originals (old path -> new readable name)
+const IP_RENAMED = existsSync(join(ROOT, 'ip_originals/_png-renames.json')) ? JSON.parse(readFileSync(join(ROOT, 'ip_originals/_png-renames.json'), 'utf8')) : {};
 
 const r2 = (v) => Math.round(v * 100) / 100;
 const r4 = (v) => Math.round(v * 10000) / 10000;
@@ -127,7 +139,16 @@ async function buildModule(mod) {
     if (bw * k > MAX_TEX - 2 * PAD) k = (MAX_TEX - 2 * PAD) / bw;
     if (bh * k > MAX_TEX - 2 * PAD) k = (MAX_TEX - 2 * PAD) / bh;
     const w = Math.max(1, Math.ceil(bw * k)), h = Math.max(1, Math.ceil(bh * k));
-    const svg = readFileSync(join(svgDir, id + '.svg'));
+    const custom = customFile(mod, id);
+    if (custom && !custom.endsWith('.svg')) {
+      // a painted replacement: scaled into the original part's box (keep the template's size and margins)
+      const px = await sharp(custom).ensureAlpha().resize(w, h, { fit: 'fill' }).raw().toBuffer();
+      let am = 0; for (let i = 3; i < px.length; i += 4) if (px[i] > am) { am = px[i]; if (am > 16) break; }
+      rects.push({ id: +id, width: w, height: h, px, k: w / bw, b, hb: am <= 16 });
+      customUsed++; continue;
+    }
+    if (custom) customUsed++;
+    const svg = readFileSync(custom ?? join(svgDir, id + '.svg'));
     const rv = new Resvg(svg, { fitTo: { mode: 'width', value: w }, imageRendering: 0, shapeRendering: 2, font: { fontFiles: SVG_FONTS, loadSystemFonts: false, defaultFontFamily: 'Ander Hedge' } });
     const img = rv.render();
     const pxBuf = img.pixels;
@@ -137,9 +158,13 @@ async function buildModule(mod) {
 
   // ---- bitmaps placed directly on the display list
   const imgDir = join(ROOT, 'art', mod, 'images');
-  for (const id of Object.keys(swf.bitmaps).filter((id) => seen.has(+id))) {
+  // only bitmaps the game places itself (on a timeline or as a class); a bitmap used as the fill of a shape is
+  // already inside that shape's SVG, and adding it again only wastes atlas memory (and shipped replaced art)
+  const placedIds = new Set([...roots]);
+  for (const sp of Object.values(swf.sprites)) for (const fr of sp.frames) for (const o of fr.ops) if (o.id !== undefined) placedIds.add(o.id);
+  for (const id of Object.keys(swf.bitmaps).filter((id) => seen.has(+id) && placedIds.has(+id))) {
     const src = join(imgDir, id + '.png');
-    if (!existsSync(src)) { console.warn(`  ${mod}: bitmap ${id} not exported`); continue; }
+    if (!existsSync(src)) { if (!IP_RENAMED[`${mod}/images/${id}.png`]) console.warn(`  ${mod}: bitmap ${id} not exported`); continue; } // removed third-party art stays out
     const meta = await sharp(src).metadata();
     let k = Math.min(Math.max(scale[id] || 1, 0.25), 2);
     if (meta.width * k > MAX_TEX - 2 * PAD) k = (MAX_TEX - 2 * PAD) / meta.width;
