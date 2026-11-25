@@ -1,0 +1,1004 @@
+{
+ "enemy1_normal": {
+  "55": {
+   "20": "this.stop();"
+  },
+  "77": {
+   "31": "this.stop();"
+  },
+  "84": {
+   "31": "this.stop();"
+  },
+  "94": {
+   "31": "this.stop();"
+  },
+  "95": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "96": {
+   "17": "this.stop();"
+  },
+  "97": {
+   "31": "this.stop();"
+  },
+  "98": {
+   "31": "this.stop();"
+  },
+  "99": {
+   "31": "this.stop();"
+  },
+  "100": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "103": {
+   "24": "this.stop();"
+  },
+  "120": {
+   "28": "this.stop();"
+  },
+  "121": {
+   "17": "this.stop();"
+  }
+ },
+ "main": {},
+ "screens": {
+  "20": {
+   "3": "this.stop();",
+   "9": "this.stop();",
+   "14": "this.stop();"
+  },
+  "25": {
+   "3": "this.stop();",
+   "9": "this.stop();",
+   "14": "this.stop();"
+  },
+  "39": {
+   "20": "this.stop();"
+  },
+  "62": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "85": {
+   "8": "this.stop();",
+   "13": "this.stop();",
+   "18": "this.stop();",
+   "29": "this.stop();"
+  },
+  "94": {
+   "0": "this.stop();",
+   "2": "this.stop();",
+   "5": "this.stop();"
+  },
+  "97": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "98": {
+   "5": "this.stop();",
+   "24": "this.stop();",
+   "44": "this.stop();"
+  },
+  "100": {
+   "13": "this.stop();"
+  },
+  "109": {
+   "8": "this.stop();"
+  },
+  "129": {
+   "2": "this.stop();",
+   "5": "this.stop();"
+  },
+  "130": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "133": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "136": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "139": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "141": {
+   "27": "this.stop();"
+  },
+  "206": {
+   "8": "this.stop();",
+   "13": "this.stop();",
+   "18": "this.stop();",
+   "29": "this.stop();"
+  },
+  "207": {
+   "8": "this.stop();",
+   "13": "this.stop();",
+   "18": "this.stop();",
+   "29": "this.stop();"
+  },
+  "209": {
+   "20": "this.stop();",
+   "72": "this.stop();",
+   "127": "this.stop();",
+   "182": "this.stop();",
+   "207": "this.stop();"
+  },
+  "218": {
+   "3": "this.stop(); this.stop();",
+   "8": "this.stop(); this.stop();",
+   "13": "this.stop(); this.stop();"
+  },
+  "220": {
+   "10": "this.dispatchEvent(\"blackIn\");",
+   "36": "this.stop();",
+   "62": "this.dispatchEvent(\"blackOut\");"
+  },
+  "223": {
+   "12": "this.stop();"
+  },
+  "242": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();",
+   "14": "this.stop();"
+  },
+  "243": {
+   "21": "this.stop();"
+  },
+  "271": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "274": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "288": {
+   "11": "this.stop();"
+  },
+  "291": {
+   "8": "this.stop();"
+  },
+  "293": {
+   "33": "this.stop();"
+  },
+  "303": {
+   "22": "this.stop();"
+  },
+  "354": {
+   "18": "this.stop();"
+  },
+  "359": {
+   "0": "this.stop();",
+   "6": "this.stop();",
+   "28": "this.stop();"
+  },
+  "364": {
+   "4": "this.stop();",
+   "18": "this.stop();",
+   "36": "this.stop();"
+  },
+  "365": {
+   "0": "this.stop();",
+   "17": "this.stop();",
+   "27": "this.stop();"
+  },
+  "381": {
+   "98": "switch((Math.ceil(Math.random() * 4)|0)) { case 1: this.gotoAndPlay(\"appearCube\"); break; default: this.gotoAndPlay(\"idle\"); }",
+   "179": "switch((Math.ceil(Math.random() * 4)|0)) { case 1: this.gotoAndPlay(\"disappearPlasma\"); break; default: this.gotoAndPlay(\"idlePlasma\"); }",
+   "209": "this.gotoAndPlay(\"idle\");"
+  },
+  "485": {
+   "38": "switch((Math.ceil(Math.random() * 5)|0)) { case 1: this.gotoAndPlay(\"leftIdleBlink\"); break; case 2: this.gotoAndPlay(\"leftIdleSmile\"); break; case 3: this.gotoAndPlay(\"lookfront\"); break; default: this.gotoAndPlay(\"leftIdle\"); }",
+   "75": "this.gotoAndPlay(\"leftIdle\");",
+   "126": "this.gotoAndPlay(\"leftIdle\");",
+   "192": "switch((Math.ceil(Math.random() * 5)|0)) { case 1: this.gotoAndPlay(\"idleFrontBlink\"); break; case 2: this.gotoAndPlay(\"idleFrontSmile\"); break; case 3: this.gotoAndPlay(\"lookLeftIdle\"); break; default: this.gotoAndPlay(\"idleFront\"); }",
+   "218": "this.gotoAndPlay(\"idleFront\");",
+   "278": "this.gotoAndPlay(\"idleFront\");",
+   "292": "this.gotoAndPlay(\"leftIdle\");",
+   "332": "this.gotoAndPlay(\"leftIdle\");",
+   "401": "this.gotoAndPlay(\"leftIdle\");",
+   "478": "this.gotoAndPlay(\"leftIdle\");"
+  },
+  "498": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "505": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "517": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "525": {
+   "9": "this.stop();",
+   "20": "this.stop();"
+  },
+  "533": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "536": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "548": {
+   "4": "this.stop();",
+   "8": "this.stop();"
+  },
+  "604": {
+   "8": "this.stop();",
+   "13": "this.stop();",
+   "18": "this.stop();",
+   "29": "this.stop();"
+  },
+  "607": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "609": {
+   "27": "this.stop();",
+   "69": "this.stop();",
+   "121": "this.stop();",
+   "155": "this.stop();"
+  },
+  "652": {
+   "0": "this.stop();",
+   "11": "this.stop();",
+   "22": "this.stop();"
+  },
+  "653": {
+   "1": "this.stop();",
+   "15": "this.stop();"
+  },
+  "717": {
+   "22": "this.gotoAndPlay(\"idle\");"
+  },
+  "740": {
+   "0": "this.stop();",
+   "17": "this.gotoAndPlay(\"mouseOver\");",
+   "18": "this.stop();"
+  },
+  "742": {
+   "0": "this.stop();",
+   "17": "this.gotoAndPlay(\"mouseOver\");",
+   "18": "this.stop();"
+  },
+  "751": {
+   "0": "this.stop();",
+   "33": "this.stop();",
+   "65": "this.stop();",
+   "94": "this.stop();"
+  },
+  "755": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  }
+ },
+ "backgrounds": {},
+ "jinn": {
+  "37": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "67": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "87": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "108": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "20": "this.stop();"
+  },
+  "115": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "20": "this.stop();"
+  },
+  "122": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "20": "this.stop();"
+  },
+  "168": {
+   "31": "this.stop();"
+  },
+  "171": {
+   "31": "this.stop();"
+  },
+  "174": {
+   "31": "this.stop();"
+  },
+  "191": {
+   "31": "this.stop();"
+  },
+  "196": {
+   "31": "this.stop();"
+  },
+  "199": {
+   "31": "this.stop();"
+  },
+  "243": {
+   "22": "this.stop();",
+   "65": "this.stop();",
+   "99": "this.stop();",
+   "139": "this.stop();",
+   "179": "this.stop();",
+   "212": "this.stop();",
+   "217": "this.stop();",
+   "241": "this.stop();",
+   "256": "this.stop();"
+  },
+  "269": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "296": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "331": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "433": {
+   "20": "this.stop();"
+  },
+  "444": {
+   "21": "this.stop();"
+  },
+  "462": {
+   "22": "this.stop();"
+  },
+  "477": {
+   "35": "this.stop();"
+  },
+  "478": {
+   "57": "this.stop();"
+  },
+  "482": {
+   "35": "this.stop();"
+  },
+  "483": {
+   "75": "this.stop();"
+  },
+  "489": {
+   "35": "this.stop();"
+  },
+  "490": {
+   "69": "this.stop();"
+  },
+  "500": {
+   "22": "this.stop();",
+   "57": "this.stop();",
+   "91": "this.stop();",
+   "131": "this.stop();",
+   "168": "this.stop();",
+   "199": "this.stop();",
+   "206": "this.stop();",
+   "230": "this.stop();",
+   "246": "this.stop();",
+   "344": "this.stop();",
+   "409": "this.stop();"
+  }
+ },
+ "items": {
+  "4": {
+   "2": "this.stop();",
+   "6": "this.stop();",
+   "10": "this.stop();",
+   "14": "this.stop();",
+   "18": "this.stop();"
+  },
+  "53": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "99": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "130": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "187": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "19": "this.stop();"
+  },
+  "247": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "20": "this.stop();"
+  },
+  "272": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "284": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "331": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "335": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "345": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "351": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "364": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "373": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "384": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "386": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "395": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "397": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "421": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "435": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "439": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();",
+   "16": "this.stop();"
+  },
+  "494": {
+   "2": "this.stop();",
+   "6": "this.stop();",
+   "10": "this.stop();",
+   "14": "this.stop();",
+   "25": "this.stop();"
+  },
+  "525": {
+   "2": "this.stop();",
+   "6": "this.stop();",
+   "10": "this.stop();",
+   "14": "this.stop();",
+   "18": "this.stop();"
+  },
+  "538": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  }
+ },
+ "boss": {
+  "168": {
+   "39": "this.stop();"
+  },
+  "197": {
+   "31": "this.stop();"
+  },
+  "204": {
+   "31": "this.stop();"
+  },
+  "215": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "221": {
+   "29": "this.stop();"
+  },
+  "222": {
+   "31": "this.stop();"
+  },
+  "223": {
+   "31": "this.stop();"
+  },
+  "224": {
+   "31": "this.stop();"
+  },
+  "225": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "229": {
+   "34": "this.stop();"
+  },
+  "230": {
+   "37": "this.stop();"
+  },
+  "231": {
+   "23": "this.stop();"
+  },
+  "232": {
+   "48": "this.stop();"
+  },
+  "234": {
+   "37": "this.stop();"
+  },
+  "237": {
+   "37": "this.stop();"
+  },
+  "238": {
+   "37": "this.stop();"
+  },
+  "239": {
+   "25": "this.stop();"
+  },
+  "246": {
+   "17": "this.stop();"
+  },
+  "247": {
+   "34": "this.stop();"
+  },
+  "255": {
+   "39": "this.stop();"
+  }
+ },
+ "combat_fx": {
+  "35": {
+   "8": "this.stop();"
+  },
+  "44": {
+   "3": "this.stop();",
+   "7": "this.stop();",
+   "11": "this.stop();",
+   "15": "this.stop();"
+  },
+  "79": {
+   "15": "this.stop();"
+  }
+ },
+ "loading": {
+  "66": {
+   "97": "this.gotoAndPlay(\"idle\");",
+   "111": "this.stop();"
+  },
+  "67": {
+   "96": "this.gotoAndPlay(\"idle\");",
+   "110": "this.stop();"
+  }
+ },
+ "tutorials": {
+  "5": {
+   "15": "this.stop();"
+  },
+  "31": {
+   "3": "this.stop();",
+   "8": "this.stop();",
+   "13": "this.stop();"
+  },
+  "41": {
+   "17": "this.stop();",
+   "33": "this.stop();"
+  },
+  "44": {
+   "17": "this.stop();",
+   "29": "this.stop();"
+  },
+  "54": {
+   "12": "this.stop();",
+   "17": "this.gotoAndPlay(\"idle\");",
+   "29": "this.stop();"
+  },
+  "59": {
+   "21": "this.gotoAndPlay(\"idle\");",
+   "40": "this.stop();"
+  },
+  "81": {
+   "22": "this.gotoAndPlay(\"idle\");",
+   "47": "this.stop();"
+  },
+  "87": {
+   "17": "this.stop();",
+   "23": "this.gotoAndPlay(\"idle\");",
+   "40": "this.stop();"
+  },
+  "100": {
+   "10": "this.stop();",
+   "18": "this.stop();"
+  }
+ },
+ "enemy1_fire": {
+  "65": {
+   "20": "this.stop();"
+  },
+  "79": {
+   "31": "this.stop();"
+  },
+  "82": {
+   "31": "this.stop();"
+  },
+  "88": {
+   "31": "this.stop();"
+  },
+  "89": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "92": {
+   "24": "this.stop();"
+  },
+  "101": {
+   "31": "this.stop();"
+  },
+  "106": {
+   "31": "this.stop();"
+  },
+  "111": {
+   "31": "this.stop();"
+  },
+  "112": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "113": {
+   "17": "this.stop();"
+  },
+  "133": {
+   "28": "this.stop();"
+  },
+  "134": {
+   "17": "this.stop();"
+  },
+  "145": {
+   "20": "this.stop();"
+  },
+  "155": {
+   "21": "this.stop();"
+  },
+  "173": {
+   "22": "this.stop();"
+  },
+  "174": {
+   "7": "this.stop();",
+   "15": "this.stop();",
+   "22": "this.stop();"
+  },
+  "176": {
+   "7": "this.stop();",
+   "15": "this.stop();",
+   "22": "this.stop();"
+  }
+ },
+ "enemy1_ice": {
+  "54": {
+   "20": "this.stop();"
+  },
+  "76": {
+   "31": "this.stop();"
+  },
+  "83": {
+   "31": "this.stop();"
+  },
+  "90": {
+   "31": "this.stop();"
+  },
+  "91": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "92": {
+   "17": "this.stop();"
+  },
+  "93": {
+   "31": "this.stop();"
+  },
+  "94": {
+   "31": "this.stop();"
+  },
+  "95": {
+   "31": "this.stop();"
+  },
+  "96": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "99": {
+   "24": "this.stop();"
+  },
+  "100": {
+   "17": "this.stop();"
+  },
+  "122": {
+   "28": "this.stop();"
+  }
+ },
+ "enemy2_normal": {
+  "49": {
+   "34": "this.stop();"
+  },
+  "70": {
+   "31": "this.stop();"
+  },
+  "77": {
+   "31": "this.stop();"
+  },
+  "87": {
+   "31": "this.stop();"
+  },
+  "88": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "89": {
+   "19": "this.stop();"
+  },
+  "90": {
+   "31": "this.stop();"
+  },
+  "91": {
+   "31": "this.stop();"
+  },
+  "92": {
+   "31": "this.stop();"
+  },
+  "93": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "99": {
+   "26": "this.stop();"
+  },
+  "100": {
+   "19": "this.stop();"
+  },
+  "113": {
+   "92": "this.stop();"
+  }
+ },
+ "enemy2_fire": {
+  "47": {
+   "34": "this.stop();"
+  },
+  "61": {
+   "31": "this.stop();"
+  },
+  "64": {
+   "31": "this.stop();"
+  },
+  "70": {
+   "31": "this.stop();"
+  },
+  "71": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "73": {
+   "26": "this.stop();"
+  },
+  "78": {
+   "31": "this.stop();"
+  },
+  "83": {
+   "31": "this.stop();"
+  },
+  "86": {
+   "31": "this.stop();"
+  },
+  "87": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "88": {
+   "19": "this.stop();"
+  },
+  "106": {
+   "92": "this.stop();"
+  },
+  "108": {
+   "19": "this.stop();"
+  }
+ },
+ "enemy2_ice": {
+  "58": {
+   "34": "this.stop();"
+  },
+  "79": {
+   "31": "this.stop();"
+  },
+  "86": {
+   "31": "this.stop();"
+  },
+  "93": {
+   "31": "this.stop();"
+  },
+  "94": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "95": {
+   "19": "this.stop();"
+  },
+  "96": {
+   "19": "this.stop();"
+  },
+  "112": {
+   "92": "this.stop();"
+  },
+  "113": {
+   "31": "this.stop();"
+  },
+  "114": {
+   "31": "this.stop();"
+  },
+  "115": {
+   "31": "this.stop();"
+  },
+  "116": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "119": {
+   "26": "this.stop();"
+  }
+ },
+ "enemy2_snow": {
+  "50": {
+   "34": "this.stop();"
+  },
+  "73": {
+   "31": "this.stop();"
+  },
+  "80": {
+   "31": "this.stop();"
+  },
+  "87": {
+   "31": "this.stop();"
+  },
+  "88": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "89": {
+   "19": "this.stop();"
+  },
+  "90": {
+   "31": "this.stop();"
+  },
+  "91": {
+   "31": "this.stop();"
+  },
+  "92": {
+   "31": "this.stop();"
+  },
+  "93": {
+   "6": "this.stop();",
+   "12": "this.stop();",
+   "18": "this.stop();"
+  },
+  "96": {
+   "26": "this.stop();"
+  },
+  "97": {
+   "19": "this.stop();"
+  },
+  "113": {
+   "92": "this.stop();"
+  }
+ }
+}
