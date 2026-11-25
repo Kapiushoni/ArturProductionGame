@@ -3,7 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 const [mod, out, from = '0', count = '120'] = process.argv.slice(2);
-const dir = `../art/${mod}/shapes`;
+const dir = `source/art/${mod}/shapes`;
 const ids = readdirSync(dir).map((f) => +f.replace('.svg', '')).sort((a, b) => a - b).slice(+from, +from + +count);
 const C = 10, S = 110;
 const comps = [];

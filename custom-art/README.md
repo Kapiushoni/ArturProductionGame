@@ -57,3 +57,16 @@
 | `npm run art:kit` | Заново делает `_originals` и `_catalog` (нужно, только если поменялись имена деталей) |
 
 Имена деталей задаются в `web/tools/parts/names.mjs`.
+
+## На другом компьютере
+
+Всё нужное лежит в репозитории: твои картинки (`web/custom-art`) и исходники игры (`web/source`: детали в SVG,
+Flash-файлы, исходный код и звуки). Достаточно:
+
+```
+git clone https://github.com/Kapiushoni/ArturProductionGame.git
+cd ArturProductionGame
+npm install
+npm run art -- --all
+npm run dev
+```

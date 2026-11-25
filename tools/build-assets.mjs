@@ -11,11 +11,12 @@ import { FOLDERS } from './parts/names.mjs';
 const ROOT = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
 const OUT = join(ROOT, 'web', 'public', 'assets');
 const GEN = join(ROOT, 'web', 'src', 'gen');
+const SRC = join(ROOT, 'web', 'source'); // decompiled game sources: art/, scripts_<module>/
 const RES = 1.5;          // device px per stage px rasterization target
 const MAX_TEX = 2048;
 const PAD = 2;
 const JSON_ONLY = process.argv.includes('--json-only');
-const SVG_FONTS = [join(ROOT, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(ROOT, 'art/fonts/cyrillic/BalsamiqSans-Bold.ttf')]; // for <text> in hand-made art
+const SVG_FONTS = [join(SRC, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(SRC, 'art/fonts/cyrillic/BalsamiqSans-Bold.ttf')]; // for <text> in hand-made art
 
 const ALL = ['screens', 'backgrounds', 'jinn', 'items', 'boss', 'combat_fx', 'loading', 'tutorials',
   'enemy1_normal', 'enemy1_fire', 'enemy1_ice', 'enemy2_normal', 'enemy2_fire', 'enemy2_ice', 'enemy2_snow'];
@@ -45,7 +46,7 @@ function walk(dir) {
 
 // ---- class files: class name -> symbol id, frame scripts, declared vars
 function readClasses(mod) {
-  const dir = join(ROOT, 'scripts_' + mod);
+  const dir = join(SRC, 'scripts_' + mod);
   const classes = {}; const scripts = {};
   for (const f of walk(dir)) {
     if (!f.endsWith('.as')) continue;
@@ -87,8 +88,8 @@ function matScale(m) {
 }
 
 async function buildModule(mod) {
-  let swfPath = join(ROOT, 'scripts_' + mod, '_assets', 'assets.swf');
-  if (!existsSync(swfPath)) swfPath = join(ROOT, 'scripts_' + mod, '_assets', mod + '.swf');
+  let swfPath = join(SRC, 'scripts_' + mod, '_assets', 'assets.swf');
+  if (!existsSync(swfPath)) swfPath = join(SRC, 'scripts_' + mod, '_assets', mod + '.swf');
   if (!existsSync(swfPath)) { console.log('skip', mod); return null; }
   const swf = parseSwf(swfPath);
   const { classes, scripts } = readClasses(mod);
@@ -128,7 +129,7 @@ async function buildModule(mod) {
     shapes = prev.shapes; atlasCount = prev.atlases; usedShapes = Object.keys(shapes);
   } else {
   // ---- rasterize shapes
-  const svgDir = join(ROOT, 'art', mod, 'shapes');
+  const svgDir = join(SRC, 'art', mod, 'shapes');
   const rects = [];
   usedShapes = Object.keys(swf.shapes).filter((id) => seen.has(+id));
   for (const id of usedShapes) {
@@ -157,7 +158,7 @@ async function buildModule(mod) {
   }
 
   // ---- bitmaps placed directly on the display list
-  const imgDir = join(ROOT, 'art', mod, 'images');
+  const imgDir = join(SRC, 'art', mod, 'images');
   // only bitmaps the game places itself (on a timeline or as a class); a bitmap used as the fill of a shape is
   // already inside that shape's SVG, and adding it again only wastes atlas memory (and shipped replaced art)
   const placedIds = new Set([...roots]);
@@ -235,7 +236,7 @@ async function buildModule(mod) {
   // morph shapes: start/end paths from FFDec's animated SVG export (art/<mod>/morphs/<id>.svg)
   const morphs = {};
   for (const id of Object.keys(swf.morphs).filter((id) => seen.has(+id))) {
-    const f = join(ROOT, 'art', mod, 'morphs', id + '.svg');
+    const f = join(SRC, 'art', mod, 'morphs', id + '.svg');
     if (!existsSync(f)) { console.warn(`  ${mod}: morph ${id} not exported (rendered empty)`); continue; }
     morphs[id] = parseMorph(readFileSync(f, 'utf8'));
   }

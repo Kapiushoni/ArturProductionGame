@@ -33,6 +33,6 @@ for (const name of names.length ? names : Object.keys(scenes)) {
   const svg = svgDoc(outW, outH, `<svg x="0" y="0" width="${outW}" height="${outH}" viewBox="0 0 ${sc.w} ${sc.h}" preserveAspectRatio="xMidYMid slice">${sc.body}</svg>`, sc.defs);
   const png = new Resvg(svg, { fitTo: { mode: 'width', value: 900 }, font: { fontFiles: FONTS, loadSystemFonts: false, defaultFontFamily: 'Ander Hedge' } }).render().asPng();
   writeFileSync(join(PREVIEW, name + '.png'), png);
-  if (mod && !previewOnly) writeFileSync(join(ROOT, 'art', mod, 'shapes', id + '.svg'), svg);
+  if (mod && !previewOnly) writeFileSync(join(ROOT, 'web', 'source', 'art', mod, 'shapes', id + '.svg'), svg);
   console.log(name, mod ? `-> ${mod}/${id} (${outW}x${outH})` : '(preview)');
 }

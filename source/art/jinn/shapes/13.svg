@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:ffdec="https://www.free-decompiler.com/flash" xmlns:xlink="http://www.w3.org/1999/xlink" ffdec:objectType="shape" height="80.0px" width="95.5px" xmlns="http://www.w3.org/2000/svg">
+<circle cx="47.75" cy="40" r="38" fill="#e2a774" stroke="#3d2c1e" stroke-width="3.04"/>
+<circle cx="49.65" cy="35.44" r="4.18" fill="#3d2c1e"/><circle cx="66.75" cy="35.44" r="4.18" fill="#3d2c1e"/>
+<path d="M45.85 49.5 Q59.15 60.900000000000006 71.31 49.5" fill="#7a2a1e" stroke="#3d2c1e" stroke-width="3.04"/>
+<ellipse cx="36.35" cy="45.7" rx="5.32" ry="3.42" fill="#ee8f7a" opacity="0.6"/>
+</svg>

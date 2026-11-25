@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 import ffmpeg from 'ffmpeg-static';
 
 const ROOT = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
-const SRC = join(ROOT, 'game_data/sounds'), OUT = join(ROOT, 'web/public/sounds');
+const SRC = join(ROOT, 'web/source/game_data/sounds'), OUT = join(ROOT, 'web/public/sounds');
 mkdirSync(OUT, { recursive: true });
 let before = 0, after = 0;
 for (const f of readdirSync(SRC).filter((f) => f.endsWith('.mp3'))) {

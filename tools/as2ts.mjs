@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSy
 import { join, dirname, relative, sep } from 'node:path';
 
 const ROOT = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
-const SRC = join(ROOT, 'scripts_main');
+const SRC = join(ROOT, 'web', 'source', 'scripts_main');
 const OUT = join(ROOT, 'web', 'src', 'game');
 const BUNDLE = !process.argv[2];
 const PATCHES = join(ROOT, 'web', 'tools', 'as2ts.patches.mjs');

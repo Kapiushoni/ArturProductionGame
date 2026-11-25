@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync } from 'node:fs';
 import sharp from 'sharp';
 const ROOT = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
-const src = `${ROOT}/art/screens/shapes/668.svg`;
+const src = `${ROOT}/web/source/art/screens/shapes/668.svg`;
 const orig = `${ROOT}/ip_originals/screens/shapes/668.svg`;
 mkdirSync(`${ROOT}/ip_originals/screens/shapes`, { recursive: true });
 if (!existsSync(orig)) copyFileSync(src, orig);

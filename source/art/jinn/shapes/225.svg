@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:ffdec="https://www.free-decompiler.com/flash" xmlns:xlink="http://www.w3.org/1999/xlink" ffdec:objectType="shape" height="222.1px" width="187.4px" xmlns="http://www.w3.org/2000/svg">
+<defs><clipPath id="cap"><rect x="4.6850000000000005" y="26.651999999999997" width="178.03" height="190.763" rx="84.33"/></clipPath></defs>
+<g clip-path="url(#cap)"><rect x="0" y="0" width="187.4" height="99.945" fill="#f3ead8"/><rect x="0" y="99.945" width="187.4" height="222.1" fill="#1f8a8a"/>
+<rect x="0" y="164.35399999999998" width="187.4" height="15.547" fill="#f0a03c"/><path d="M0 61.9659 Q93.7 44.975249999999996 187.4 61.9659" fill="none" stroke="#d8ccb2" stroke-width="7.496000000000001"/></g>
+<circle cx="93.7" cy="41.97689999999999" r="11.244" fill="#d6334a" stroke="#3d2c1e" stroke-width="4.6850000000000005"/>
+<rect x="4.6850000000000005" y="26.651999999999997" width="178.03" height="190.763" rx="84.33" fill="none" stroke="#3d2c1e" stroke-width="4.6850000000000005"/>
+</svg>

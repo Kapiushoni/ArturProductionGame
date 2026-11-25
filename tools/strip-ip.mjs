@@ -81,7 +81,7 @@ function empty(svg) {
 let n = 0;
 for (const [mod, groups] of Object.entries(cfg)) {
   if (mod.startsWith('_')) continue;
-  const src = join(ROOT, 'art', mod, 'shapes');
+  const src = join(ROOT, 'web', 'source', 'art', mod, 'shapes');
   const dst = join(ROOT, 'ip_originals', mod, 'shapes');
   mkdirSync(dst, { recursive: true });
   for (const [mode, ids] of Object.entries(groups)) {

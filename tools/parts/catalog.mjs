@@ -13,7 +13,7 @@ const WEB = new URL('../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1')
 const ASSETS = join(WEB, 'public', 'assets');
 const KIT = join(WEB, 'custom-art');
 const OUT_JSON = join(WEB, 'tools', 'parts', 'parts.json');
-const ROOT = join(WEB, '..');
+const ROOT = join(WEB, 'source'); // decompiled game sources (art/)
 const SVG_FONTS = [join(ROOT, 'art/fonts/12_symbol12_Ander Hedge.ttf'), join(ROOT, 'art/fonts/cyrillic/BalsamiqSans-Bold.ttf')];
 /** the part as the base game art draws it (used instead of the atlas when the atlas holds the user's replacement) */
 async function baseArt(mod, id, w, h) {
