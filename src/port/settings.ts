@@ -1,12 +1,15 @@
 // Port extras: settings panel (volumes, fullscreen, battle speed, language, save export/import),
 // in-game buttons (gear, x2), hotkeys, pause audio when the tab is hidden, rotate hint on phones.
-import { Sprite } from '@/flash/display';
+import { Sprite, Shape, DisplayObject } from '@/flash/display';
+import { modules } from '@/flash/library';
+import { Graphics as PGraphics } from 'pixi.js';
 import { TextField, TextFormat } from '@/flash/text';
-import { MouseEvent, KeyboardEvent } from '@/flash/events';
+import { MouseEvent, KeyboardEvent, Event } from '@/flash/events';
 import { clock } from '@/flash/clock';
 import { player } from '@/flash/player';
 import { setBusVolume, audio, SharedObject } from '@/flash/as3';
 import { lang, LANGS, setLang, type Lang } from './i18n';
+import { VERSION } from './version';
 
 // ---------------- persisted settings ----------------
 type Settings = { music: number; sfx: number; fast: boolean };
@@ -33,7 +36,13 @@ const appState = (): string => { try { return app.fsmAplication.getActualState()
 const gameState = (): string => { try { return mainCls().gameHolder.gameView.fsm.getActualState().getName(); } catch { return ''; } };
 export const inBattle = () => appState() === 'game' && (gameState() === 'dungeon' || gameState() === 'boss');
 /** pause / win / lose windows live in GameView.pauseHolder */
-const overlayOpen = (): boolean => { try { return mainCls().gameHolder.gameView.pauseHolder.numChildren > 0; } catch { return false; } };
+/** something covers the battle: pause/win/lose windows, the recipe book, or the loading transition */
+const overlayOpen = (): boolean => {
+  try {
+    const M = mainCls(); const gv = M.gameHolder.gameView;
+    return gv.pauseHolder.numChildren > 0 || gv.cookBook != null || M.transitionHolder.numChildren > 0;
+  } catch { return false; }
+};
 let paused = false; let hookedGame: any = null;
 function trackPause() {
   const g = mainCls()?.game;
@@ -67,7 +76,7 @@ class IconButton extends Sprite {
     const g = this.graphics;
     g.lineStyle(2, 0xc9b27a, 1); g.beginFill(0x1f2b2e, 0.92); g.drawRoundRect(0, 0, w, 34, 12);
     this.label = new TextField();
-    this.label.width = w; this.label.height = 30; this.label.y = 3;
+    this.label.width = w; this.label.height = 30; this.label.y = 6;
     const f = new TextFormat('Ander Hedge', 20, 0xf2dea5); f.align = 'center';
     this.label.defaultTextFormat = f; this.label.text = text; this.label.mouseEnabled = false;
     this.addChild(this.label);
@@ -76,6 +85,56 @@ class IconButton extends Sprite {
     this.addEventListener(MouseEvent.ROLL_OVER, () => { this.alpha = 0.85; });
     this.addEventListener(MouseEvent.ROLL_OUT, () => { this.alpha = 1; });
   }
+}
+
+/** part of a polygon (flat x,y list) above the line y = yCut (Sutherland–Hodgman against one half-plane) */
+function clipAbove(pts: number[], yCut: number): number[] {
+  const out: number[] = []; const n = pts.length / 2;
+  for (let i = 0; i < n; i++) {
+    const x1 = pts[i * 2], y1 = pts[i * 2 + 1], x2 = pts[((i + 1) % n) * 2], y2 = pts[((i + 1) % n) * 2 + 1];
+    const in1 = y1 <= yCut, in2 = y2 <= yCut;
+    if (in1) out.push(x1, y1);
+    if (in1 !== in2) { const t = (yCut - y1) / (y2 - y1); out.push(x1 + (x2 - x1) * t, yCut); }
+  }
+  return out;
+}
+
+/** settings button: the game's own round-square music button (screens sprite 130) with a gear instead of the note */
+const SOUND_BUTTON_SPRITE = 130;
+function makeGearButton(onClick: () => void): DisplayObject {
+  const mc: any = modules.get('screens')!.create(SOUND_BUTTON_SPRITE);
+  const icon = new Shape();
+  const g = new PGraphics();
+  // classic cog in the note's style: white fill, light-blue shading, very thin dark-teal outline, see-through hub
+  const cog = (cx: number, cy: number) => {
+    const teeth = 8, rOut = 12.2, rBody = 9.4, tw = 0.2, bw = 0.3, pts: number[] = [];
+    for (let i = 0; i < teeth; i++) {
+      const a = (i / teeth) * Math.PI * 2;
+      for (const [r, d] of [[rBody, -bw], [rOut, -tw], [rOut, tw], [rBody, bw]] as const) pts.push(cx + Math.cos(a + d) * r, cy + Math.sin(a + d) * r);
+    }
+    return pts;
+  };
+  g.poly(cog(0.8, 0.8)).fill({ color: 0x9fdcec, alpha: 0.9 });            // soft shading offset, like the note's
+  g.circle(0.8, 0.8, 4.2).cut();
+  g.poly(cog(0, 0)).fill(0xffffff);
+  g.circle(0, 0, 4.2).cut();
+  // upper half in the note's shaded tone (the note is bluish on top, white below)
+  g.poly(clipAbove(cog(0, 0), 0.5)).fill(0xc9e7ef);
+  g.circle(0, 0, 4.2).cut();
+  g.poly(cog(0, 0)).stroke({ width: 1, color: 0x1d4650, join: 'round' });
+  g.circle(0, 0, 4.2).stroke({ width: 1, color: 0x1d4650 });
+  icon._c.addChild(g);
+  icon.x = -1.5; icon.y = 4;
+  // same layer as the note, i.e. under the button's glass highlight that darkens the icon's upper half
+  if (mc.icon) mc.addChildAt(icon, mc.getChildIndex(mc.icon) + 1); else mc.addChild(icon);
+  const hideNote = () => { if (mc.icon) mc.icon.visible = false; };
+  hideNote();
+  mc.addEventListener(Event.ENTER_FRAME, hideNote);
+  mc.mouseChildren = false; mc.buttonMode = true;
+  mc.addEventListener(MouseEvent.CLICK, onClick);
+  mc.addEventListener(MouseEvent.ROLL_OVER, () => mc.gotoAndPlay('mouseOver'));
+  mc.addEventListener(MouseEvent.ROLL_OUT, () => mc.gotoAndPlay('mouseOut'));
+  return mc;
 }
 
 // ---------------- settings panel (DOM) ----------------
@@ -149,6 +208,9 @@ const panelOpen = () => panel?.style.display === 'flex';
 
 // ---------------- battle speed ----------------
 let fastBtn: IconButton | null = null;
+let pauseBtn: any = null;
+let menuRef: any = null;
+let versionLabel: TextField | null = null;
 function refreshFastButton() { if (fastBtn) fastBtn.label.text = settings.fast ? 'x2' : 'x1'; }
 
 // ---------------- hotkeys ----------------
@@ -179,22 +241,56 @@ function onKey(e: KeyboardEvent) {
 // ---------------- install ----------------
 export function installSettings(mainApp: any) {
   app = mainApp;
-  const gear = new IconButton('⚙', 40, openPanel);
-  gear.label.defaultTextFormat = Object.assign(new TextFormat('Arial', 22, 0xf2dea5), { align: 'center' });
-  gear.label.text = '⚙';
-  gear.x = 76; gear.y = 14;
+  // created once the game's graphics are loaded (it reuses the music button artwork)
+  let gear: DisplayObject | null = null;
   fastBtn = new IconButton('x1', 44, () => { settings.fast = !settings.fast; save(); refreshFastButton(); });
   fastBtn.x = 80; fastBtn.y = 208;
   refreshFastButton();
-  player.stage.addChild(gear);
-  player.stage.addChild(fastBtn);
   player.onFrame.push(() => {
     trackPause();
     const st = appState();
     const battle = inBattle();
-    gear.visible = st === 'mainMenu' || paused;
-    if (paused) { gear.x = 14; gear.y = 14; } else { gear.x = 76; gear.y = 14; }
-    fastBtn!.visible = battle && !paused && !overlayOpen();
+    if (!gear && modules.has('screens')) gear = makeGearButton(openPanel);
+    // The settings button lives inside the screen it belongs to, so transitions/animations cover it
+    // together with the neighbouring buttons: main menu -> next to the music button; pause -> in the pause window.
+    let host: any = null, gx = 0, gy = 0;
+    if (st === 'mainMenu') {
+      if (!menuRef || !menuRef.stage) menuRef = findDO((o) => o.constructor.name === 'MainMenu');
+      const snd = menuRef?.bg?.container?.sound;
+      if (snd) {
+        // music moves one slot left (offset on top of the timeline position: setting .x would freeze the fly-in)
+        if (snd._m[4] !== snd.__myx) { snd._scripted = false; const m = snd._m.slice(); m[4] -= 58; snd._setM(m); snd.__myx = m[4]; }
+        host = snd.parent; gx = snd.x + 58; gy = snd.y;
+      }
+    } else if (paused) {
+      const ps = findDO((o) => o.constructor.name === 'Pause');
+      if (ps) { host = ps; gx = 48; gy = 37; }
+    }
+    // version label in the menu's top-left corner (inside the menu, so transitions cover it too)
+    if (st === 'mainMenu' && menuRef?.bg && versionLabel?.parent !== menuRef.bg) {
+      versionLabel = new TextField();
+      versionLabel.width = 120; versionLabel.height = 20; versionLabel.x = 10; versionLabel.y = 6;
+      versionLabel.defaultTextFormat = new TextFormat('Ander Hedge', 14, 0xc9b27a);
+      versionLabel.text = 'v' + VERSION; versionLabel.alpha = 0.85; versionLabel.mouseEnabled = false;
+      menuRef.bg.addChild(versionLabel);
+    }
+    if (gear) {
+      if (host) {
+        if (gear.parent !== host) host.addChild(gear);
+        gear.x = gx; gear.y = gy; gear.visible = true;
+      } else if (gear.parent) gear.parent.removeChild(gear);
+    }
+    // the speed button lives next to the game's own pause button (same layer), so everything that covers
+    // or reveals the pause button (recipe book, loading screen, windows) does the same to it
+    if (battle) {
+      if (!pauseBtn || !pauseBtn.stage) pauseBtn = findDO((o) => o.constructor._libName === 'assets.ButtonPause');
+      if (pauseBtn && fastBtn!.parent !== pauseBtn.parent) {
+        pauseBtn.parent.addChildAt(fastBtn!, pauseBtn.parent.getChildIndex(pauseBtn) + 1);
+      }
+      if (pauseBtn) { fastBtn!.x = pauseBtn.x + 30; fastBtn!.y = pauseBtn.y - 17; fastBtn!.visible = pauseBtn.visible; }
+    } else if (fastBtn!.parent) {
+      fastBtn!.parent.removeChild(fastBtn!); pauseBtn = null;
+    }
     clock.scale = battle && settings.fast ? 2 : 1;
   });
   player.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKey as any);

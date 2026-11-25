@@ -2356,7 +2356,7 @@ export class Screen extends Sprite {
          this.added(null);
       }
   pop() { const __self = this;
-         __self.parent.removeChild(this);
+         if (this.parent) __self.parent.removeChild(this);
          this.clear();
       }
   getBg() {
@@ -7771,6 +7771,8 @@ bindMethods(Level);
 
 // ===== main_game.map.LegendaryLevel
 export class LegendaryLevel extends Level {
+  isLocked() { return false; }
+  isUnlocked() { return true; }
   declare theElement: any;
   declare date: any;
   constructor(param1, param2, param3, param4 = 1) {
@@ -10178,6 +10180,7 @@ export class AnimatedScreen extends Screen {
          this.callOnEnd(__self.bg,param1);
       }
   leave(param1 = null) { const __self = this;
+         if (!__self.bg) { if (param1) param1(); return; }
          __self.bg.gotoAndPlay(this.leaveLabel);
          this.callOnEnd(__self.bg,param1);
       }

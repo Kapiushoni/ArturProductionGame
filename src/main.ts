@@ -3,7 +3,7 @@ import { lib } from './flash/library';
 import { fontMap, setFallbackFonts } from './flash/text';
 import { paths } from './flash/as3';
 import { PreloaderAP } from './port/preloader';
-import { lang, LangButton } from './port/i18n';
+import { lang } from './port/i18n';
 import { installSettings } from './port/settings';
 
 lib.define('assets.PreloaderAP', PreloaderAP);
@@ -49,21 +49,13 @@ async function boot() {
   const app = new GM.main();
   player.stage.addChild(app);
 
-  // language switch, visible on the main menu only
-  const langBtn = new LangButton();
-  langBtn.x = 14; langBtn.y = 14;
-  player.stage.addChild(langBtn);
-  player.onFrame.push(() => {
-    let st = '';
-    try { st = (app as any).fsmAplication?.getActualState().getName(); } catch { /* */ }
-    langBtn.visible = st === 'mainMenu';
-  });
 
   installSettings(app);
 
   if (import.meta.env.DEV) {
     const d = await import('./flash/display');
-    Object.assign(window as any, { GM, game: app, dbg: { player, hitDeep: d.hitDeep, mouseTarget: d.mouseTarget } });
+    const tx = await import('./flash/text');
+    Object.assign(window as any, { GM, game: app, dbg: { player, hitDeep: d.hitDeep, mouseTarget: d.mouseTarget, allClips: d.allClips, frameListeners: d.frameListeners, liveTexts: tx.liveTexts } });
     (await import('./port/devtools')).installDevtools();
   }
 }

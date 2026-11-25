@@ -182,4 +182,4 @@ strawberryIceCream:Клубничное мороженое
 paper:Тетрадный лист
 paperBook:Энциклопедия фехтования
 legendarySword:Клинок колдуна
-marcelineBass:Боевая гитара
+battleGuitar:Боевая гитара

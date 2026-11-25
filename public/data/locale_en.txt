@@ -182,4 +182,4 @@ strawberryIceCream:Strawberry Ice Cream
 paper:Notebook Paper
 paperBook:Swordplay Encyclopedia
 legendarySword:Sorcerer's Blade
-marcelineBass:Battle Guitar
+battleGuitar:Battle Guitar

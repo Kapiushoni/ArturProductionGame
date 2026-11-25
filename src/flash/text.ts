@@ -1,5 +1,5 @@
 // flash.text.TextField on top of Pixi Text (box model with 2px gutter, html subset)
-import { Text, TextStyle, Rectangle as PRect, Graphics as PGraphics } from 'pixi.js';
+import { Text, TextStyle, Rectangle as PRect, Graphics as PGraphics, CanvasTextMetrics } from 'pixi.js';
 import { InteractiveObject } from './display';
 
 export class TextFormat {
@@ -28,7 +28,7 @@ function families(name: string): string[] {
 }
 
 let textRes = 2;
-const liveTexts = new Set<TextField>();
+export const liveTexts = new Set<TextField>();
 export function setTextResolution(r: number) {
   r = Math.min(4, Math.max(1, Math.round(r * 4) / 4));
   if (r === textRes) return;
@@ -37,6 +37,8 @@ export function setTextResolution(r: number) {
 }
 
 const ALIGNS = ['left', 'right', 'center', 'justify'];
+/** ascent (em) of the fonts embedded in the SWF, as Flash uses them for line placement */
+const FLASH_ASCENT: Record<string, number> = { 'Ander Hedge': 0.794, 'Arial Black': 0.716 };
 const decode = (s: string) => s.replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&amp;/g, '&');
 
 export class TextField extends InteractiveObject {
@@ -128,6 +130,7 @@ export class TextField extends InteractiveObject {
   get height() { return this._box.height * Math.abs(this.scaleY); }
   set height(v: number) { this._box.height = v / (Math.abs(this.scaleY) || 1); this._layout(); }
   _localBounds() { return this._box.clone(); }
+  _addedToStage() { super._addedToStage(); this._layout(); } // re-centre once the surrounding graphics exist
   _hitLocal(x: number, y: number) { return this._box.contains(x, y); }
 
   _lineH() { const f = this._fmt; return (f.size ?? 12) * 1.18 + (f.leading ?? 0); }
@@ -159,9 +162,34 @@ export class TextField extends InteractiveObject {
     }
     const x0 = this._box.x + 2 + (f.leftMargin ?? 0);
     let x = x0;
-    if (align === 'center') x = x0 + (inner - tw) / 2;
+    if (align === 'center') x = x0 + (inner - tw + (f.letterSpacing ?? 0)) / 2; // trailing letter spacing
     else if (align === 'right') x = x0 + inner - tw;
     t.x = x; t.y = this._box.y + 2;
+    // Place the first baseline exactly where Flash puts it: box top + 2px gutter + font ascent.
+    // Browser metrics (and the Cyrillic fallback) differ, so Pixi's own baseline is corrected to it.
+    {
+      const lh = this._lineH();
+      const fm = CanvasTextMetrics.measureFont((t.style as any)._fontString);
+      const shift = Math.max(0, (lh - fm.fontSize) / 2);
+      const asc = FLASH_ASCENT[(f.font ?? '').replace(/ Regular$/, '')] ?? 0.9;
+      // small text sits ~2px low in the browser compared to Flash (hinting/rounding); large text matches
+      const small = -2 * Math.max(0, Math.min(1, (30 - size) / 12));
+      t.y = this._box.y + 2 + asc * size + small - (fm.ascent + shift);
+      // one-line labels sitting on a bar/plate (HP, XP, level...): centre the glyphs on that graphic,
+      // the invisible text box is often taller than the bar and placed differently from field to field
+      if (!this.wordWrap && !this.multiline && this._autoSize === 'none' && this.parent) {
+        let host: any = this.parent; let up = 0;
+        while (host && host._ch.length === 1 && up < 2) { host = host.parent; up++; }
+        if (host && host._ch && host._ch.length > 1) {
+          const vis = this._c.visible; this._c.visible = false;
+          const hb = host.getBounds(this);
+          this._c.visible = vis;
+          if (hb.height > size * 0.9 && hb.height <= size * 2.2) t.y = hb.y + hb.height / 2 + size * 0.36 - (fm.ascent + shift);
+          // the hero level label sits on a plate drawn inside the big stats panel: nudge it onto the plate's centre
+          else if (this.name === 'title_1' && this.parent?.name === 'level' && this.parent?.parent?.name === 'stats') t.y += 3;
+        }
+      }
+    }
     if (this._border || this._bg) {
       this._deco ??= this._c.addChildAt(new PGraphics(), 0);
       const g = this._deco; g.clear(); g.rect(this._box.x, this._box.y, this._box.width, this._box.height);

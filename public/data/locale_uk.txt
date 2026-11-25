@@ -182,4 +182,4 @@ strawberryIceCream:Полуничне морозиво
 paper:Зошитовий аркуш
 paperBook:Енциклопедія фехтування
 legendarySword:Клинок чаклуна
-marcelineBass:Бойова гітара
+battleGuitar:Бойова гітара

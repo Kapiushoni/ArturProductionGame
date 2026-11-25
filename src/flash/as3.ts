@@ -278,14 +278,28 @@ export class Sound extends EventDispatcher {
   get length() { return this.buffer ? this.buffer.duration * 1000 : 0; }
   load(req: URLRequest) {
     this.url = paths.resolve(req.url);
-    fetch(this.url).then((r) => { if (!r.ok) throw new Error(r.status + ' ' + this.url); return r.arrayBuffer(); })
-      .then((ab) => { this.bytesTotal = this.bytesLoaded = ab.byteLength; return audio().decodeAudioData(ab); })
-      .then((b) => {
-        this.buffer = b;
-        const p = new ProgressEvent(ProgressEvent.PROGRESS); p.bytesLoaded = p.bytesTotal = this.bytesTotal; this.dispatchEvent(p);
-        this.dispatchEvent(new Event(Event.COMPLETE));
+    const done = () => {
+      const p = new ProgressEvent(ProgressEvent.PROGRESS); p.bytesLoaded = p.bytesTotal = Math.max(1, this.bytesTotal); this.dispatchEvent(p);
+      this.dispatchEvent(new Event(Event.COMPLETE));
+    };
+    const ctrl = new AbortController();
+    const timeout = globalThis.setTimeout(() => ctrl.abort(), 30000);
+    fetch(this.url, { signal: ctrl.signal }).then((r) => { if (!r.ok) throw new Error(r.status + ' ' + this.url); return r.arrayBuffer(); })
+      .then((ab) => {
+        this.bytesTotal = this.bytesLoaded = ab.byteLength;
+        // callback form works on old Safari too (no promise-returning decodeAudioData there)
+        return new Promise<AudioBuffer>((res, rej) => { const pr = audio().decodeAudioData(ab, res, rej); if (pr && (pr as any).then) (pr as any).then(res, rej); });
       })
-      .catch((e) => { console.warn('sound', e); const ev = new IOErrorEvent(IOErrorEvent.IO_ERROR); ev.text = String(e); this.dispatchEvent(ev); });
+      .then((b) => { this.buffer = b; done(); })
+      .catch((e) => {
+        // the original game waits for every sound before some levels (e.g. the boss): a failed sound must not
+        // block it forever, so it counts as loaded (silent) after reporting the error
+        console.warn('sound not loaded, continuing silently:', this.url, e);
+        const ev = new IOErrorEvent(IOErrorEvent.IO_ERROR); ev.text = String(e);
+        try { this.dispatchEvent(ev); } catch { /* the game throws in its handler */ }
+        done();
+      })
+      .finally(() => globalThis.clearTimeout(timeout));
   }
   play(startTime = 0, loops = 0, st: SoundTransform | null = null): SoundChannel {
     return new SoundChannel(this, startTime, loops, st);
@@ -365,4 +379,6 @@ export function as3as(v: any, T: any): any {
  * (the game clock runs x2 in fast battles and drops time on slow frames). */
 export class AudioTimer extends Timer {
   _now() { return audio().currentTime * 1000; }
+  // a sound that failed to load has length 0: don't re-trigger its loop every frame
+  start() { if (!(this.delay > 0)) this.delay = 60000; super.start(); }
 }

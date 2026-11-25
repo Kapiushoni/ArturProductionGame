@@ -39,7 +39,7 @@ export class LangButton extends Sprite {
     g.beginFill(0x1f2b2e, 0.92);
     g.drawRoundRect(0, 0, 54, 34, 12);
     const t = new TextField();
-    t.width = 54; t.height = 30; t.y = 2;
+    t.width = 54; t.height = 30; t.y = 6;
     const f = new TextFormat('Ander Hedge', 20, 0xf2dea5); f.align = 'center';
     t.defaultTextFormat = f; t.text = LABEL[lang];
     t.mouseEnabled = false;

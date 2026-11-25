@@ -81,4 +81,4 @@ PaperBook,paperBook,E,book,A,300,D,20,null,1,0,500
 Recipe,recipe,E,recipe,H,0,null,null,null,1,0,0
 BossPendant,bossPendant,E,bossPendant,H,10,A,10,null,1,0,1000
 LegendarySword,legendarySword,W,sword.normal.06,A,200,D,-100,null,1,0,800
-FarcelineBass,farcelineBass,W,sword.normal.07,A,300,MH,-400,null,1,0,500
+BattleGuitar,battleGuitar,W,sword.normal.07,A,300,MH,-400,null,1,0,500
