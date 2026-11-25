@@ -50,7 +50,7 @@ async function boot() {
   player.stage.addChild(app);
 
 
-  installSettings(app);
+  installSettings(app, { MainMenu: GM.MainMenu, Pause: GM.Pause });
 
   if (import.meta.env.DEV) {
     const d = await import('./flash/display');

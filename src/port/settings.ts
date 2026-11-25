@@ -223,7 +223,7 @@ function drinkFromCell(n: number) {
 }
 function togglePause() {
   if (paused) {
-    const pauseScreen = findDO((o) => o.constructor.name === 'Pause');
+    const pauseScreen = findDO((o) => o instanceof GC.Pause);
     click(pauseScreen?.bg?.cancel);
   } else if (inBattle()) {
     click(findDO((o) => o.constructor._libName === 'assets.ButtonPause'));
@@ -239,8 +239,11 @@ function onKey(e: KeyboardEvent) {
 }
 
 // ---------------- install ----------------
-export function installSettings(mainApp: any) {
-  app = mainApp;
+/** game classes (looked up with instanceof: class names are minified in the production build) */
+let GC: { MainMenu: any; Pause: any } = { MainMenu: null, Pause: null };
+
+export function installSettings(mainApp: any, gameClasses: { MainMenu: any; Pause: any }) {
+  app = mainApp; GC = gameClasses;
   // created once the game's graphics are loaded (it reuses the music button artwork)
   let gear: DisplayObject | null = null;
   fastBtn = new IconButton('x1', 44, () => { settings.fast = !settings.fast; save(); refreshFastButton(); });
@@ -255,7 +258,7 @@ export function installSettings(mainApp: any) {
     // together with the neighbouring buttons: main menu -> next to the music button; pause -> in the pause window.
     let host: any = null, gx = 0, gy = 0;
     if (st === 'mainMenu') {
-      if (!menuRef || !menuRef.stage) menuRef = findDO((o) => o.constructor.name === 'MainMenu');
+      if (!menuRef || !menuRef.stage) menuRef = findDO((o) => o instanceof GC.MainMenu);
       const snd = menuRef?.bg?.container?.sound;
       if (snd) {
         // music moves one slot left (offset on top of the timeline position: setting .x would freeze the fly-in)
@@ -263,7 +266,7 @@ export function installSettings(mainApp: any) {
         host = snd.parent; gx = snd.x + 58; gy = snd.y;
       }
     } else if (paused) {
-      const ps = findDO((o) => o.constructor.name === 'Pause');
+      const ps = findDO((o) => o instanceof GC.Pause);
       if (ps) { host = ps; gx = 48; gy = 37; }
     }
     // version label in the menu's top-left corner (inside the menu, so transitions cover it too)
