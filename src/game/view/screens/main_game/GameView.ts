@@ -1,0 +1,213 @@
+// @ts-nocheck
+import { Dictionary, MovieClip, __DEFER, as3as, bindMethods } from '@/flash/as3';
+import { Screen } from '@/game/cb/display/Screen';
+import { FSM } from '@/game/aplication/FSM';
+import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
+import { Signal } from '@/game/cb/signals/Signal';
+import { main } from '@/game/main';
+import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
+import { GameSounds } from '@/game/sound/GameSounds';
+import { Buttons } from '@/game/util/Buttons';
+import { Sepializer } from '@/game/util/Sepializer';
+import { Util } from '@/game/util/Util';
+import { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonState';
+import { CookBook } from '@/game/view/screens/main_game/cookBook/CookBook';
+import { InventoryView } from '@/game/view/screens/main_game/inventory/InventoryView';
+import { MixerView } from '@/game/view/screens/main_game/inventory/MixerView';
+import { StatsView } from '@/game/view/screens/main_game/inventory/StatsView';
+import { ShmabledumView } from '@/game/view/screens/main_game/shmabledum/ShmabledumView';
+import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPausableState';
+import { DungeonState } from '@/game/view/screens/main_game/states/DungeonState';
+import { MapState } from '@/game/view/screens/main_game/states/MapState';
+
+export class GameView extends Screen {
+  inventory = new InventoryView();
+  mixing = new MixerView();
+  stats = new StatsView();
+  princess = new ShmabledumView();
+  declare cookBook: any;
+  cookBookEnalbed = true;
+  declare fsm: any;
+  declare up_holder: any;
+  declare onExit: any;
+  declare onEnd: any;
+  constructor() {super(__DEFER); 
+          this.__init_Screen(main.swfLoader.getClass("assets.Inventory"),this.getButtonInfo());
+         this.up_holder = new MovieClip();
+         this.addChildAt(this.up_holder,0);
+         this.up_holder.game = new MovieClip();
+         this.up_holder.pause = new MovieClip();
+         this.up_holder.addChild(this.up_holder.game);
+         this.up_holder.addChild(this.up_holder.pause);
+         this.initialize();
+         this.initializeFSM();
+      }
+  get pauseHolder() {
+         return this.up_holder.pause;
+      }
+  get gameHolder() {
+         return this.up_holder.game;
+      }
+  getButtonInfo() {
+         var dict = new Dictionary();
+         dict.set("mix.mix_button", ButtonGroup.get("gui_mix").createButton(this.mixing.mix,"mouseOver",this.mixing.mixButtonOut));
+         dict.set("inventory.recipes", ButtonGroup.get("gui").createButton(this.clickOnRecipes,"mouseOver","mouseOut"));
+         return dict;
+      }
+  initialize() { const __self = this;
+         this.onExit = new Signal();
+         this.onEnd = new Signal();
+         this.inventory.initialize(__self.bg.inventory);
+         this.mixing.initialize(__self.bg.mix);
+         this.stats.initialize(__self.bg.stats);
+         this.princess.initialize(__self.bg.mix.pb);
+         Buttons.setButtons(__self.bg.inventory,["recipes"],true);
+         main.game.onPause.add(this.updatePauseState);
+      }
+  updatePauseState(flag) { const __self = this;
+         if(flag)
+         {
+            __self.bg.mouseChildren = false;
+            __self.bg.mouseEnabled = false;
+            Sepializer.getInstance().sepialize(__self.bg);
+         }
+         else
+         {
+            __self.bg.mouseChildren = true;
+            __self.bg.mouseEnabled = true;
+            Sepializer.getInstance().unsepialize(__self.bg);
+         }
+      }
+  initializeFSM() { const __self = this;
+         var basicPausableState = new BasicPausableState("init");
+         var basicPausableState2 = new BasicPausableState("exit",__self.pop);
+         var mapState = new MapState("map",this);
+         var dungeonState = new DungeonState("dungeon",this);
+         dungeonState.onToDungeon.add(this.toLevel);
+         dungeonState.onToMap.add(this.showMap);
+         var bossDungeonState = new BossDungeonState("boss",this);
+         bossDungeonState.setNextDungeon(main.game.getMap().getLevel(BossDungeon.idBossLevel));
+         bossDungeonState.onToDungeon.add(this.toLevel);
+         bossDungeonState.onToMap.add(this.showMap);
+         bossDungeonState.onToOutro.add(this.toOutro);
+         this.fsm = new FSM(basicPausableState);
+         this.fsm.addState(mapState);
+         this.fsm.addState(dungeonState);
+         this.fsm.addState(bossDungeonState);
+         this.fsm.addState(basicPausableState2);
+         this.fsm.addTransition("init","map","enterMap");
+         this.fsm.addTransition("map","map","enterMap");
+         this.fsm.addTransition("dungeon","map","enterMap");
+         this.fsm.addTransition("boss","map","enterMap");
+         this.fsm.addTransition("map","dungeon","enterDungeon");
+         this.fsm.addTransition("dungeon","dungeon","enterDungeon");
+         this.fsm.addTransition("boss","dungeon","enterDungeon");
+         this.fsm.addTransition("dungeon","boss","enterBoss");
+         this.fsm.addTransition("boss","boss","enterBoss");
+         this.fsm.addTransition("map","boss","enterBoss");
+         this.fsm.addTransition("map","exit","leave");
+         this.fsm.addTransition("boss","exit","leave");
+      }
+  get recipesButton() {
+         return this.bg.inventory.recipes.book;
+      }
+  clickOnRecipes(event = null) {
+         if(!this.cookBookEnalbed)
+         {
+            return;
+         }
+         this.disableCookButton();
+         if(this.cookBook == null)
+         {
+            (this.fsm.getActualState()).pause();
+            this.recipesButton.gotoAndPlay("clicked");
+            this.cookBook = new CookBook(this.clickOnRecipes);
+            this.up_holder.addChild(this.cookBook);
+            this.cookBook.enter(this.enableCookButton);
+         }
+         else
+         {
+            (this.fsm.getActualState()).resume();
+            this.recipesButton.gotoAndPlay("unclicked");
+            this.cookBook.leave(this.removeCookBook);
+         }
+      }
+  enableCookButton() { const __self = this;
+         this.cookBookEnalbed = true;
+         Buttons.setButtons(__self.bg.inventory,["recipes"],true);
+      }
+  disableCookButton() { const __self = this;
+         this.cookBookEnalbed = false;
+         Buttons.setButtons(__self.bg.inventory,["recipes"],false);
+      }
+  removeCookBook() {
+         this.up_holder.removeChild(this.cookBook);
+         this.cookBook.clear();
+         this.cookBook = null;
+         this.enableCookButton();
+      }
+  start() {
+         this.fsm.takeTransition("enterMap");
+      }
+  showMap() {
+         this.fsm.takeTransition("enterMap");
+      }
+  toLevel(level) {
+         if(!Util.areLoaded(this.resourcesForLevel(level),main.theLoader))
+         {
+            this.toLevelWaiting(level);
+         }
+         else
+         {
+            this.toLevelWithoutWait(level);
+         }
+      }
+  resourcesForLevel(level) {
+         if(level.getDungeonId() == BossDungeon.idBossLevel)
+         {
+            return GameSounds.bossSounds;
+         }
+         if(level.getArea() <= 1 && !level.isLegendary() && !level.isSpecial())
+         {
+            return GameSounds.combatSoundsBasic;
+         }
+         return GameSounds.combatSounds;
+      }
+  toLevelWaiting(level) {
+         main.waitForResources(this.resourcesForLevel(level),Util.l(this.toLevelWithoutWait,level));
+      }
+  toLevelWithoutWait(level) {
+         if(level.getDungeonId() == BossDungeon.idBossLevel)
+         {
+            this.fsm.takeTransition("enterBoss");
+         }
+         else
+         {
+            (as3as(this.fsm.getState("dungeon"), DungeonState)).setNextDungeon(level);
+            this.fsm.takeTransition("enterDungeon");
+         }
+      }
+  toMainMenu() {
+         this.onExit.emit();
+      }
+  toOutro() {
+         this.onEnd.emit();
+      }
+  exit() {
+         this.fsm.takeTransition("leave");
+      }
+  clear() {
+         this.inventory.clear();
+         this.mixing.clear();
+         this.stats.clear();
+         this.princess.clear();
+         this.fsm.clear();
+         super.clear();
+      }
+}
+GameView.prototype.cookBook = null;
+GameView.prototype.fsm = null;
+GameView.prototype.up_holder = null;
+GameView.prototype.onExit = null;
+GameView.prototype.onEnd = null;
+bindMethods(GameView);

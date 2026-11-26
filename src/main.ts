@@ -46,7 +46,7 @@ async function boot() {
   document.getElementById('boot')?.remove();
   const q = new URLSearchParams(location.search);
   if (q.has('sym')) return viewer(q);
-  const GM = await import('./game/game');
+  const GM = await import('./game/index');
   const app = new GM.main();
   player.stage.addChild(app);
 

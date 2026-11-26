@@ -4,3 +4,4 @@ dist
 
 # per-machine build state of npm run art
 custom-art/.build-state.json
+tools/.out
