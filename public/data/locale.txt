@@ -17,12 +17,12 @@ intro_03:Thirsty? Have a drink.
 intro_04:Huh? That's Forgetfulness water! 
 intro_05:
 intro_06:Too late! Your friend and his tasty flesh are coming with me!
-intro_07:Don’t worry, Jinn. We’ll help you, using the power of MAGIC! 
-outro_01:I crossed the whole Underworld... to RESCUE you! Your name is Jacky, and you are my best friend!
+intro_07:Don’t worry, Finn. We’ll help you, using the power of SCIENCE! 
+outro_01:I crossed the whole Underworld... to RESCUE you! Your name is Jake, and you are my best friend!
 outro_02:I’m cool with that, dude… but I’m still NOT kissing that guy! That’s GROSS!
-outro_03:My kiss of death will restore your memory, Jacky.
+outro_03:My kiss of death will restore your memory, Jake.
 outro_04:And you... you were supposed to RETURN my lost talisman, not USE it to open portals and kidnap fleshies!
-outro_05:Gotta deal with this guy now... say hello to Crazy Bro for me, will ya?
+outro_05:Gotta deal with this guy now... say hello to Peppermint Butler for me, will ya?
 outro_06:Thanks a lot, Death. We won’t bother you anymore. Cross our hearts and... hope we won’t meet again!
 outro_07:
 enemy_level:Lvl. $1
@@ -35,8 +35,8 @@ mixName:Mix $1
 inventory:Inventory
 popUpValue:$1/$2
 tutorialSwordTitle:EQUIPMENT
-tutorialSword:Jinn, you should always check your inventory and equip yourself before battle! Drag your sword into the weapon slot to boost your chances!
-tutorialStatsTitle:Jinn's Stats
+tutorialSword:Finn, you should always check your inventory and equip yourself before battle! Drag your sword into the weapon slot to boost your chances!
+tutorialStatsTitle:Finn's Stats
 tutorialStats:You can improve four different stats:
 tutorialStatsHealth:HEALTH: the damage you can take.
 tutorialStatsAttack:ATTACK: the damage you deal.
@@ -46,7 +46,7 @@ tutorialConsumablesTitle:BOOST ITEMS
 tutorialConsumables:Using items during battle can turn the tide. Drag the Health Potion into the power-up slot to recover some energy!
 tutorialMixTitle:MIXING ITEMS
 tutorialMix:The item you place in the left slot determines which kind of object you’ll get! Try experimenting, but remember: items can only have two stats!
-tutorialMix2:Way to go, Jinn! Now you can use your laboratory backpack to mix up powerful new items! Drop any two items into the slots, click the MIX button, and let science do the work!
+tutorialMix2:Way to go, Finn! Now you can use your laboratory backpack to mix up powerful new items! Drop any two items into the slots, click the MIX button, and let science do the work!
 tutorialTakeAll:Click this button to grab all the loot at once.
 advice1:Have you tried mixing a sword with a block of ice?
 advice2:All items have a primary and a secondary stat you can improve.
@@ -55,7 +55,7 @@ advice4:Equip an Ice Shield to improve your defense against Ice enemies
 advice5:Equip a Fire Shield to improve your defense against Fire enemies
 advice6:Equip a Fire Sword to deal more damage to Ice enemies
 advice7:Equip an Ice Sword to deal more damage to Fire enemies
-pbSpecialMixEnd:"$1"! Great mix, Jinn!
+pbSpecialMixEnd:"$1"! Great mix, Finn!
 pbSpecialMix:You could mix these items to get something interesting!
 pbFire:Fire Swords deal more damage to Ice enemies
 pbIce:Ice Swords deal more damage to Fire enemies
@@ -69,7 +69,7 @@ pbAdvice4:The item you place in the left slot determines which kind of object yo
 pbAdvice5:Mixing during battle will get you bonus XP... but only if you beat the Dungeon!
 pbAdvice6:Dungeons marked with a star are wicked hard, but they'll grant you better loot!
 pbAdvice7:Critical Hits will get you bonus XP... but only if you beat the Dungeon!
-pbAdvice8:C'mon, Jinn! You can do it!!
+pbAdvice8:C'mon, Finn! You can do it!!
 pbAdvice9:Can't beat a Dungeon? Don't panic. Replay a previous level to improve your stats!
 pbAdvice10:Some items can only be found in certain Dungeons.
 pbAdvice11:You've got science on your side!
@@ -92,7 +92,7 @@ win_mix_bonus:Mix Bonus
 win_loot:Loot
 win_total:Total
 win_xp_amount:$1 XP
-Jinn:Jinn
+Jinn:Finn
 enemy1_normal:Skeleton Guard
 enemy1_fire:Flame Guard
 enemy1_ice:Icy Guard
@@ -129,15 +129,15 @@ maxHPPendant2:Life Jewelry
 defPendant2:Protection Jewelry
 attPendant2:Power Jewelry
 luckPendant2:Fortune Jewelry
-swordStarter:Jinn's Sword
+swordStarter:Finn's Sword
 swordSimple:Iron  Blade
 swordMedium:Ninja Sword
 swordHeavy:Scimitar
-swordStarterFire:Jinn's Fire Sword
+swordStarterFire:Finn's Fire Sword
 swordSimpleFire:Flaming Blade
 swordMediumFire:Flaming Ninja Sword
 swordHeavyFire:Flaming Scimitar
-swordStarterIce:Jinn's Ice Sword
+swordStarterIce:Finn's Ice Sword
 swordSimpleIce:Frozen Blade
 swordMediumIce:Frozen Ninja Sword
 swordHeavyIce:Frozen Scimitar
