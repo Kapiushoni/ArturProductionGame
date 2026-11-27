@@ -1,6 +1,6 @@
 import { Event, MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { Log } from '@/game/cb/logger/Log';
-import { ClassLoader } from '@/game/bonus/ClassLoader';
+import { DiFile } from '@/game/bonus/DiFile';
 import { FileLoader } from '@/game/bonus/FileLoader';
 import { Functor } from '@/game/cb/actions/Functor';
 import { AnimationFrameAt } from '@/game/cb/conditions/AnimationFrameAt';
@@ -124,14 +124,14 @@ export class Preloader {
   configComplete(event: any) {
     Preloader.log.log('config Loaded');
     event.currentTarget.removeEventListener(Event.COMPLETE, this.configComplete);
-    this.onConfigLoaded.emit(new ClassLoader(as3as(event.target, FileLoader)));
+    this.onConfigLoaded.emit(new DiFile(as3as(event.target, FileLoader)));
     this.onConfigLoaded.clear();
     this.rule.check('config');
   }
   bonusComplete(event: any) {
     Preloader.log.log('bonus Loaded');
     event.currentTarget.removeEventListener(Event.COMPLETE, this.bonusComplete);
-    main.setDailyBonus(new ClassLoader(as3as(event.target, FileLoader)));
+    main.setDailyBonus(new DiFile(as3as(event.target, FileLoader)));
     this.rule.check('bonus');
   }
   dungeonsComplete(loader: CsvLoader) {

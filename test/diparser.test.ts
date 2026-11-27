@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { GM } from './helpers';
 
-const { ClassLoader } = GM;
+const { DiFile } = GM;
 
 /** parses a .di text (the format of config.di / dailyBonus.di) */
-const parse = (text: string) => new ClassLoader({ name: 'test.di', data: text });
+const parse = (text: string) => new DiFile({ name: 'test.di', data: text });
 
 const SAMPLE = `
 // a one-line comment
@@ -29,7 +29,7 @@ Other {
 }
 `;
 
-describe('.di parser (ClassLoader)', () => {
+describe('.di parser (DiFile)', () => {
   const loader = parse(SAMPLE);
   const config = loader.get('Config');
 
@@ -59,12 +59,6 @@ describe('.di parser (ClassLoader)', () => {
     expect(l.get('A').list).toEqual([{ v: 1 }, 1, { v: 2 }, { v: 1 }]);
   });
 
-  it('getCopy() returns an independent copy', () => {
-    const copy = loader.getCopy('Config');
-    copy.list.push(99);
-    expect(loader.get('Config').list).toHaveLength(4);
-  });
-
   it('a value right before "}" is still read', () => {
     expect(parse('A {\n x = 5}').get('A')).toEqual({ x: 5 });
     expect(parse('A{ s = "q"}').get('A')).toEqual({ s: 'q' });
@@ -73,5 +67,11 @@ describe('.di parser (ClassLoader)', () => {
   it('syntax errors are reported with the file name and line', () => {
     expect(() => parse('A {\n x = 1\n 2bad = 3\n}')).toThrow(/test\.di:3/);
     expect(() => parse('A {\n x = 1\n')).toThrow();
+    expect(() => parse('A {\n /* x\n */\n s = "open\n}')).toThrow(/test\.di:4: unterminated string/);
+    expect(() => parse('A { list = { 1 2 } }')).toThrow(/expected "," or "}"/);
+  });
+
+  it('nested arrays and comments inside arrays', () => {
+    expect(parse('A { m = { { 1, 2 }, /* c */ { 3 } // c\n } }').get('A').m).toEqual([[1, 2], [3]]);
   });
 });

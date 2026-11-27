@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GM } from './helpers';
 
-const { DailyBonus, ClassLoader, XpBonus, ExtraLevelBonus, ExtraDungeon, Element, AllFilter, NoneFilter } = GM;
+const { DailyBonus, DiFile, XpBonus, ExtraLevelBonus, ExtraDungeon, Element, AllFilter, NoneFilter } = GM;
 
 /** a dailyBonus.di of our own */
 const DI = `
@@ -18,7 +18,7 @@ MonBonus { filter = "Ice" enemyExtraLevel = 2 }
 `;
 
 beforeEach(() => {
-  DailyBonus.config = new ClassLoader({ name: 'dailyBonus.di', data: DI });
+  DailyBonus.config = new DiFile({ name: 'dailyBonus.di', data: DI });
 });
 
 describe('DailyBonus', () => {

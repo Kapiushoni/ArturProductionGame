@@ -12,7 +12,7 @@ import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
 /**
- * The bonus of a day, from dailyBonus.di (DailyBonus.config, a ClassLoader):
+ * The bonus of a day, from dailyBonus.di (DailyBonus.config, a DiFile):
  * - SpecialEvents: { date_MM_dd_yyyy: bonus } for special days (checked first);
  * - Weekly: { Monday: bonus, ... }.
  * A bonus is { specialDungeon, element } or { filter, xpPercent } or { filter, enemyExtraLevel }.

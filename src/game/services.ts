@@ -16,7 +16,7 @@ export interface Texts {
 export interface SoundEffects {
   playFx(name: string, start?: number, volume?: number): any;
 }
-/** the publisher's achievement system */
+/** the game events that count for achievements (see AchievementDispatcher) */
 export interface Achievements {
   madeMix(): void;
   friendlyRockJrObtained(): void;

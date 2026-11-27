@@ -27,7 +27,7 @@ import { TransitionWindowJakeLess } from '@/game/view/screens/main_game/Transiti
 import { MainMenu } from '@/game/view/screens/MainMenu';
 import { Outro } from '@/game/view/screens/Outro';
 import { services } from '@/game/services';
-import type { ClassLoader } from '@/game/bonus/ClassLoader';
+import type { DiFile } from '@/game/bonus/DiFile';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 import type { Locale } from '@/game/cb/data/Locale';
 import type { SwfBulkLoader } from '@/game/cb/display/SwfBulkLoader';
@@ -105,7 +105,7 @@ export class main extends Sprite {
   static get theLoader(): PostLoader {
     return main.postLoader;
   }
-  static setDailyBonus(config: ClassLoader) {
+  static setDailyBonus(config: DiFile) {
     DailyBonus.config = config;
     main.activeBonus = DailyBonus.getBonusOfDate(new Date());
   }
@@ -136,7 +136,7 @@ export class main extends Sprite {
 
     const preloader = new Preloader(main.gameHolder);
     preloader.onLocaleLoaded.add((locale: Locale) => (main.locale = locale));
-    preloader.onConfigLoaded.add((config: ClassLoader) => (main.config = config));
+    preloader.onConfigLoaded.add((config: DiFile) => (main.config = config));
     preloader.onCharactersLoaded.add((rows: any) => CharacterFactory.setConfig(rows));
     preloader.onItemsLoaded.add((rows: any) => ItemFactory.setConfig(rows));
     preloader.onDungeonsLoaded.add((rows: any) => DungeonFactory.setConfig(rows));
