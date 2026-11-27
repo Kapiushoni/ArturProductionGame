@@ -1,6 +1,4 @@
 import { bindMethods } from '@/flash/as3';
-import { Appender } from '@/game/cb/logger/Appender';
-import { JSConsoleAppender } from '@/game/cb/logger/JSConsoleAppender';
 import { Log } from '@/game/cb/logger/Log';
 
 /**
@@ -11,10 +9,6 @@ import { Log } from '@/game/cb/logger/Log';
 export class AchievementDispatcher {
   private readonly log = Log.getLogger('achievement');
 
-  constructor() {
-    this.log.addAppender(new Appender());
-    this.log.addAppender(new JSConsoleAppender());
-  }
   gameLoaded() {
     this.log.log('game loaded');
   }

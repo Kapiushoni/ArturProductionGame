@@ -1,9 +1,9 @@
 import { as3values, bindMethods, int } from '@/flash/as3';
-import { AllFilter } from '@/game/bonus/filter/AllFilter';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { XpCalculator } from '@/game/main_game/dungeon/XpCalculator';
+import { BonusFilters } from '@/game/bonus/filter/IBonusFilter';
 import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
@@ -17,7 +17,7 @@ export class XpBonus implements IDailyBonus, IXpCalculator {
 
   constructor(percent = 100, filter: IBonusFilter = null) {
     this.value = Number(percent) / 100;
-    this.filter = filter ?? new AllFilter();
+    this.filter = filter ?? BonusFilters.All();
   }
   activate() {
     this.xpCalculator = new XpCalculator();

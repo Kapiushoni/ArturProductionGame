@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GM } from './helpers';
 
-const { DailyBonus, DiFile, XpBonus, ExtraLevelBonus, ExtraDungeon, Element, AllFilter, NoneFilter } = GM;
+const { DailyBonus, DiFile, XpBonus, ExtraLevelBonus, ExtraDungeon, Element } = GM;
 
 /** a dailyBonus.di of our own */
 const DI = `
@@ -65,8 +65,15 @@ describe('DailyBonus', () => {
   });
 
   it('filters', () => {
-    expect(DailyBonus.parseFilter('All')).toBeInstanceOf(AllFilter);
-    expect(DailyBonus.parseFilter('???')).toBeInstanceOf(NoneFilter);
+    expect(
+      DailyBonus.parseFilter('All')
+        .getIcons()
+        .map((i: any) => i.type),
+    ).toEqual(['Normal', 'Fire', 'Ice']);
+    expect(DailyBonus.parseFilter('???').doesApply(Element.fire)).toBe(false);
+    expect(DailyBonus.parseFilter('???').getIcons()).toEqual([]);
+    expect(DailyBonus.parseFilter('toString').getIcons()).toEqual([]);
+    expect(DailyBonus.parseFilter('Ice').doesApply(Element.fire)).toBe(false);
     expect(DailyBonus.parseFilter('Normal').doesApply(Element.normal)).toBe(true);
     expect(DailyBonus.parseFilter('Normal').doesApply(Element.fire)).toBe(false);
     expect(DailyBonus.parseFilter('Fire').doesApply(Element.fire)).toBe(true);

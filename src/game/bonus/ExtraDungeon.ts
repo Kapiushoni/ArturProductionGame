@@ -1,7 +1,7 @@
 import { bindMethods } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
-import { NoneFilter } from '@/game/bonus/filter/NoneFilter';
 import { Element } from '@/game/main_game/element/Element';
+import { BonusFilters } from '@/game/bonus/filter/IBonusFilter';
 import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
@@ -26,7 +26,7 @@ export class ExtraDungeon implements IDailyBonus {
     return BonusIcon.getExtraDungeon(this.element);
   }
   getFilter(): IBonusFilter {
-    return new NoneFilter();
+    return BonusFilters.None();
   }
   getAction(): string {
     return '';

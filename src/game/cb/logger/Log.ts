@@ -1,29 +1,23 @@
-import { Dictionary, as3values, bindMethods } from '@/flash/as3';
-import type { Appender } from '@/game/cb/logger/Appender';
+import { bindMethods } from '@/flash/as3';
 
-/** A named logger: "[name] message" to each of its appenders. One per name (Log.getLogger). */
+/**
+ * A named logger: log(...) writes "[name] message" to the browser console when Log.enabled is on
+ * (off by default: in the original the messages went to a Flash debug console that the web does not have).
+ */
 export class Log {
-  static loggers: any = new Dictionary();
-  private appenders: Appender[];
-  private name: string;
+  static enabled = false;
+  private static loggers = new Map<string, Log>();
 
-  constructor(name: string) {
-    this.appenders = [];
-    this.name = name;
-  }
+  private constructor(private name: string) {}
+
+  /** one logger per name */
   static getLogger(name: string): Log {
-    if (Log.loggers.get(name) == undefined) {
-      Log.loggers.set(name, new Log(name));
-    }
-    return Log.loggers.get(name);
-  }
-  addAppender(appender: Appender) {
-    this.appenders.push(appender);
+    let logger = Log.loggers.get(name);
+    if (!logger) Log.loggers.set(name, (logger = new Log(name)));
+    return logger;
   }
   log(...parts: any[]) {
-    for (const appender of as3values(this.appenders)) {
-      appender.log('[' + this.name + '] ' + parts.join(''));
-    }
+    if (Log.enabled) console.log('[' + this.name + '] ' + parts.join(''));
   }
 }
 bindMethods(Log);

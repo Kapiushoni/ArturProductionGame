@@ -1,13 +1,9 @@
 import { DateTimeFormatter, as3keys, bindMethods, int } from '@/flash/as3';
 import { ExtraDungeon } from '@/game/bonus/ExtraDungeon';
 import { ExtraLevelBonus } from '@/game/bonus/ExtraLevelBonus';
-import { AllFilter } from '@/game/bonus/filter/AllFilter';
-import { FireFilter } from '@/game/bonus/filter/FireFilter';
-import { IceFilter } from '@/game/bonus/filter/IceFilter';
-import { NoneFilter } from '@/game/bonus/filter/NoneFilter';
-import { NormalFilter } from '@/game/bonus/filter/NormalFilter';
 import { XpBonus } from '@/game/bonus/XpBonus';
 import { Element } from '@/game/main_game/element/Element';
+import { BonusFilters } from '@/game/bonus/filter/IBonusFilter';
 import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
@@ -86,18 +82,7 @@ export class DailyBonus {
     return date;
   }
   static parseFilter(name: string): IBonusFilter {
-    switch (name) {
-      case 'All':
-        return new AllFilter();
-      case 'Ice':
-        return new IceFilter();
-      case 'Fire':
-        return new FireFilter();
-      case 'Normal':
-        return new NormalFilter();
-      default:
-        return new NoneFilter();
-    }
+    return (Object.hasOwn(BonusFilters, name) ? BonusFilters[name as keyof typeof BonusFilters] : BonusFilters.None)();
   }
   /** the first special event after `date` */
   static getNextSpecialBonusDate(date: Date): Date | null {

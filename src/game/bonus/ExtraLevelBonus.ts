@@ -1,7 +1,7 @@
 import { bindMethods, int } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
-import { NoneFilter } from '@/game/bonus/filter/NoneFilter';
 import { LevelingEnemies } from '@/game/main_game/character/stats/LevelingEnemies';
+import { BonusFilters } from '@/game/bonus/filter/IBonusFilter';
 import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
@@ -12,7 +12,7 @@ export class ExtraLevelBonus implements IDailyBonus {
 
   constructor(extraLevel = 0, filter: IBonusFilter = null) {
     this.extraLevel = int(Number(extraLevel));
-    this.filter = filter ?? new NoneFilter();
+    this.filter = filter ?? BonusFilters.None();
   }
   activate() {
     LevelingEnemies.setBonus(this);

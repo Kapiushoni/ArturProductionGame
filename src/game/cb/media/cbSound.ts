@@ -42,9 +42,6 @@ export class cbSound {
       this.progress.clear();
     }
   }
-  setSound(sound: any) {
-    this.sound = sound;
-  }
   playing(): boolean {
     return this.isPlaying;
   }

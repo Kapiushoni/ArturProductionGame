@@ -1,6 +1,4 @@
 import { bindMethods } from '@/flash/as3';
-import { Appender } from '@/game/cb/logger/Appender';
-import { JSConsoleAppender } from '@/game/cb/logger/JSConsoleAppender';
 import { Log } from '@/game/cb/logger/Log';
 import { Signal } from '@/game/cb/signals/Signal';
 
@@ -18,10 +16,7 @@ export class PostLoader {
   constructor(
     private resources: string[],
     private loadOne: (resource: string) => Promise<void>,
-  ) {
-    PostLoader.log.addAppender(new Appender());
-    PostLoader.log.addAppender(new JSConsoleAppender());
-  }
+  ) {}
   isLoaded(resource: string): boolean {
     return this.resources.includes(resource) ? this.loaded.has(resource) : this.started;
   }

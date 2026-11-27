@@ -4,9 +4,6 @@ import { BasicState } from '@/game/aplication/BasicState';
 import { FSM } from '@/game/aplication/FSM';
 import { assert } from '@/game/assert';
 import { DailyBonus } from '@/game/bonus/DailyBonus';
-import { Appender } from '@/game/cb/logger/Appender';
-import { JSConsoleAppender } from '@/game/cb/logger/JSConsoleAppender';
-import { Log } from '@/game/cb/logger/Log';
 import { DragDispatcher } from '@/game/drag_and_drop/DragDispatcher';
 import { PostLoader } from '@/game/loader/PostLoader';
 import { Preloader } from '@/game/loader/Preloader';
@@ -94,8 +91,6 @@ export class main extends Sprite {
 
   constructor() {
     super();
-    Log.getLogger('debug').addAppender(new JSConsoleAppender());
-    Log.getLogger('debug').addAppender(new Appender());
     if (this.stage) {
       this.init();
     } else {
