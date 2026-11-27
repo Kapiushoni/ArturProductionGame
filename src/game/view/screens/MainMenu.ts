@@ -27,15 +27,15 @@ export class MainMenu extends Screen {
     this.bg.gotoAndStop(0);
   }
   getButtonInfo() {
-    var dict = new Dictionary();
-    var buttonGroup = ButtonGroup.get('gui');
+    const dict = new Dictionary();
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('new_game', buttonGroup.createButton(this.newGame, 'mouseOver', 'mouseOut'));
     dict.set('continue_game', buttonGroup.createButton(this.continueGame, 'mouseOver', 'mouseOut'));
     dict.set('sound', ButtonGroup.get('sound_gui').createButton(null, 'mouseOver', 'mouseOut'));
     return dict;
   }
   initialize() {
-    var textFormat = new TextFormat();
+    const textFormat = new TextFormat();
     textFormat.size = 43;
     this.bg.container.new_game.title.title.defaultTextFormat = textFormat;
     this.bg.container.continue_game.title.title.defaultTextFormat = textFormat;
@@ -55,14 +55,14 @@ export class MainMenu extends Screen {
     main.soundManager.playMusic(GameSounds.INTRO_MUSIC);
   }
   initializeDailyBonus() {
-    var text = null;
+    let text = null;
     if (main.activeBonus) {
       this.currentBonus = new DailyBonusView(main.activeBonus, main.locale.get(MainMenu.ActiveMessage));
       this.bg.container.hoder_1.addChild(this.currentBonus);
     }
-    var date = new Date();
-    var bonusOfDate = null;
-    var i = 0;
+    let date = new Date();
+    let bonusOfDate = null;
+    let i = 0;
     while (i < 7) {
       date = new Date(date.time + 1000 * 60 * 60 * 24);
       bonusOfDate = DailyBonus.getBonusOfDate(date);
@@ -87,9 +87,8 @@ export class MainMenu extends Screen {
     this.showBonus(callback);
   }
   showBonus(callback: Function = null) {
-    var rule = null;
-    var next = callback;
-    rule = new Rule('start');
+    const next = callback;
+    const rule = new Rule('start');
     if (next != null) {
       rule.completed.add(next);
     }
@@ -120,8 +119,8 @@ export class MainMenu extends Screen {
     }
   }
   showConfirmationPopUp() {
-    var text = main.locale.get('new_gameConfirmation');
-    var confirmationPopUp = new ConfirmationPopUp(this.bg.container, this.onNewGame.emit, this.cancelPopUp, text);
+    const text = main.locale.get('new_gameConfirmation');
+    const confirmationPopUp = new ConfirmationPopUp(this.bg.container, this.onNewGame.emit, this.cancelPopUp, text);
     this.bg.addChild(confirmationPopUp);
     confirmationPopUp.enter();
   }

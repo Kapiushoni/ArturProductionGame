@@ -28,7 +28,7 @@ export class JinnView extends FighterView {
     new PotionEffect(item, this.mc);
   }
   createMc() {
-    var text = 'Sword';
+    let text = 'Sword';
     if (this.jinn.gear.weapon.isEmpty()) {
       text = 'Hand';
     }
@@ -37,11 +37,11 @@ export class JinnView extends FighterView {
     this.setShield(this.mc.shield);
   }
   setSword(clip: any) {
-    var swordModifier = ItemViews.swordModifier(this.jinn.gear.weapon.getContent());
+    const swordModifier = ItemViews.swordModifier(this.jinn.gear.weapon.getContent());
     swordModifier.modify(clip);
   }
   setShield(clip: any) {
-    var shieldModifier = ItemViews.shieldModifier(this.jinn.gear.shield.getContent());
+    const shieldModifier = ItemViews.shieldModifier(this.jinn.gear.shield.getContent());
     shieldModifier.modify(clip);
   }
   playAnimation(fighterAnimation: IFighterAnimation) {

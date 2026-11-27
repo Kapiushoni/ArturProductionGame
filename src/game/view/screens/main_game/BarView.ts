@@ -32,7 +32,7 @@ export class BarView {
     if (this.locale != null && this.localeText != '') {
       this.mc.title.title.text = main.locale.get(this.localeText, [this.current.toString(), this.total.toString()]);
     }
-    var num = uint(Math.ceil((this.current * 100) / this.total));
+    let num = uint(Math.ceil((this.current * 100) / this.total));
     if (this.current != this.total) {
       num = uint(Math.min(99, num));
     }

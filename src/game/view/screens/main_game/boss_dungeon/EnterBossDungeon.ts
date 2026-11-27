@@ -24,9 +24,9 @@ export class EnterBossDungeon {
     this.start();
   }
   start() {
-    var num = Number(Dungeon.DungeonConfig['height_fighters']);
-    var jinnView = this.bossDungeonView.jinnView;
-    var bossView = this.bossDungeonView.bossView;
+    const num = Number(Dungeon.DungeonConfig['height_fighters']);
+    const jinnView = this.bossDungeonView.jinnView;
+    const bossView = this.bossDungeonView.bossView;
     jinnView.y = num;
     bossView.y = num;
     jinnView.x = Dungeon.DungeonConfig['position_jinn'] - 2.1 * Dungeon.DungeonConfig['lenght_step'];

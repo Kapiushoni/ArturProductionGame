@@ -10,8 +10,8 @@ export class BossView extends EnemyView {
     super(fighter);
   }
   getNewMc(fighterAnimation: IFighterAnimation) {
-    var text = 'assets.' + 'boss_normal' + '.' + fighterAnimation.getName();
-    var cls = main.swfLoader.getClass(text);
+    const text = 'assets.' + 'boss_normal' + '.' + fighterAnimation.getName();
+    const cls = main.swfLoader.getClass(text);
     return new cls();
   }
   setSoundManager() {

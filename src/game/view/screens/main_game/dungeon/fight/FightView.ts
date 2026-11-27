@@ -16,7 +16,7 @@ export class FightView extends BasicFightView {
     this.initFightView(fight, backgroundView, fighterView);
   }
   initializeViews(list: any[]) {
-    var jinnView = list[0];
+    const jinnView = list[0];
     this.views.set(main.game.getJinn(), jinnView);
     this.views.set(this.fight.getEnemy(), new EnemyView(this.fight.getEnemy()));
   }
@@ -25,7 +25,7 @@ export class FightView extends BasicFightView {
   }
   initialize() {
     this.enemy = this.fight.getEnemy();
-    var fighterView = this.views.get(this.enemy);
+    const fighterView = this.views.get(this.enemy);
     fighterView.putIn(this.bg.arena);
     fighterView.y = Dungeon.DungeonConfig['height_fighters'];
     fighterView.x =
@@ -49,9 +49,9 @@ export class FightView extends BasicFightView {
     this.views.get(this.enemy).x -= num;
   }
   enter(callback2: Function) {
-    var callback = callback2;
-    var steps = Number(Dungeon.DungeonConfig['steps_to_find_enemy']);
-    var walk = new RunAnimation(steps, !this.fight.first);
+    const callback = callback2;
+    const steps = Number(Dungeon.DungeonConfig['steps_to_find_enemy']);
+    const walk = new RunAnimation(steps, !this.fight.first);
     this.jinnView.animate(walk);
     walk.atFinish.add((fighterAnimation) => {
       this.atEndEnter(callback);

@@ -6,7 +6,7 @@ import { GameSounds } from '@/game/sound/GameSounds';
 
 export class SmokeEffect extends Effect {
   constructor() {
-    var clip = as3as(main.swfLoader.getObject('assets.Smoke'), MovieClip);
+    const clip = as3as(main.swfLoader.getObject('assets.Smoke'), MovieClip);
     clip.rotation = Random.nextInt(360);
     super(clip);
   }

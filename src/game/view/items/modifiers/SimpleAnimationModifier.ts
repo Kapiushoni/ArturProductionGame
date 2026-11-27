@@ -21,8 +21,8 @@ export class SimpleAnimationModifier {
     this.setIcon(clip.icon, text);
   }
   setIcon(clip: any, text: string) {
-    var mc = clip;
-    var type = text;
+    const mc = clip;
+    const type = text;
     if (type == null) {
       try {
         mc.gotoAndStop('none');

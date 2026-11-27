@@ -17,8 +17,8 @@ export class FightFeedback extends Sprite {
     displayObjectContainer.addChild(this);
   }
   addFeedback(clip: any) {
-    var above = null;
-    var i = 0;
+    let above = null;
+    let i = 0;
     while (i < 3) {
       if (!this.slots[i]) {
         this.slots[i] = clip;
@@ -35,12 +35,12 @@ export class FightFeedback extends Sprite {
   makeAppear(clip: any) {
     this.addChild(clip);
     clip.gotoAndPlay(1);
-    var smartMC = new SmartMC(clip);
+    const smartMC = new SmartMC(clip);
     smartMC.trigger(new EndAnimation(), new Functor(this.removePoster, clip));
   }
   removePoster(clip: any, params: any[]) {
-    var poster = params[0];
-    var i = 0;
+    const poster = params[0];
+    let i = 0;
     while (i < 3) {
       if (this.slots[i] == poster) {
         this.slots[i] = null;
@@ -52,7 +52,7 @@ export class FightFeedback extends Sprite {
     }
   }
   pause() {
-    var i = 0;
+    let i = 0;
     while (i < 3) {
       if (this.slots[i]) {
         this.slots[i].stop();
@@ -61,7 +61,7 @@ export class FightFeedback extends Sprite {
     }
   }
   resume() {
-    var i = 0;
+    let i = 0;
     while (i < 3) {
       if (this.slots[i]) {
         this.slots[i].play();
@@ -70,7 +70,7 @@ export class FightFeedback extends Sprite {
     }
   }
   clear() {
-    var i = 0;
+    let i = 0;
     while (i < 3) {
       if (this.slots[i]) {
         this.slots[i].stop();

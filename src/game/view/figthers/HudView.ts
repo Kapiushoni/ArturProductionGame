@@ -37,7 +37,7 @@ export class HudView {
     this.refresh();
   }
   refresh() {
-    var health = null;
+    let health = null;
     Tween.killTweensOf(this.bar);
     if (this.stats != null) {
       health = this.getHealth();

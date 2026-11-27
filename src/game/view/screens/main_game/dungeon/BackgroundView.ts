@@ -71,10 +71,10 @@ export class BackgroundView extends MovieClip {
     return this.jinnHudView;
   }
   setLayers() {
-    var clip = new MovieClip();
+    let clip = new MovieClip();
     this.addChild(clip);
     this.layer3 = clip;
-    var cls = main.swfLoader.getClass('assets.Mist');
+    const cls = main.swfLoader.getClass('assets.Mist');
     this.mist1 = new cls();
     this.mist2 = new cls();
     this.addChild(this.mist1);
@@ -108,7 +108,7 @@ export class BackgroundView extends MovieClip {
     this.gameLoop.start();
   }
   setPauseButton() {
-    var clip = as3as(main.swfLoader.getObject('assets.ButtonPause'), MovieClip);
+    const clip = as3as(main.swfLoader.getObject('assets.ButtonPause'), MovieClip);
     this.information.addChild(clip);
     this.information.pause = clip;
     clip.x = Dungeon.DungeonConfig['pause_btn_x'];
@@ -123,14 +123,13 @@ export class BackgroundView extends MovieClip {
     clip.number_heathl_parts_blocked.title.scaleX = -1;
   }
   setBackground(clip: any, backgroundSet: BackgroundSet) {
-    var background = null;
-    background = backgroundSet.getBackground();
+    const background = backgroundSet.getBackground();
     clip.addChild(background);
     clip['1'] = background;
     this.checkLayer(clip, backgroundSet);
   }
   checkLayer(clip: any, backgroundSet: BackgroundSet) {
-    var background = null;
+    let background = null;
     if (clip['1'].x < -clip['1'].width) {
       clip.removeChild(clip['1']);
       clip['1'] = clip['2'];
@@ -176,10 +175,10 @@ export class BackgroundView extends MovieClip {
   }
   scroll(num: number) {
     num = int(num);
-    var MIST_VELOCITY = NaN;
-    var VELOCITY1 = NaN;
-    var ARENA_VELOCITY = NaN;
-    var VELOCITY3 = NaN;
+    let MIST_VELOCITY = NaN;
+    let VELOCITY1 = NaN;
+    let ARENA_VELOCITY = NaN;
+    let VELOCITY3 = NaN;
     if (!this.paused) {
       MIST_VELOCITY = Number(BackgroundView.MIST_VELOCITY);
       this.scrollMist(MIST_VELOCITY);

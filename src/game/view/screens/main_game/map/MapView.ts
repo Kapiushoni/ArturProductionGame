@@ -41,16 +41,15 @@ export class MapView extends Screen {
     this.refreshArrows(this.actual_page);
   }
   getButtonInfo() {
-    var level = null;
-    var buttonName = null;
+    let buttonName = null;
     this.buttonsNames = new Array();
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('sound', ButtonGroup.get('sound_gui').createButton(null, 'mouseOver', 'mouseOut'));
     this.buttonsNames.push('sound');
-    var buttonGroup = ButtonGroup.get('gui');
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('back', buttonGroup.createButton(this.toMainMenu, 'mouseOver', 'mouseOut'));
     this.buttonsNames.push('back');
-    for (level of as3values(this.map.map.levels)) {
+    for (const level of as3values(this.map.map.levels)) {
       buttonName = this.getButtonName(level);
       dict.set(buttonName, buttonGroup.createButton(this.getGoToDungeon(level), 'mouseOver', 'mouseOut'));
       this.buttonsNames.push(buttonName);
@@ -64,23 +63,22 @@ export class MapView extends Screen {
     return uint(level.getArea());
   }
   getGoToDungeon(level2: Level) {
-    var level = level2;
+    const level = level2;
     return (event) => {
       Buttons.setButtons(this.bg, this.buttonsNames, false);
       this.onToDungeon.emit(level);
     };
   }
   initialize() {
-    var level = null;
-    var buttonName = null;
-    var button = null;
-    var eventBadge = null;
-    var date = null;
+    let buttonName = null;
+    let button = null;
+    let eventBadge = null;
+    let date = null;
     this.onToMainMenu = new Signal();
     this.onToDungeon = new Signal();
     main.soundManager.updateSoundButton(this.bg.sound);
     Buttons.setButtons(this.bg, this.buttonsNames, true);
-    for (level of as3values(this.map.map.levels)) {
+    for (const level of as3values(this.map.map.levels)) {
       buttonName = this.getButtonName(level);
       button = as3as(Util.getSprite(this.bg, buttonName), MovieClip);
       if (level.isLocked()) {
@@ -124,13 +122,11 @@ export class MapView extends Screen {
     }
   }
   putEnemies(button: any, level: Level) {
-    var enemy = null;
-    var skulls = null;
-    var element = null;
-    var enemyElement = null;
-    var config = DungeonFactory.getConfigFor(level.dungeonId);
-    var elements = new cbArray();
-    for (enemy of as3values(config.enemiesData)) {
+    let skulls = null;
+    let enemyElement = null;
+    const config = DungeonFactory.getConfigFor(level.dungeonId);
+    const elements = new cbArray();
+    for (const enemy of as3values(config.enemiesData)) {
       enemyElement = CharacterFactory.getInstance().getConfig(enemy[0]).element;
       elements.pushIfNotPresent(enemyElement);
     }
@@ -146,8 +142,8 @@ export class MapView extends Screen {
       }
       skulls = as3as(main.swfLoader.getObject('assets.SkullsX3'), MovieClip);
     }
-    var n = 1;
-    for (element of as3values(elements)) {
+    let n = 1;
+    for (const element of as3values(elements)) {
       skulls['skull' + n].gotoAndStop(element.type);
       n++;
     }
@@ -174,9 +170,9 @@ export class MapView extends Screen {
       return;
     }
     this.hideArrows();
-    var text = 'page_' + this.actual_page + '/page_' + num;
+    const text = 'page_' + this.actual_page + '/page_' + num;
     this.bg.pages.gotoAndPlay(text);
-    var smartMC = new SmartMC(this.bg.pages);
+    const smartMC = new SmartMC(this.bg.pages);
     smartMC.trigger(new EndCurrentLabel(this.bg.pages), new Lambda(this.updatePage, num));
   }
   hideArrows() {
@@ -208,10 +204,9 @@ export class MapView extends Screen {
     this.map = null;
   }
   refreshUnlocked(levels: cbArray) {
-    var button = null;
-    var level = null;
-    var buttonName = null;
-    for (level of as3values(levels)) {
+    let button = null;
+    let buttonName = null;
+    for (const level of as3values(levels)) {
       buttonName = this.getButtonName(level);
       if (level.isCleared()) {
         button = as3as(Util.getSprite(this.bg, buttonName), MovieClip);
@@ -240,7 +235,7 @@ export class MapView extends Screen {
     this.refreshArrows(this.actual_page);
   }
   refreshLastLevel(event: any) {
-    var clip = as3as(
+    const clip = as3as(
       Util.getSprite(this.bg, this.getButtonName(this.map.map.getLevel(main.saveSystem.getLastPlayed()))),
       MovieClip,
     );

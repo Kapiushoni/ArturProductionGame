@@ -26,8 +26,8 @@ export class DailyBonusView extends AnimatedScreen {
   }
   initialize(dailyBonus: IDailyBonus) {
     this.bg[this.container].title.title.text = this.message;
-    var icon = dailyBonus.getIcon();
-    var icons = dailyBonus.getFilter().getIcons();
+    const icon = dailyBonus.getIcon();
+    const icons = dailyBonus.getFilter().getIcons();
     switch (icons.length) {
       case 3:
         this.addIcon(icons[0], this.bg[this.container].holder_1a, dailyBonus.getAction());

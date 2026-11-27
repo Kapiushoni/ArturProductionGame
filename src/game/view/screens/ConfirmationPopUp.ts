@@ -22,8 +22,8 @@ export class ConfirmationPopUp extends AnimatedScreen {
     this.bg.container.text.title.text = text;
   }
   getButtonInfo() {
-    var dict = new Dictionary();
-    var buttonGroup = ButtonGroup.get('gui');
+    const dict = new Dictionary();
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('accept', buttonGroup.createButton(this.accept, 'mouseOver', 'mouseOut'));
     dict.set('cancel', buttonGroup.createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;

@@ -23,7 +23,7 @@ export class EnterDungeonView {
     this.start();
   }
   start() {
-    var num = Dungeon.DungeonConfig['position_jinn'] - Dungeon.DungeonConfig['lenght_step'] * 2;
+    const num = Dungeon.DungeonConfig['position_jinn'] - Dungeon.DungeonConfig['lenght_step'] * 2;
     this.jinnView.putIn(this.bg.arena);
     this.jinnView.x = num - Dungeon.DungeonConfig['start_lenght_step'];
     this.jinnView.y = Dungeon.DungeonConfig['height_fighters'];

@@ -42,7 +42,7 @@ export class ComicWindow extends AnimatedScreen {
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], true);
   }
   getButtonInfo() {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('ok', ButtonGroup.get('gui').createButton(this.next, 'mouseOver', 'mouseOut'));
     dict.set('back', ButtonGroup.get('gui').createButton(this.toMainMenu, 'mouseOver', 'mouseOut'));
     dict.set('sound', ButtonGroup.get('sound_gui').createButton(null, 'mouseOver', 'mouseOut'));

@@ -12,10 +12,10 @@ export class CookBookPage {
     this.initializeRecipes(list);
   }
   initializeRecipes(list: any[]) {
-    var recipe = null;
-    var recipeView = null;
+    let recipe = null;
+    let recipeView = null;
     this.recipes = [];
-    var i = 0;
+    let i = 0;
     while (i < CookBookPage.RECIPES) {
       recipe = null;
       if (i < list.length) {
@@ -38,8 +38,7 @@ export class CookBookPage {
     this.clear();
   }
   clear() {
-    var recipe = null;
-    for (recipe of as3values(this.recipes)) {
+    for (const recipe of as3values(this.recipes)) {
       recipe.clear();
     }
     this.recipes = null;

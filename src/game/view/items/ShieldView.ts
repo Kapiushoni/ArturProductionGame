@@ -9,7 +9,7 @@ export class ShieldView extends ItemView {
     super(item);
   }
   getMC() {
-    var mc = super.getMC();
+    const mc = super.getMC();
     ModifierIcons.show(this.item.secondaryModifier, mc.sword.gem);
     return mc;
   }

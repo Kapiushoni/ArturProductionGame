@@ -29,7 +29,7 @@ export class LiverView {
     this.trueRefresh(liver);
   }
   animate(flag: boolean) {
-    var text = null;
+    let text = null;
     if (flag == this.showing) {
       this.showing = !flag;
       text = flag ? 'out' : 'in';
@@ -37,21 +37,21 @@ export class LiverView {
     }
   }
   refresh(slotChange: SlotChange) {
-    var liver = as3as(slotChange.getSlot(), Liver);
+    const liver = as3as(slotChange.getSlot(), Liver);
     this.trueRefresh(liver);
     if (slotChange.getOldItem() != null) {
       this.removeConsumable(slotChange.getOldItem());
     }
   }
   refreshGlow(liver: Liver) {
-    var cbArray = liver.activeBuffs();
+    const cbArray = liver.activeBuffs();
     this.stats.glowAttack(cbArray.indexOf(StatType.ATTACK) >= 0);
     this.stats.glowDefense(cbArray.indexOf(StatType.DEFENSE) >= 0);
     this.stats.glowLuck(cbArray.indexOf(StatType.LUCK) >= 0);
   }
   trueRefresh(liver: Liver) {
-    var potionEffect = null;
-    var consumable = null;
+    let potionEffect = null;
+    let consumable = null;
     this.refreshGlow(liver);
     if (!liver.isEmpty()) {
       this.slot.blockSelection();
@@ -68,7 +68,7 @@ export class LiverView {
     this.bg.potion_mask.gotoAndStop(100 - num);
   }
   removeConsumable(item: Item) {
-    var consumable = as3as(item.getCategory(), Consumable);
+    const consumable = as3as(item.getCategory(), Consumable);
     consumable.onChange.remove(this.refreshMask);
     consumable.atEndEffect.remove(this.removeConsumable);
     this.removeMask();

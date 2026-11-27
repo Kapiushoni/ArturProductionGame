@@ -24,8 +24,8 @@ export class Pause extends AnimatedScreen {
     this.initialize();
   }
   getButtonInfo() {
-    var dict = new Dictionary();
-    var buttonGroup = ButtonGroup.get('gui');
+    const dict = new Dictionary();
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('cancel', buttonGroup.createButton(this.cancel, 'mouseOver', 'mouseOut'));
     dict.set('help', buttonGroup.createButton(this.help, 'mouseOver', 'mouseOut'));
     dict.set('level_select', buttonGroup.createButton(this.levelSelect, 'mouseOver', 'mouseOut'));
@@ -46,11 +46,11 @@ export class Pause extends AnimatedScreen {
     this.putAdvice(this.bg.tips.tip_text.title);
   }
   putAdvice(textField: any) {
-    var num = 1;
+    let num = 1;
     if (!main.theTutorial.isMixKnown()) {
       num = uint(main.config.get('InitialConfig').mixAdvices + 1);
     }
-    var text = main.locale.get('advice' + Random.nextRange(num, main.config.get('InitialConfig').advices).toString());
+    const text = main.locale.get('advice' + Random.nextRange(num, main.config.get('InitialConfig').advices).toString());
     textField.text = text;
   }
   enter(callback: Function = null) {
@@ -75,15 +75,15 @@ export class Pause extends AnimatedScreen {
     this.showConfirmation(Util.l(this.emitAndLeave, this.onLevelSelect), Util.pass);
   }
   emitAndLeave(signal2: Signal) {
-    var signal = signal2;
+    const signal = signal2;
     signal.emit();
     this.leave(() => {
       this.pop();
     });
   }
   showConfirmation(callback: Function, callback2: Function) {
-    var text = main.locale.get('leave_dungeonConfirmation');
-    var confirmationPopUp = new ConfirmationPopUp(this.bg, callback, callback2, text);
+    const text = main.locale.get('leave_dungeonConfirmation');
+    const confirmationPopUp = new ConfirmationPopUp(this.bg, callback, callback2, text);
     main.tutorialHolder.addChild(confirmationPopUp);
     confirmationPopUp.enter();
   }

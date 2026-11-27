@@ -29,7 +29,7 @@ export class ShmabledumPopUp {
     return this.onCancelSignal;
   }
   getButtonInfo() {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('container.cancel', ButtonGroup.get('gui').createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;
   }

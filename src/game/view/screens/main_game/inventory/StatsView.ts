@@ -27,8 +27,8 @@ export class StatsView {
   initialize(bg: any) {
     this.bg = bg;
     this.drag_listener = new DragListener(bg, main.game.getJinn().liver);
-    var stats = main.game.getJinn().stats;
-    var experience = as3as(stats.getStat(StatType.EXPERIENCE), Experience);
+    const stats = main.game.getJinn().stats;
+    const experience = as3as(stats.getStat(StatType.EXPERIENCE), Experience);
     this.experience = new BarView(
       as3as(this.bg.xp, MovieClip),
       main.locale,
@@ -42,7 +42,7 @@ export class StatsView {
   }
   initializeStats() {
     main.game.getJinn().stats.onChange.add(this.refresh);
-    var stats = main.game.getJinn().stats;
+    const stats = main.game.getJinn().stats;
     this.bg.health.title.title.text = as3as(stats.getStat(StatType.HEALTH), HealthStat).getUpperBound().getValue();
     this.bg.defence.title.title.text = stats.getDefense();
     this.bg.weapon.title.title.text = stats.getAttack();
@@ -51,7 +51,7 @@ export class StatsView {
     this.refresh();
   }
   refresh() {
-    var stats = main.game.getJinn().stats;
+    const stats = main.game.getJinn().stats;
     this.updateLevelAndXp(stats.getLevel(), as3as(stats.getStat(StatType.EXPERIENCE), PersistentExperience));
     this.updateHealth(as3as(stats.getStat(StatType.HEALTH), HealthStat).getUpperBound().getValue());
     this.updateDefense(stats.getDefense());
@@ -59,7 +59,7 @@ export class StatsView {
     this.updateLuck(stats.getLuck());
   }
   initializeSlots() {
-    var gear = main.game.getJinn().gear;
+    const gear = main.game.getJinn().gear;
     this.weapon_slot = new LeftSlotView(gear.weapon);
     this.shield_slot = new LeftSlotView(gear.shield);
     this.equip_slot_1 = new LeftSlotView(gear.equipment_1);
@@ -126,7 +126,7 @@ export class StatsView {
     Tween.to(textField, 300, { text: num }, null, Util.l(this.interize, textField));
   }
   interize(textField: any) {
-    var text = textField.text;
+    const text = textField.text;
     textField.text = text.split('.')[0];
   }
   killTweens() {

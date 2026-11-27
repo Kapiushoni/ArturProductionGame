@@ -19,7 +19,7 @@ export class RecipeView {
     this.initializeViews();
   }
   initializeSlots(recipe: Recipe) {
-    var instance = null;
+    let instance = null;
     this.primarySlot = new NullSlot();
     this.secondarySlot = new NullSlot();
     this.resultSlot = new NullSlot();
@@ -62,7 +62,7 @@ export class RecipeView {
     this.resultSlot = null;
   }
   clearSlot(slot: ISlot) {
-    var content = slot.getContent();
+    const content = slot.getContent();
     if (content != null) {
       content.clear();
     }

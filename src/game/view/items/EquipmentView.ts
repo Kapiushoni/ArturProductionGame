@@ -9,7 +9,7 @@ export class EquipmentView extends ItemView {
     super(item);
   }
   getMC() {
-    var mc = super.getMC();
+    const mc = super.getMC();
     if (mc.hasOwnProperty('equip')) {
       ModifierIcons.show(this.item.primaryModifier, mc.equip.gem1);
       ModifierIcons.show(this.item.secondaryModifier, mc.equip.gem2);

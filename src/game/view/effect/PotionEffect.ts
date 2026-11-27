@@ -22,7 +22,7 @@ export class PotionEffect {
     if (modifier.getCategory() == StatType.NULL) {
       return null;
     }
-    var feedback = as3as(main.swfLoader.getObject('assets.potionFeedback'), MovieClip);
+    const feedback = as3as(main.swfLoader.getObject('assets.potionFeedback'), MovieClip);
     feedback.x += dx;
     feedback.y += dy;
     feedback.mouseEnabled = false;

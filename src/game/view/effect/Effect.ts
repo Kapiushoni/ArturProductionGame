@@ -10,9 +10,9 @@ export class Effect {
     this.effect = effect;
   }
   playOn(displayObjectContainer: any, displayObjectContainer2: any = null) {
-    var point = null;
-    var popUpHolder = null;
-    var point2 = null;
+    let point = null;
+    let popUpHolder = null;
+    let point2 = null;
     if (displayObjectContainer2 == null) {
       point = displayObjectContainer.localToGlobal(new Point(0, 0));
       popUpHolder = main.popUpHolder;
@@ -23,7 +23,7 @@ export class Effect {
     }
     displayObjectContainer2.addChild(this.effect);
     this.effect.gotoAndPlay(1);
-    var smartMC = new SmartMC(this.effect);
+    const smartMC = new SmartMC(this.effect);
     smartMC.trigger(new EndAnimation(), new RemoveFromParent());
   }
   clear() {

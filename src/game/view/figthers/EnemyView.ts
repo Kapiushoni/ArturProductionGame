@@ -29,8 +29,8 @@ export class EnemyView extends FighterView {
     this.container.enemy.gotoAndPlay(1);
   }
   getNewMc(fighterAnimation: IFighterAnimation) {
-    var text = 'assets.' + this.fighter.getName() + '.' + fighterAnimation.getName();
-    var cls = main.swfLoader.getClass(text);
+    const text = 'assets.' + this.fighter.getName() + '.' + fighterAnimation.getName();
+    const cls = main.swfLoader.getClass(text);
     return new cls();
   }
   putIn(displayObjectContainer: any) {
@@ -52,7 +52,7 @@ export class EnemyView extends FighterView {
     return Number(this.container.y);
   }
   bringToFront() {
-    var clip = this.container;
+    const clip = this.container;
     Util.bringToFront(clip);
   }
   clear() {

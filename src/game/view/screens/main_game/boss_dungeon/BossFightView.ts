@@ -21,7 +21,7 @@ export class BossFightView extends BasicFightView {
   }
   initializeViews(list: any[]) {
     this.enemy = this.fight.getEnemy();
-    var jinnView = this.bossDungeonView.jinnView;
+    const jinnView = this.bossDungeonView.jinnView;
     this.views.set(jinnView.fighter, jinnView);
     this.views.set(this.bossView.fighter, this.bossView);
   }

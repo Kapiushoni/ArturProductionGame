@@ -29,7 +29,7 @@ export class LootView {
   resume() {}
   initialize() {
     this.showing = 0;
-    var i = 1;
+    let i = 1;
     while (i <= 3) {
       this.slots[i - 1] = new SlotView(this.loot.getSlot(i - 1));
       this.slots[i - 1].initialize(this.bg['slot_' + i]);
@@ -58,14 +58,14 @@ export class LootView {
   }
   showLootOf(num: number) {
     num = int(num);
-    var smokeEffect = new SmokeEffect();
+    const smokeEffect = new SmokeEffect();
     smokeEffect.playOn(this.bg['slot_' + num]);
     as3as(this.slots[num - 1], SlotView).unHideItem();
   }
   takeAll() {
-    var bootyItem = null;
-    var emptySlot = null;
-    var content = null;
+    let bootyItem = null;
+    let emptySlot = null;
+    let content = null;
     this.clearTimer();
     if (this.showing < 3) {
       while (this.showing < 3) {
@@ -94,8 +94,7 @@ export class LootView {
     }
   }
   clear() {
-    var slot = null;
-    for (slot of as3values(this.slots)) {
+    for (const slot of as3values(this.slots)) {
       slot.clear();
     }
     this.loot.clear();

@@ -17,7 +17,7 @@ export class Outro extends ComicWindow {
     this.bg.box_6.text.text = main.locale.get('outro_06');
   }
   getButtonInfo() {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('ok', ButtonGroup.get('gui').createButton(this.next, 'mouseOver', 'mouseOut'));
     dict.set('sound', ButtonGroup.get('sound_gui').createButton(null, 'mouseOver', 'mouseOut'));
     return dict;

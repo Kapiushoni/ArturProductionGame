@@ -34,22 +34,22 @@ export class TimeLine extends MovieClip {
     return Number(main.config.get('TimelineConfig')['y']);
   }
   initialize() {
-    var step = null;
-    var dungeon = this.dungeonView.dungeon.getDungeon();
+    let step = null;
+    const dungeon = this.dungeonView.dungeon.getDungeon();
     dungeon.onFight.add(this.nextFight);
-    var enemyList = dungeon.enemies;
+    const enemyList = dungeon.enemies;
     this.y = TimeLine.positionY;
-    var clip = as3as(main.swfLoader.getObject('assets.TimeLine'), MovieClip);
+    const clip = as3as(main.swfLoader.getObject('assets.TimeLine'), MovieClip);
     this.setLevel(clip, dungeon.getLevel());
     this.x = TimeLine.positionX - clip.width / 2;
     clip.x = clip.width / 2;
     this.addChild(clip);
-    var width = clip.width - 80;
+    const width = clip.width - 80;
     this.dungeonView.background.onMove.add(this.move);
     this.distance = width / enemyList.length;
-    var stepsDistance = Dungeon.DungeonConfig['lenght_step'] * Dungeon.DungeonConfig['steps_to_find_enemy'];
+    const stepsDistance = Dungeon.DungeonConfig['lenght_step'] * Dungeon.DungeonConfig['steps_to_find_enemy'];
     this.scale = this.distance / stepsDistance;
-    var i = 0;
+    let i = 0;
     while (i < enemyList.length) {
       step = this.newStep(enemyList[i]);
       step.x = this.positionOfFight(i + 1);
@@ -102,8 +102,8 @@ export class TimeLine extends MovieClip {
     );
   }
   newStep(enemy: Enemy) {
-    var cls = null;
-    var element = enemy.getElement();
+    let cls = null;
+    const element = enemy.getElement();
     if (element.isOfFire) {
       cls = main.swfLoader.getClass('assets.MapSkullFire');
     } else if (element.isOfIce) {
@@ -114,8 +114,7 @@ export class TimeLine extends MovieClip {
     return new cls();
   }
   clear() {
-    var skull = null;
-    for (skull of as3values(this.skulls)) {
+    for (const skull of as3values(this.skulls)) {
       Tween.killTweensOf(skull);
     }
     if (this.parent != null) {

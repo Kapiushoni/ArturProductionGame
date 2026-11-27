@@ -61,13 +61,13 @@ export class BasicSlotView {
     this.refresh();
   }
   refresh(slotChange: SlotChange = null) {
-    var point = null;
+    let point = null;
     this.removeEvents();
     if (this.item_view != null) {
       this.item_view.clear();
       this.item_view = null;
     }
-    var content = this.slot.getContent();
+    const content = this.slot.getContent();
     this.popUp.refreshItem(content);
     if (content) {
       this.item_view = ItemViews.create(content);

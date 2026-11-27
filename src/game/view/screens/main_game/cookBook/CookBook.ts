@@ -39,7 +39,7 @@ export class CookBook extends AnimatedScreen {
     return this.bg.container;
   }
   getButtonInfo(callback: Function) {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('cancel', ButtonGroup.get('gui').createButton(callback, 'mouseOver', 'mouseOut'));
     return dict;
   }
@@ -52,8 +52,8 @@ export class CookBook extends AnimatedScreen {
   }
   makePage(num: number) {
     num = uint(num);
-    var list = new Array();
-    var i = int(num * 6);
+    const list = new Array();
+    let i = int(num * 6);
     while (i < this.recipes.length && i < (num + 1) * 6) {
       list.push(this.recipes[i]);
       i++;

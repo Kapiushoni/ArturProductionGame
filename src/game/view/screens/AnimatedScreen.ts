@@ -30,9 +30,9 @@ export class AnimatedScreen extends Screen {
     this.callOnEnd(this.bg, callback);
   }
   callOnEnd(clip: any, callback: Function = null) {
-    var smc = null;
-    var mc = clip;
-    var fc = callback;
+    let smc = null;
+    const mc = clip;
+    const fc = callback;
     if (fc != null) {
       smc = new SmartMC(mc);
       smc.trigger(

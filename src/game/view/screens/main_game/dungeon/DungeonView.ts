@@ -44,7 +44,7 @@ export class DungeonView extends Screen {
     return as3as(this.bg, BackgroundView);
   }
   getButtonInfo() {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set('information.pause', ButtonGroup.get('gui').createButton(this.pause, 'mouseOver', 'mouseOut'));
     return dict;
   }
@@ -71,7 +71,7 @@ export class DungeonView extends Screen {
   }
   suddenDeath() {
     this.innerView.pause();
-    var dieAnimation = new DieAnimation();
+    const dieAnimation = new DieAnimation();
     this.jinnView.animate(dieAnimation);
     dieAnimation.atFinish.add(Util.removeParams(this.dungeon.getDungeon().suddenDeath));
   }
@@ -92,7 +92,7 @@ export class DungeonView extends Screen {
       return;
     }
     this.innerView.pause();
-    var pause = new Pause(this.getDungeonLevel());
+    const pause = new Pause(this.getDungeonLevel());
     pause.onLevelSelect.add(this.onLevelSelect);
     pause.onCancel.add(this.resume);
     pause.onReplay.add(this.onReplay);
@@ -113,7 +113,7 @@ export class DungeonView extends Screen {
     this.gotoDungeonId(this.dungeon.getDungeon().getId());
   }
   gotoDungeonId(text: string) {
-    var level = main.game.map.getLevel(text);
+    const level = main.game.map.getLevel(text);
     this.dungeon.onToDungeon.emit(level);
   }
   onFight(fight: IFight) {
@@ -138,24 +138,22 @@ export class DungeonView extends Screen {
   dungeonLost() {
     this.stopMusic();
     Buttons.setButtons(this.background.information, ['pause'], false);
-    var lostWindow = new LostWindow(this.getStats());
+    const lostWindow = new LostWindow(this.getStats());
     this.showFinishWindow(lostWindow);
   }
   dungeonWon() {
-    var joy = null;
-    var winWindow = null;
     this.stopMusic();
     Buttons.setButtons(this.background.information, ['pause'], false);
-    joy = new JoyAnimation();
+    const joy = new JoyAnimation();
     this.jinnView.animate(joy);
-    winWindow = this.makeWinWindow();
+    const winWindow = this.makeWinWindow();
     joy.atFinish.add((fighterAnimation) => {
       this.showFinishWindow(winWindow);
     });
   }
   makeWinWindow() {
-    var callback = null;
-    var nextLevel = main.game.map.getNextLevel(this.dungeon.getDungeon().getLevel());
+    let callback = null;
+    const nextLevel = main.game.map.getNextLevel(this.dungeon.getDungeon().getLevel());
     if (nextLevel != null && nextLevel.getArea() == this.dungeon.getDungeon().getLevel().getArea()) {
       callback = Util.l(this.dungeon.onToDungeon.emit, nextLevel);
     }

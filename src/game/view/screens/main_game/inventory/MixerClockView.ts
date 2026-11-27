@@ -17,8 +17,8 @@ export class MixerClockView extends Screen {
     this.bg.gotoAndStop(num);
   }
   removeClock() {
-    var cls = main.swfLoader.getClass('assets.Stars');
-    var effect = new Effect(new cls());
+    const cls = main.swfLoader.getClass('assets.Stars');
+    const effect = new Effect(new cls());
     effect.playOn(this.bg.parent);
     this.pop();
   }

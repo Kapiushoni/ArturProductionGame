@@ -145,8 +145,8 @@ export class WinWindow extends AnimatedScreen {
     }
   }
   giveXp() {
-    var stats = main.game.getJinn().stats;
-    var level = uint(stats.getLevel());
+    const stats = main.game.getJinn().stats;
+    const level = uint(stats.getLevel());
     stats.addXP(this.stats.getDungeonExperience());
     if (level < stats.getLevel()) {
       new LevelUp();
@@ -154,7 +154,7 @@ export class WinWindow extends AnimatedScreen {
   }
   updateProperty(property: string, target: number, label: string, callback: Function) {
     target = int(target);
-    var obj = null;
+    let obj = null;
     if (target == this[property]) {
       callback();
     } else {
@@ -168,8 +168,8 @@ export class WinWindow extends AnimatedScreen {
     callback();
   }
   getButtonInfo() {
-    var dict = new Dictionary();
-    var buttonGroup = ButtonGroup.get('gui');
+    const dict = new Dictionary();
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('replay', buttonGroup.createButton(this.replay, 'mouseOver', 'mouseOut'));
     dict.set('level_select', buttonGroup.createButton(this.toMap, 'mouseOver', 'mouseOut'));
     dict.set('next', buttonGroup.createButton(this.next, 'mouseOver', 'mouseOut'));

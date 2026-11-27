@@ -22,8 +22,8 @@ export class InventoryView {
   initialize(bg: any) {
     this.bg = bg;
     this.trash.initialize(bg.trash);
-    var inventory = main.game.getInventory();
-    var i = 1;
+    const inventory = main.game.getInventory();
+    let i = 1;
     while (i <= Inventory.SLOTS) {
       this.slots[i - 1] = new SlotView(inventory.getSlot(i - 1));
       this.slots[i - 1].initialize(bg.page_1['slot_' + i]);
@@ -46,14 +46,13 @@ export class InventoryView {
       this.updatePage(null, num);
       return;
     }
-    var text = 'page_' + this.actual_page + '_' + num;
+    const text = 'page_' + this.actual_page + '_' + num;
     this.bg.gotoAndPlay(text);
-    var smartMC = new SmartMC(this.bg.page_1);
+    const smartMC = new SmartMC(this.bg.page_1);
     smartMC.trigger(new EndAnimation(), new Lambda(this.updatePage, num));
   }
   clear() {
-    var slot = null;
-    for (slot of as3values(this.slots)) {
+    for (const slot of as3values(this.slots)) {
       slot.clear();
     }
     this.slots = null;

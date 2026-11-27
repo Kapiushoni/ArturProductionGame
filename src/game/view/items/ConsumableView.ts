@@ -9,7 +9,7 @@ export class ConsumableView extends ItemView {
     super(item);
   }
   getMC() {
-    var mc = super.getMC();
+    const mc = super.getMC();
     if (mc.potion.hasOwnProperty('liquid1')) {
       ModifierIcons.show(this.item.primaryModifier, mc.potion.liquid1);
     }

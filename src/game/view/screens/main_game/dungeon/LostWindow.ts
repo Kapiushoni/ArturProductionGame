@@ -45,7 +45,7 @@ export class LostWindow extends AnimatedScreen {
     Buttons.setButtons(this.bg, ['replay', 'level_select'], true);
   }
   showStats(callback: Function = null) {
-    var end = callback;
+    const end = callback;
     if (end != null) {
       end();
     }
@@ -55,16 +55,16 @@ export class LostWindow extends AnimatedScreen {
     });
   }
   giveXp() {
-    var stats = main.game.getJinn().stats;
-    var level = uint(stats.getLevel());
+    const stats = main.game.getJinn().stats;
+    const level = uint(stats.getLevel());
     stats.addXP(this.stats.getCombatExperience());
     if (level < stats.getLevel()) {
       new LevelUp();
     }
   }
   getButtonInfo() {
-    var dict = new Dictionary();
-    var buttonGroup = ButtonGroup.get('gui');
+    const dict = new Dictionary();
+    const buttonGroup = ButtonGroup.get('gui');
     dict.set('replay', buttonGroup.createButton(this.replay, 'mouseOver', 'mouseOut'));
     dict.set('level_select', buttonGroup.createButton(this.back, 'mouseOver', 'mouseOut'));
     return dict;
@@ -76,7 +76,7 @@ export class LostWindow extends AnimatedScreen {
     this.emitAndLeave(this.onBackToMap);
   }
   emitAndLeave(signal2: Signal) {
-    var signal = signal2;
+    const signal = signal2;
     this.killTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select'], false);
     signal.emit();

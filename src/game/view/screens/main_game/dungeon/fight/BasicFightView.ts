@@ -51,7 +51,7 @@ export class BasicFightView {
     throw new Error('Must implement');
   }
   countdown(callback: Function) {
-    var next = callback;
+    const next = callback;
     this.bg.enemyHud.changeFighter(this.enemy);
     this.timer = new Timer(100, this.getFightConfig().countdown * 10);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, (event) => {
@@ -68,10 +68,10 @@ export class BasicFightView {
     callback();
   }
   onHit(fighter: Fighter, fighter2: Fighter, damage2: Damage, callback: Function) {
-    var hitter = fighter;
-    var reciver = fighter2;
-    var damage = damage2;
-    var atEnd = callback;
+    const hitter = fighter;
+    const reciver = fighter2;
+    const damage = damage2;
+    const atEnd = callback;
     this.timer = new Timer(100, this.getFightConfig().cooldown * 10);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, (event) => {
       this.removeTimer();
@@ -82,19 +82,14 @@ export class BasicFightView {
     this.timer.start();
   }
   showFeedback(fighter: Fighter, fighter2: Fighter, damage2: Damage) {
-    var hitterView = null;
-    var jinnFeedbacks = null;
-    var enemyFeedbacks = null;
-    var number = null;
-    var smart_mc = null;
-    var fFeedback = null;
-    var eFeedback = null;
-    var hitter = fighter;
-    var reciver = fighter2;
-    var damage = damage2;
-    number = as3as(main.swfLoader.getObject('assets.numberHealth2'), MovieClip);
+    let jinnFeedbacks = null;
+    let enemyFeedbacks = null;
+    const hitter = fighter;
+    const reciver = fighter2;
+    const damage = damage2;
+    const number = as3as(main.swfLoader.getObject('assets.numberHealth2'), MovieClip);
     number.container.title.title.text = damage.stringValue();
-    hitterView = as3as(this.views.get(reciver), FighterView);
+    const hitterView = as3as(this.views.get(reciver), FighterView);
     number.x = hitterView.x;
     number.y = hitterView.y;
     if (hitter.isJinn()) {
@@ -109,7 +104,7 @@ export class BasicFightView {
     }
     number.gotoAndPlay(1);
     this.bg.arena.addChild(number);
-    smart_mc = new SmartMC(number);
+    const smart_mc = new SmartMC(number);
     smart_mc.trigger(
       new EndAnimation(),
       Functor.wrap(function () {
@@ -118,10 +113,10 @@ export class BasicFightView {
         number.parent.removeChild(number);
       }),
     );
-    for (fFeedback of as3values(jinnFeedbacks)) {
+    for (const fFeedback of as3values(jinnFeedbacks)) {
       this.bg.addJinnFeddback(fFeedback);
     }
-    for (eFeedback of as3values(enemyFeedbacks)) {
+    for (const eFeedback of as3values(enemyFeedbacks)) {
       this.bg.addEnemyFeddback(eFeedback);
     }
   }
@@ -132,22 +127,20 @@ export class BasicFightView {
     this.timer = null;
   }
   pause() {
-    var view = null;
     if (this.timer != null) {
       this.timer.stop();
     }
     this.bg.pauseScroll();
-    for (view of as3values(this.views)) {
+    for (const view of as3values(this.views)) {
       view.pause();
     }
   }
   resume() {
-    var view = null;
     if (this.timer != null) {
       this.timer.start();
     }
     this.bg.resumeScroll();
-    for (view of as3values(this.views)) {
+    for (const view of as3values(this.views)) {
       view.resume();
     }
   }

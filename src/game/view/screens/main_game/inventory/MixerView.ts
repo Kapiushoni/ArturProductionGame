@@ -17,14 +17,14 @@ export class MixerView {
     this.slots = new Array();
   }
   initialize(bg: any) {
-    var slot = null;
-    var autoSelectSlotView = null;
+    let slot = null;
+    let autoSelectSlotView = null;
     this.bg = bg;
     this.bg.mouseEnabled = false;
     this.bg.mix_button.title.title.text = main.locale.get('mix');
-    var mixer = main.game.getMixer();
+    const mixer = main.game.getMixer();
     this.refreshButton();
-    var i = 1;
+    let i = 1;
     while (i <= 3) {
       slot = mixer.getSlot(i);
       slot.onChange.add(this.change);
@@ -52,14 +52,14 @@ export class MixerView {
     this.refreshButton();
   }
   mix(event: any) {
-    var mixer = main.game.getMixer();
+    const mixer = main.game.getMixer();
     mixer.startMix();
     this.clock_view = new MixerClockView(mixer.clock);
     this.bg['mix_slot_3'].addChild(this.clock_view);
     this.refreshButton();
   }
   refreshButton() {
-    var mixer = main.game.getMixer();
+    const mixer = main.game.getMixer();
     Buttons.setButtons(this.bg, ['mix_button'], mixer.canMix());
     if (mixer.canMix()) {
       this.bg['mix_button'].gotoAndStop('idle');
@@ -76,8 +76,7 @@ export class MixerView {
     }
   }
   clear() {
-    var slot = null;
-    for (slot of as3values(this.slots)) {
+    for (const slot of as3values(this.slots)) {
       slot.clear();
     }
     this.slots = null;

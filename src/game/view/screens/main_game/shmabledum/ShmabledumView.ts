@@ -72,7 +72,7 @@ export class ShmabledumView {
     if (this.tips.length == 0) {
       return;
     }
-    var bubbleGumTip = this.tips[0];
+    const bubbleGumTip = this.tips[0];
     this.popUp.refreshTip(bubbleGumTip);
     this.popUp.show();
     this.bg.gotoAndPlay('talk_' + Random.nextRange(1, 2));

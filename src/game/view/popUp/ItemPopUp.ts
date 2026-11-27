@@ -10,7 +10,7 @@ export class ItemPopUp extends PopUp {
   static RIGHT = 'Right';
   declare item: any;
   constructor(text: string = 'Left') {
-    var clip = as3as(main.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
+    const clip = as3as(main.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
     super(clip);
     this.item = null;
   }
@@ -22,7 +22,7 @@ export class ItemPopUp extends PopUp {
   }
   refreshInfo(item: Item) {
     this.mc.container.title.title.text = item.getNameToShow();
-    var maxMod = int(item.maxMod);
+    let maxMod = int(item.maxMod);
     ModifierIcons.show(item.primaryModifier, this.mc.container.armor_icon_1);
     ModifierIcons.showValue(item.primaryModifier, this.mc.container.numbers_1.title, maxMod);
     ModifierIcons.show(item.secondaryModifier, this.mc.container.armor_icon_2);

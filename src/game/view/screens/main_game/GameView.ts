@@ -50,7 +50,7 @@ export class GameView extends Screen {
     return this.up_holder.game;
   }
   getButtonInfo() {
-    var dict = new Dictionary();
+    const dict = new Dictionary();
     dict.set(
       'mix.mix_button',
       ButtonGroup.get('gui_mix').createButton(this.mixing.mix, 'mouseOver', this.mixing.mixButtonOut),
@@ -80,13 +80,13 @@ export class GameView extends Screen {
     }
   }
   initializeFSM() {
-    var basicPausableState = new BasicPausableState('init');
-    var basicPausableState2 = new BasicPausableState('exit', this.pop);
-    var mapState = new MapState('map', this);
-    var dungeonState = new DungeonState('dungeon', this);
+    const basicPausableState = new BasicPausableState('init');
+    const basicPausableState2 = new BasicPausableState('exit', this.pop);
+    const mapState = new MapState('map', this);
+    const dungeonState = new DungeonState('dungeon', this);
     dungeonState.onToDungeon.add(this.toLevel);
     dungeonState.onToMap.add(this.showMap);
-    var bossDungeonState = new BossDungeonState('boss', this);
+    const bossDungeonState = new BossDungeonState('boss', this);
     bossDungeonState.setNextDungeon(main.game.map.getLevel(BossDungeon.idBossLevel));
     bossDungeonState.onToDungeon.add(this.toLevel);
     bossDungeonState.onToMap.add(this.showMap);

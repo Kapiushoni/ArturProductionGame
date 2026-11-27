@@ -75,7 +75,7 @@ export class FighterView {
   putIn(displayObjectContainer: any) {}
   onHit(fighterView: FighterView, damage: Damage, callback: Function, callback2: Function = null) {
     this.bringToFront();
-    var hitAnimation = new HitAnimation(fighterView, damage, callback, callback2);
+    const hitAnimation = new HitAnimation(fighterView, damage, callback, callback2);
     this.animate(hitAnimation);
   }
   bringToFront() {

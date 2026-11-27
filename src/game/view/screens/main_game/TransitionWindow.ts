@@ -41,7 +41,7 @@ export class TransitionWindow extends AnimatedScreen {
     this.leave();
   }
   leave(callback: Function = null) {
-    var end = callback;
+    const end = callback;
     main.soundManager.playFx(GameSounds.TRANSITION_OUT);
     super.leave(() => {
       if (end != null) {

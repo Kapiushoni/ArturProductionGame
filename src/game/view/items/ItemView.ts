@@ -10,7 +10,7 @@ export class ItemView {
     this.item = item;
   }
   getMC() {
-    var cls = null;
+    let cls = null;
     if (this.mc == null) {
       cls = main.swfLoader.getClass('assets.' + this.item.getMcName());
       this.mc = new cls();
@@ -18,7 +18,7 @@ export class ItemView {
     return this.mc;
   }
   putIn(displayObjectContainer: any) {
-    var mc = this.getMC();
+    const mc = this.getMC();
     displayObjectContainer.addChild(mc);
   }
   clear() {
