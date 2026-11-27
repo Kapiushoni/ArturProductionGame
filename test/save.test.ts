@@ -62,7 +62,7 @@ describe('SaveSystem', () => {
     expect(reopen().loadInventoryItem(2)).toBe(null); // not written yet
     s.savePending();
     const r = reopen();
-    expect(r.loadInventoryItem(2).getID()).toBe('potA');
+    expect(r.loadInventoryItem(2).id).toBe('potA');
     expect(r.loadInventoryItem(3)).toBe(null);
     expect(r.getLastPlayed()).toBe('12');
     expect(r.recipes).toEqual([4]);
@@ -79,7 +79,7 @@ describe('SaveSystem', () => {
     s.saveMix(1, mixed);
     s.savePending();
     const back = reopen().loadMixItem(1);
-    expect(back.getID()).toBe(mixed.getID());
+    expect(back.id).toBe(mixed.id);
     expect(back.toObject()).toEqual(mixed.toObject());
   });
 });

@@ -11,8 +11,8 @@ export class EquipmentView extends ItemView {
   getMC() {
     var mc = super.getMC();
     if (mc.hasOwnProperty('equip')) {
-      ModifierIcons.show(this.item.getPrimaryModifier(), mc.equip.gem1);
-      ModifierIcons.show(this.item.getSecondaryModifier(), mc.equip.gem2);
+      ModifierIcons.show(this.item.primaryModifier, mc.equip.gem1);
+      ModifierIcons.show(this.item.secondaryModifier, mc.equip.gem2);
     }
     return mc;
   }

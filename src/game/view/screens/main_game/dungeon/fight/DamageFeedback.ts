@@ -7,7 +7,7 @@ export class DamageFeedback {
   /** over the attacker: critical hit, element bonus */
   static hitter(damage: Damage): MovieClip[] {
     const list = [];
-    if (damage.isCritical()) {
+    if (damage.critical) {
       const clip = as3as(main.swfLoader.getObject('assets.criticalHit'), MovieClip);
       clip.number_heathl_parts_blocked.title.title.text = main.locale.get('critical_bonus');
       list.push(clip);

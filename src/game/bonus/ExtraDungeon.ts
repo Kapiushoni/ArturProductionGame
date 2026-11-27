@@ -16,8 +16,8 @@ export class ExtraDungeon implements IDailyBonus {
     this.element = element;
   }
   activate(game: any) {
-    game.getMap().getLevel(this.dungeonId).unlock();
-    game.getMap().unlockUnlocked();
+    game.map.getLevel(this.dungeonId).unlock();
+    game.map.unlockUnlocked();
   }
   getElement(): Element {
     return Element.parseElement(this.element);

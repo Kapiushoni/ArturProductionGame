@@ -20,7 +20,7 @@ export class Consumable extends Category {
     this.onChange = new Signal();
   }
   isInstant(): boolean {
-    return this.item.getPrimaryModifier().isInstant() && this.item.getSecondaryModifier().isInstant();
+    return this.item.primaryModifier.isInstant() && this.item.secondaryModifier.isInstant();
   }
   /** starts wearing off (once); onPause(paused): the game's pause signal */
   degrade(onPause: Signal) {
@@ -28,7 +28,7 @@ export class Consumable extends Category {
       this.onPause = onPause;
       this.onPause.add(this.pause);
       this.percent = 100;
-      this.timer = new Timer(this.item.getDuration() * 10, 100);
+      this.timer = new Timer(this.item.duration * 10, 100);
       this.timer.addEventListener(TimerEvent.TIMER, this.tick);
       this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.complete);
       this.timer.start();

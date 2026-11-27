@@ -10,7 +10,7 @@ export class WeaponView extends ItemView {
   }
   getMC() {
     var mc = super.getMC();
-    ModifierIcons.show(this.item.getSecondaryModifier(), mc.sword.gem);
+    ModifierIcons.show(this.item.secondaryModifier, mc.sword.gem);
     return mc;
   }
   getStateForSlot(slotView: SlotView) {

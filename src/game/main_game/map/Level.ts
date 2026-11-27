@@ -3,9 +3,9 @@ import { services } from '@/game/services';
 
 /** A dungeon on the map: locked -> unlocked -> cleared. `correlative`: the levels it opens when cleared. */
 export class Level {
-  private dungeonId: string;
+  dungeonId: string;
   private state: number;
-  private correlative: Level[];
+  correlative: Level[];
 
   constructor(dungeonId: string, state = 1) {
     this.dungeonId = dungeonId;
@@ -38,14 +38,8 @@ export class Level {
   isSpecial(): boolean {
     return false;
   }
-  getDungeonId(): string {
-    return this.dungeonId;
-  }
   addCorrelative(level: Level) {
     this.correlative.push(level);
-  }
-  getCorrelative(): Level[] {
-    return this.correlative;
   }
   isLocked(): boolean {
     return this.state == Level.LOCKED;

@@ -156,7 +156,7 @@ export class ShmabledumPrincess {
     let text: string = null;
     if (!ShmabledumPrincess.elementTipShowed) {
       for (const item of as3values(items)) {
-        id = item.getID();
+        id = item.id;
         if (id == ShmabledumPrincess.FIRE_FLAME) {
           text = services.texts.get('pbFire');
           break;

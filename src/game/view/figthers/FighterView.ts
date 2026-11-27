@@ -16,9 +16,6 @@ export class FighterView {
     this.fighter = fighter;
     this.setSoundManager();
   }
-  getFighter() {
-    return this.fighter;
-  }
   setSoundManager() {
     throw new Error('Abstract Class');
   }
@@ -44,7 +41,7 @@ export class FighterView {
     }
     this.currentAnimation = this.nextAnimation;
     this.nextAnimation = null;
-    this.currentAnimation.getAtFinish().addAtFirst(this.endCurrentAnimation);
+    this.currentAnimation.atFinish.addAtFirst(this.endCurrentAnimation);
     this.currentAnimation.make(this);
   }
   pause() {

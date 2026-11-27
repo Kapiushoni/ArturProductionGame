@@ -3,8 +3,8 @@ import { bindMethods } from '@/flash/as3';
 /** A music to play: name, start time (ms) and volume (-1: its own). */
 export class MusicRequest {
   private soundName: string;
-  private startTime: number;
-  private volume: number;
+  startTime: number;
+  volume: number;
 
   constructor(soundName: string, startTime: number, volume: number) {
     this.soundName = soundName;
@@ -12,18 +12,10 @@ export class MusicRequest {
     this.volume = Number(volume);
   }
   equal(other: MusicRequest): boolean {
-    return (
-      this.soundName == other.getName() && this.startTime == other.getStartTime() && this.volume == other.getVolume()
-    );
+    return this.soundName == other.getName() && this.startTime == other.startTime && this.volume == other.volume;
   }
   getName(): string {
     return this.soundName;
-  }
-  getVolume(): number {
-    return this.volume;
-  }
-  getStartTime(): number {
-    return this.startTime;
   }
 }
 bindMethods(MusicRequest);

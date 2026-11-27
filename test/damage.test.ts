@@ -46,7 +46,7 @@ describe('DamageCalculator', () => {
     // 20 -> 18 -> 18 + 18 * 0.15 = 20.7
     expect(d.hp_damage).toBe(21);
     expect(d.doesHeHit()).toBe(true);
-    expect(d.isCritical()).toBe(false);
+    expect(d.critical).toBe(false);
     expect(d.elementBonus).toBe(null);
   });
 
@@ -68,7 +68,7 @@ describe('DamageCalculator', () => {
     );
     // (30 - 10) * 1.5 = 30 -> 27 -> critical x2
     expect(d.hp_damage).toBe(54);
-    expect(d.isCritical()).toBe(true);
+    expect(d.critical).toBe(true);
     expect(d.elementBonus.value).toBe(1.5);
     expect(d.elementBonus.element).toBe(Element.fire);
   });
@@ -79,7 +79,7 @@ describe('DamageCalculator', () => {
       jinn(fakeStats({ attack: 30, luck: 99 })),
       enemy(fakeStats({ defense: 10 }), Element.ice),
     );
-    expect(d.isCritical()).toBe(false);
+    expect(d.critical).toBe(false);
     expect(d.hp_damage).toBe(18);
   });
 

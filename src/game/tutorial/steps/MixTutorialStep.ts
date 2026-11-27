@@ -18,7 +18,7 @@ export class MixTutorialStep extends TutorialStep {
   }
   enter() {
     super.enter();
-    this.theView.getBg().removeChild(this.theView.getBg().glow);
+    this.theView.bg.removeChild(this.theView.bg.glow);
     main.game.getMixer().onMixStart.add(this.theView.leave);
   }
   leave() {

@@ -60,8 +60,8 @@ export class Liver extends Slot {
     const buffs = new cbArray();
     if (!this.isEmpty()) {
       const potion = this.getContent();
-      buffs.pushIfNotPresent(potion.getPrimaryModifier().getCategory());
-      buffs.pushIfNotPresent(potion.getSecondaryModifier().getCategory());
+      buffs.pushIfNotPresent(potion.primaryModifier.getCategory());
+      buffs.pushIfNotPresent(potion.secondaryModifier.getCategory());
     }
     return buffs;
   }

@@ -9,7 +9,7 @@ export interface IFight {
   suddenDeath(): void;
   deactivate(): void;
   clear(): void;
-  isFirst(): boolean;
+  readonly first: boolean;
   get onEnter(): Signal;
   get onExit(): Signal;
   get onHit(): Signal;

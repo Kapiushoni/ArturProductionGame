@@ -26,12 +26,6 @@ export class BossDungeonView extends DungeonView {
     this.innerView.clear();
     this.innerView = new EnterBossDungeon(this, this.dungeon.getDungeon().startFight);
   }
-  getBossView() {
-    return this.bossView;
-  }
-  getJinnView() {
-    return this.jinnView;
-  }
   playMusic() {
     this.innerView.playMusic();
   }

@@ -22,12 +22,6 @@ export class LostWindow extends AnimatedScreen {
     this.onBackToMap = new Signal();
     this.initialize();
   }
-  getOnReplay() {
-    return this.onReplay;
-  }
-  getOnBackToMap() {
-    return this.onBackToMap;
-  }
   putIn(displayObjectContainer: any) {
     displayObjectContainer.addChild(this);
   }

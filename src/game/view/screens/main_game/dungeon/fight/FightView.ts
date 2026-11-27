@@ -32,7 +32,7 @@ export class FightView extends BasicFightView {
       Dungeon.DungeonConfig['position_enemy'] +
       Dungeon.DungeonConfig['lenght_step'] * Dungeon.DungeonConfig['steps_to_find_enemy'];
     fighterView.x += Dungeon.DungeonConfig['end_lenght_step'];
-    if (!this.fight.isFirst()) {
+    if (!this.fight.first) {
       fighterView.x += Dungeon.DungeonConfig['start_lenght_step'];
     }
     fighterView.animate(new IdleAnimation());
@@ -51,9 +51,9 @@ export class FightView extends BasicFightView {
   enter(callback2: Function) {
     var callback = callback2;
     var steps = Number(Dungeon.DungeonConfig['steps_to_find_enemy']);
-    var walk = new RunAnimation(steps, !this.fight.isFirst());
+    var walk = new RunAnimation(steps, !this.fight.first);
     this.jinnView.animate(walk);
-    walk.getAtFinish().add((fighterAnimation) => {
+    walk.atFinish.add((fighterAnimation) => {
       this.atEndEnter(callback);
     });
     this.bg.onMove.add(this.moveEnemy);

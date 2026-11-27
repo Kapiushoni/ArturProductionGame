@@ -9,14 +9,14 @@ export class MapState extends BasicPausableState {
   /** the GameView */
   private principal: any;
   private mapView: MapView = null;
-  private map: any = null;
+  map: any = null;
 
   constructor(name: string, principal: any, onEnter: Function = null, onLeave: Function = null) {
     super(name, onEnter, onLeave);
     this.principal = principal;
   }
   enter() {
-    this.map = main.game.getMap();
+    this.map = main.game.map;
     this.mapView = new MapView(this);
     this.mapView.onToMainMenu.add(this.toMainMenu);
     this.mapView.onToDungeon.add(this.toLevel);
@@ -37,9 +37,6 @@ export class MapState extends BasicPausableState {
   }
   toLevel(level: any) {
     this.principal.toLevelWaiting(level);
-  }
-  getMap(): any {
-    return this.map;
   }
 }
 bindMethods(MapState);

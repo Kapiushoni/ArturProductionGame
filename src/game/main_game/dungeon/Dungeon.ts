@@ -133,10 +133,10 @@ export class Dungeon {
     }
   }
   advertiseAchievements() {
-    if (this.level.getDungeonId() == Dungeon.BOSS_LEVEL_ID) {
+    if (this.level.dungeonId == Dungeon.BOSS_LEVEL_ID) {
       services.achievements.endLastDungeon();
     }
-    if (this.level.getDungeonId() == '8') {
+    if (this.level.dungeonId == '8') {
       services.achievements.finishFirstPage();
     }
     const gear = this.game.getJinn().gear;

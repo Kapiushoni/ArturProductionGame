@@ -28,7 +28,7 @@ export class EnterDungeonView {
     this.jinnView.x = num - Dungeon.DungeonConfig['start_lenght_step'];
     this.jinnView.y = Dungeon.DungeonConfig['height_fighters'];
     this.walk = new RunAnimation(2, true, false);
-    this.walk.getAtFinish().add(this.endEnter);
+    this.walk.atFinish.add(this.endEnter);
     this.jinnView.animate(this.walk);
     if (!this.paused) {
       this.gameLoop.start();

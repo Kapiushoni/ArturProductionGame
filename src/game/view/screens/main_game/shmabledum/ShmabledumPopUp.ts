@@ -37,14 +37,14 @@ export class ShmabledumPopUp {
     this.onCancel.emit();
   }
   get mc() {
-    return this.screen.getBg();
+    return this.screen.bg;
   }
   addIn(displayObjectContainer: any) {
     displayObjectContainer.addChild(this.screen);
   }
   hide(callback: Function = null) {
     if (this.showing) {
-      Buttons.setButtons(this.screen.getBg(), ['container.cancel'], false);
+      Buttons.setButtons(this.screen.bg, ['container.cancel'], false);
       this.mc.gotoAndPlay('out');
       this.showing = false;
       new SmartMC(this.mc).trigger(new EndCurrentLabel(this.mc), Functor.wrap(Util.l(this.trueHide, callback)));
@@ -61,7 +61,7 @@ export class ShmabledumPopUp {
   }
   show(callback: Function = null) {
     this.mc.visible = true;
-    Buttons.setButtons(this.screen.getBg(), ['container.cancel'], true);
+    Buttons.setButtons(this.screen.bg, ['container.cancel'], true);
     if (!this.showing) {
       this.mc.gotoAndPlay('in');
       if (callback != null) {

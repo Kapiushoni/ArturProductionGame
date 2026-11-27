@@ -19,7 +19,7 @@ export class JinnView extends FighterView {
     this.jinn.onPotionConsumition.add(this.consumePotion);
   }
   get jinn() {
-    return as3as(this.getFighter(), Jinn);
+    return as3as(this.fighter, Jinn);
   }
   setSoundManager() {
     this.soundManager = new JinnSoundManager(this.jinn);

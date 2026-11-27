@@ -17,7 +17,7 @@ import type { Level } from '@/game/main_game/map/Level';
  */
 export class Game {
   private inv: Inventory = null;
-  private map: Map = null;
+  map: Map = null;
   private mix: Mixer = null;
   private jinn: Jinn = null;
   private princess: ShmabledumPrincess = null;
@@ -67,7 +67,7 @@ export class Game {
     this.current_dungeon = DungeonFactory.getInstance().getDungeon(level, this);
     this.current_dungeon.enter();
     this.onDungeon.emit(this.current_dungeon);
-    services.saveSystem.saveLastPlayed(level.getDungeonId());
+    services.saveSystem.saveLastPlayed(level.dungeonId);
     return this.current_dungeon;
   }
   getDungeon(): Dungeon | null {
@@ -88,9 +88,6 @@ export class Game {
   }
   getMixer(): Mixer {
     return this.mix;
-  }
-  getMap(): Map {
-    return this.map;
   }
 }
 bindMethods(Game);

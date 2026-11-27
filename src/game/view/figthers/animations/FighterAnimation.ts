@@ -12,7 +12,7 @@ import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighter
  * Plays the label `name` of the fighter clip until "end_animation" (or the last frame), then atFinish(this).
  */
 export class FighterAnimation implements IFighterAnimation {
-  protected atFinish: Signal;
+  atFinish: Signal;
   /** label of the fighter clip */
   protected name: string;
   protected current_mc: any = null;
@@ -21,9 +21,6 @@ export class FighterAnimation implements IFighterAnimation {
   constructor(name: string) {
     this.name = name;
     this.atFinish = new Signal();
-  }
-  getAtFinish(): Signal {
-    return this.atFinish;
   }
   forceKill(): boolean {
     return false;

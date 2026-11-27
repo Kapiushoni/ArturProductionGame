@@ -10,8 +10,8 @@ export class PotionEffect {
   secondaryEffect: any = null;
   timer: any = null;
   constructor(item: Item, clip: any) {
-    this.primaryEffect = this.addPotionEffect(item.getPrimaryModifier(), clip);
-    this.secondaryEffect = this.addPotionEffect(item.getSecondaryModifier(), clip, -9, 7);
+    this.primaryEffect = this.addPotionEffect(item.primaryModifier, clip);
+    this.secondaryEffect = this.addPotionEffect(item.secondaryModifier, clip, -9, 7);
     this.timer = new Timer(2000, 1);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.endTimer);
     this.timer.start();

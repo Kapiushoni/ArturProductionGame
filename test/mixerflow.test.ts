@@ -61,7 +61,7 @@ describe('Mixer', () => {
     m.startMix();
     m.endMix(); // what the mixer clock calls when the time is up
     expect(m.slot_1.isEmpty() && m.slot_2.isEmpty()).toBe(true);
-    expect(m.getSlot(3).getContent().getID()).toBe('rock');
+    expect(m.getSlot(3).getContent().id).toBe('rock');
     expect(m.slot_1.isLocked()).toBe(false);
     expect(ended.mock.calls[0][0].recipe.getId()).toBe(1);
     expect(GM.services.saveSystem.saveRecipe).toHaveBeenCalled();

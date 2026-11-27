@@ -29,7 +29,7 @@ export class DungeonStats {
     this.mixesDone = int(this.mixesDone + 1);
   }
   onHit(_jinn: any, _enemy: any, damage: Damage, _done: Function) {
-    if (damage.isCritical()) {
+    if (damage.critical) {
       this.criticalHits = int(this.criticalHits + 1);
     }
   }

@@ -11,10 +11,10 @@ export class SpecialLevel extends Level {
     return services.texts.get('specialDungeonName');
   }
   getArea(): number {
-    if (this.getDungeonId() == '26') {
+    if (this.dungeonId == '26') {
       return 1;
     }
-    if (this.getDungeonId() == '27') {
+    if (this.dungeonId == '27') {
       return 2;
     }
     return 3;

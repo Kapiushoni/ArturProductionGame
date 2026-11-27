@@ -97,8 +97,5 @@ export class Screen extends Sprite {
     if (this.parent) this.parent.removeChild(this);
     this.clear();
   }
-  getBg(): any {
-    return this.bg;
-  }
 }
 bindMethods(Screen);

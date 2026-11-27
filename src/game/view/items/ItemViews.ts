@@ -32,14 +32,14 @@ export class ItemViews {
     if (item == null) {
       return new NullShieldModifier();
     }
-    return new ShieldModifier(item.getMcName(), item.getSecondaryModifier().toObject().Category);
+    return new ShieldModifier(item.getMcName(), item.secondaryModifier.toObject().Category);
   }
   /** how the equipped weapon looks on the jinn */
   static swordModifier(item: Item | null): any {
     if (item == null) {
       return new NullSwordModifier();
     }
-    return new SwordModifier(item.getMcName(), item.getSecondaryModifier().toObject().Category);
+    return new SwordModifier(item.getMcName(), item.secondaryModifier.toObject().Category);
   }
 }
 bindMethods(ItemViews);

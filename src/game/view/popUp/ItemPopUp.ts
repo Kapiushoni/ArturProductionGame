@@ -22,12 +22,12 @@ export class ItemPopUp extends PopUp {
   }
   refreshInfo(item: Item) {
     this.mc.container.title.title.text = item.getNameToShow();
-    var maxMod = int(item.getMaxMod());
-    ModifierIcons.show(item.getPrimaryModifier(), this.mc.container.armor_icon_1);
-    ModifierIcons.showValue(item.getPrimaryModifier(), this.mc.container.numbers_1.title, maxMod);
-    ModifierIcons.show(item.getSecondaryModifier(), this.mc.container.armor_icon_2);
+    var maxMod = int(item.maxMod);
+    ModifierIcons.show(item.primaryModifier, this.mc.container.armor_icon_1);
+    ModifierIcons.showValue(item.primaryModifier, this.mc.container.numbers_1.title, maxMod);
+    ModifierIcons.show(item.secondaryModifier, this.mc.container.armor_icon_2);
     maxMod = int(Math.round((maxMod * MixStrategy.mixConfig.secondModMaxPercent) / 100));
-    ModifierIcons.showValue(item.getSecondaryModifier(), this.mc.container.numbers_2.title, maxMod);
+    ModifierIcons.showValue(item.secondaryModifier, this.mc.container.numbers_2.title, maxMod);
   }
   hide(callback: Function = null) {
     if (this.item) {

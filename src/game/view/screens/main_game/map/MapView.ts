@@ -33,7 +33,7 @@ export class MapView extends Screen {
     this.map = map;
     this.lastPlayedTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.refreshLastLevel);
     this.initScreen(main.swfLoader.getClass('assets.Map'), this.getButtonInfo());
-    this.actual_page = uint(this.pageOfLevel(this.map.getMap().getLevel(main.saveSystem.getLastPlayed())));
+    this.actual_page = uint(this.pageOfLevel(this.map.map.getLevel(main.saveSystem.getLastPlayed())));
     this.initialize();
     this.bg.pages.gotoAndStop('page_' + this.actual_page);
     this.nextArrow = new ArrowView(Util.getSprite(this.bg, MapView.NEXT_BUTTON), this.nextPage);
@@ -50,7 +50,7 @@ export class MapView extends Screen {
     var buttonGroup = ButtonGroup.get('gui');
     dict.set('back', buttonGroup.createButton(this.toMainMenu, 'mouseOver', 'mouseOut'));
     this.buttonsNames.push('back');
-    for (level of as3values(this.map.getMap().getLevels())) {
+    for (level of as3values(this.map.map.levels)) {
       buttonName = this.getButtonName(level);
       dict.set(buttonName, buttonGroup.createButton(this.getGoToDungeon(level), 'mouseOver', 'mouseOut'));
       this.buttonsNames.push(buttonName);
@@ -58,7 +58,7 @@ export class MapView extends Screen {
     return dict;
   }
   getButtonName(level: Level) {
-    return 'pages.page_' + this.pageOfLevel(level) + '.dungeon_' + level.getDungeonId();
+    return 'pages.page_' + this.pageOfLevel(level) + '.dungeon_' + level.dungeonId;
   }
   pageOfLevel(level: Level) {
     return uint(level.getArea());
@@ -80,7 +80,7 @@ export class MapView extends Screen {
     this.onToDungeon = new Signal();
     main.soundManager.updateSoundButton(this.bg.sound);
     Buttons.setButtons(this.bg, this.buttonsNames, true);
-    for (level of as3values(this.map.getMap().getLevels())) {
+    for (level of as3values(this.map.map.levels)) {
       buttonName = this.getButtonName(level);
       button = as3as(Util.getSprite(this.bg, buttonName), MovieClip);
       if (level.isLocked()) {
@@ -102,7 +102,7 @@ export class MapView extends Screen {
         if (!level.isLegendary()) {
           button.icon.gotoAndStop('cleared');
           if (!level.isSpecial()) {
-            button.icon.title.title.text = level.getDungeonId();
+            button.icon.title.title.text = level.dungeonId;
           }
         }
         Buttons.setButtons(this.bg, [buttonName], true);
@@ -111,7 +111,7 @@ export class MapView extends Screen {
         if (!level.isLegendary()) {
           button.icon.gotoAndStop('unlocked');
           if (!level.isSpecial()) {
-            button.icon.title.title.text = level.getDungeonId();
+            button.icon.title.title.text = level.dungeonId;
           }
         }
         Buttons.setButtons(this.bg, [buttonName], true);
@@ -128,7 +128,7 @@ export class MapView extends Screen {
     var skulls = null;
     var element = null;
     var enemyElement = null;
-    var config = DungeonFactory.getConfigFor(level.getDungeonId());
+    var config = DungeonFactory.getConfigFor(level.dungeonId);
     var elements = new cbArray();
     for (enemy of as3values(config.enemiesData)) {
       enemyElement = CharacterFactory.getInstance().getConfig(enemy[0]).element;
@@ -170,7 +170,7 @@ export class MapView extends Screen {
       this.updatePage(null, num);
       return;
     }
-    if (num > this.pageOfLevel(this.map.getMap().biggestUnlockedLevel())) {
+    if (num > this.pageOfLevel(this.map.map.biggestUnlockedLevel())) {
       return;
     }
     this.hideArrows();
@@ -185,7 +185,7 @@ export class MapView extends Screen {
   }
   refreshArrows(num: number) {
     num = uint(num);
-    if (num + 1 <= this.pageOfLevel(this.map.getMap().biggestUnlockedLevel())) {
+    if (num + 1 <= this.pageOfLevel(this.map.map.biggestUnlockedLevel())) {
       this.nextArrow.show();
     }
     if (num != 1) {
@@ -218,7 +218,7 @@ export class MapView extends Screen {
         if (!level.isLegendary()) {
           button.icon.gotoAndStop('cleared');
           if (!level.isSpecial()) {
-            button.icon.title.title.text = level.getDungeonId();
+            button.icon.title.title.text = level.dungeonId;
           }
         }
         Buttons.setButtons(this.bg, [buttonName], true);
@@ -228,7 +228,7 @@ export class MapView extends Screen {
         if (!level.isLegendary()) {
           button.icon.gotoAndStop('unlocked');
           if (!level.isSpecial()) {
-            button.icon.title.title.text = level.getDungeonId();
+            button.icon.title.title.text = level.dungeonId;
           }
         }
         Buttons.setButtons(this.bg, [buttonName], true);
@@ -241,7 +241,7 @@ export class MapView extends Screen {
   }
   refreshLastLevel(event: any) {
     var clip = as3as(
-      Util.getSprite(this.bg, this.getButtonName(this.map.getMap().getLevel(main.saveSystem.getLastPlayed()))),
+      Util.getSprite(this.bg, this.getButtonName(this.map.map.getLevel(main.saveSystem.getLastPlayed()))),
       MovieClip,
     );
     if (clip.lastLevel) {

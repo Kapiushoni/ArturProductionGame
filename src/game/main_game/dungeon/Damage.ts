@@ -26,9 +26,6 @@ export class Damage {
   doesHeHit(): boolean {
     return this.hit;
   }
-  isCritical(): boolean {
-    return this.critical;
-  }
   stringValue(): string {
     return this.hp_damage.toString();
   }

@@ -11,15 +11,15 @@ export class StatsEffectGuardian {
   }
   removeEfectsOfItem(item: Item | null) {
     if (item != null) {
-      item.getPrimaryModifier().disaffect(this.stats);
-      item.getSecondaryModifier().disaffect(this.stats);
+      item.primaryModifier.disaffect(this.stats);
+      item.secondaryModifier.disaffect(this.stats);
       this.stats.onChange.emit();
     }
   }
   addEfectsOfItem(item: Item | null) {
     if (item != null) {
-      item.getPrimaryModifier().affect(this.stats);
-      item.getSecondaryModifier().affect(this.stats);
+      item.primaryModifier.affect(this.stats);
+      item.secondaryModifier.affect(this.stats);
       this.stats.onChange.emit();
     }
   }

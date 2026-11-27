@@ -18,8 +18,8 @@ export class MixRecipe {
     if (recipe == null) {
       return false;
     }
-    const sameOrder = recipe.item1.getID() == this.item1.getID() && recipe.item2.getID() == this.item2.getID();
-    const swapped = recipe.item2.getID() == this.item1.getID() && recipe.item1.getID() == this.item2.getID();
+    const sameOrder = recipe.item1.id == this.item1.id && recipe.item2.id == this.item2.id;
+    const swapped = recipe.item2.id == this.item1.id && recipe.item1.id == this.item2.id;
     return this.result == recipe.result && (sameOrder || swapped);
   }
   get item1(): Item {

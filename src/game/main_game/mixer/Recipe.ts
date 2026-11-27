@@ -26,12 +26,12 @@ export class Recipe {
   }
   /** are these the ingredients (in any order, unless strictOrder)? "Mix_" prefixes are ignored */
   areIngredients(item: Item, item2: Item, strictOrder = false): boolean {
-    const a = MixStrategy.removeMix(item.getID());
-    const b = MixStrategy.removeMix(item2.getID());
+    const a = MixStrategy.removeMix(item.id);
+    const b = MixStrategy.removeMix(item2.id);
     return (a == this.i1 && b == this.i2) || (!strictOrder && b == this.i1 && a == this.i2);
   }
   isResult(item: Item): boolean {
-    return item.getID() == this.res;
+    return item.id == this.res;
   }
   get primary(): string {
     return this.i1;

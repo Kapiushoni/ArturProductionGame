@@ -14,7 +14,7 @@ import { SpecialLevel } from '@/game/main_game/map/SpecialLevel';
  */
 export class Map {
   /** Dictionary: dungeon id -> Level */
-  private levels: any;
+  levels: any;
 
   constructor() {
     this.initializeLevels();
@@ -24,7 +24,7 @@ export class Map {
     this.unlockUnlocked();
   }
   getNextLevel(level: Level): Level | null {
-    const next = level.getCorrelative();
+    const next = level.correlative;
     return next.length > 0 ? next[0] : null;
   }
   /** the furthest unlocked level of the main path */
@@ -39,9 +39,6 @@ export class Map {
   }
   getLevel(id: string | number): any {
     return this.levels.get(id);
-  }
-  getLevels(): any {
-    return this.levels;
   }
   initializeLevels() {
     this.levels = new Dictionary();
@@ -58,7 +55,7 @@ export class Map {
     }
   }
   addLevel(level: Level) {
-    this.levels.set(level.getDungeonId(), level);
+    this.levels.set(level.dungeonId, level);
   }
   /** which level leads to which */
   setConections() {
@@ -86,7 +83,7 @@ export class Map {
     const unlocked = new cbArray();
     for (const level of as3values(this.levels)) {
       if (level.isCleared()) {
-        for (const next of as3values(level.getCorrelative())) {
+        for (const next of as3values(level.correlative)) {
           if (next.isLocked()) {
             next.unlock();
             unlocked.pushIfNotPresent(next);

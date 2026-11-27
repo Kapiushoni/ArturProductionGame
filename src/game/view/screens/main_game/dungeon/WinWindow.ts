@@ -48,12 +48,6 @@ export class WinWindow extends AnimatedScreen {
   get lootMcButton() {
     return this.bg.loot;
   }
-  getOnReplay() {
-    return this.onReplay;
-  }
-  getOnBackToMap() {
-    return this.onBackToMap;
-  }
   putIn(displayObjectContainer: any) {
     displayObjectContainer['window'] = this;
     displayObjectContainer.addChild(this);

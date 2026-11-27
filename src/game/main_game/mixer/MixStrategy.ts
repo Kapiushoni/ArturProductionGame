@@ -29,7 +29,7 @@ export class MixStrategy {
   }
   /** is the item the result of a special recipe? */
   static isSpecial(item: Item): boolean {
-    for (const recipe of as3values(MixStrategy.recipes.getRecipes())) {
+    for (const recipe of as3values(MixStrategy.recipes.recipes)) {
       if (recipe.isResult(item)) {
         return true;
       }
@@ -37,7 +37,7 @@ export class MixStrategy {
     return false;
   }
   static getSpecialMixId(item: Item, item2: Item, strictOrder = false): Recipe | null {
-    for (const recipe of as3values(MixStrategy.recipes.getRecipes())) {
+    for (const recipe of as3values(MixStrategy.recipes.recipes)) {
       if (recipe.areIngredients(item, item2, strictOrder)) {
         return recipe;
       }
@@ -73,10 +73,10 @@ export class MixStrategy {
       for (const key of as3keys(resultConfig)) {
         config[key] = resultConfig[key];
       }
-      config.FirstModifier = item.getPrimaryModifier().toObject();
+      config.FirstModifier = item.primaryModifier.toObject();
       config.FirstModifier.Value = Math.max(config.FirstModifier.Value, resultConfig.FirstModifier.Value);
-      if (item.getSecondaryModifier().getCategory() != StatType.NULL) {
-        config.SecondModifier = item.getSecondaryModifier().toObject();
+      if (item.secondaryModifier.getCategory() != StatType.NULL) {
+        config.SecondModifier = item.secondaryModifier.toObject();
         custom = true;
       }
       this.applyLimitToModifiers(config);
@@ -92,19 +92,19 @@ export class MixStrategy {
     const config: any = {};
     config.NameString = item.name;
     config.Category = item.getCategory().type;
-    const primary = item.getPrimaryModifier();
-    const secondary = item.getSecondaryModifier();
-    const primary2 = item2.getPrimaryModifier();
-    const secondary2 = item2.getSecondaryModifier();
+    const primary = item.primaryModifier;
+    const secondary = item.secondaryModifier;
+    const primary2 = item2.primaryModifier;
+    const secondary2 = item2.secondaryModifier;
     const potion = this.isConsumable(item);
     config.MovieClip = item.getMcName();
     // a pure healing potion lasts as long as the second item
     if (primary.getCategory() == StatType.HEALTH && secondary.getCategory() == StatType.NULL) {
-      config.Duration = item2.getDuration();
+      config.Duration = item2.duration;
     } else {
-      config.Duration = item.getDuration();
+      config.Duration = item.duration;
     }
-    config.MaxMod = item.getMaxMod();
+    config.MaxMod = item.maxMod;
     const primaryWeight = Number(MixStrategy.mixConfig.primaryModifier);
     let secondaryWeight = Number(MixStrategy.mixConfig.secondaryModifier);
     if (this.isConsumable(item) && this.isConsumable(item2)) {
@@ -121,7 +121,7 @@ export class MixStrategy {
     this.applyLimitToModifiers(config);
     config.Element = item.getElement().type;
     config.MixTime = item.getMixTime();
-    return ItemFactory.getInstance().getCustomItem('Mix_' + MixStrategy.removeMix(item.getID()), config);
+    return ItemFactory.getInstance().getCustomItem('Mix_' + MixStrategy.removeMix(item.id), config);
   }
 
   /** the first modifier stays within +-MaxMod, the second within +-secondModMaxPercent of MaxMod */

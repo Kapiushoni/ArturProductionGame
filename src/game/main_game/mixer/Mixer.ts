@@ -82,7 +82,7 @@ export class Mixer {
     }
     services.saveSystem.savePendingItems();
     services.sound.playFx(GameSounds.MIX_DONE);
-    if (item.getID() == 'FriendlyRockJr') {
+    if (item.id == 'FriendlyRockJr') {
       services.achievements.friendlyRockJrObtained();
     }
     services.achievements.madeMix();

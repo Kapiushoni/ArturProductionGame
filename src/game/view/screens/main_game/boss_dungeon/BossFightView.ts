@@ -17,30 +17,30 @@ export class BossFightView extends BasicFightView {
     main.soundManager.playMusic(GameSounds.BOSS_MUSIC);
   }
   get bossView() {
-    return this.bossDungeonView.getBossView();
+    return this.bossDungeonView.bossView;
   }
   initializeViews(list: any[]) {
     this.enemy = this.fight.getEnemy();
-    var jinnView = this.bossDungeonView.getJinnView();
-    this.views.set(jinnView.getFighter(), jinnView);
-    this.views.set(this.bossView.getFighter(), this.bossView);
+    var jinnView = this.bossDungeonView.jinnView;
+    this.views.set(jinnView.fighter, jinnView);
+    this.views.set(this.bossView.fighter, this.bossView);
   }
   enter(callback: Function) {
     this.bossView.animate(new IdleAnimation());
     this.bossView.x =
-      this.bossDungeonView.getJinnView().x +
+      this.bossDungeonView.jinnView.x +
       (Dungeon.DungeonConfig['position_enemy'] - Dungeon.DungeonConfig['position_jinn']) +
       100;
     this.bossView.putIn(this.bossDungeonView.background.arena);
-    this.bossDungeonView.getJinnView().animate(new IdleAnimation());
+    this.bossDungeonView.jinnView.animate(new IdleAnimation());
     this.bossDungeonView.background.onMove.add(Util.l(this.backgroundMove, callback));
     this.bossDungeonView.background.beginScroll();
   }
   backgroundMove(num: number, callback: Function) {
     num = Number(num);
-    this.bossDungeonView.getJinnView().x = this.bossDungeonView.getJinnView().x - num;
-    this.bossDungeonView.getBossView().x = this.bossDungeonView.getBossView().x - num;
-    if (this.bossDungeonView.getJinnView().x <= Dungeon.DungeonConfig['position_jinn']) {
+    this.bossDungeonView.jinnView.x = this.bossDungeonView.jinnView.x - num;
+    this.bossDungeonView.bossView.x = this.bossDungeonView.bossView.x - num;
+    if (this.bossDungeonView.jinnView.x <= Dungeon.DungeonConfig['position_jinn']) {
       this.bossDungeonView.background.onMove.remove(this.backgroundMove);
       this.bossDungeonView.background.endScroll();
       super.enter(callback);

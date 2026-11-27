@@ -7,7 +7,7 @@ export interface IFighterAnimation {
   resume(): void;
   kill(): void;
   /** atFinish(animation) */
-  getAtFinish(): Signal;
+  readonly atFinish: Signal;
   /** go back to idle afterwards */
   mustGoToIdle(): boolean;
   getName(): string;

@@ -4,7 +4,7 @@ import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighter
 
 /** No animation (nothing is playing). */
 export class NoneAnimation implements IFighterAnimation {
-  private atFinish: Signal;
+  atFinish: Signal;
 
   constructor() {
     this.atFinish = new Signal();
@@ -21,9 +21,6 @@ export class NoneAnimation implements IFighterAnimation {
   kill() {
     this.atFinish.clear();
     this.atFinish = null;
-  }
-  getAtFinish(): Signal {
-    return this.atFinish;
   }
   mustGoToIdle(): boolean {
     return false;

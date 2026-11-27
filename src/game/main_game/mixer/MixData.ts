@@ -3,7 +3,7 @@ import { Recipe } from '@/game/main_game/mixer/Recipe';
 
 /** All special recipes, from mix.csv: id -> { item1, item2, itemResult, showAdvice }. */
 export class MixData {
-  private recipes: Recipe[];
+  recipes: Recipe[];
 
   constructor(config: any) {
     this.recipes = [];
@@ -13,9 +13,6 @@ export class MixData {
         new Recipe(int(key), row.item1, row.item2, row.itemResult, row.showAdvice.toLowerCase() == 'true'),
       );
     }
-  }
-  getRecipes(): Recipe[] {
-    return this.recipes;
   }
   /** the recipe with this id, or null */
   getRecipeById(id: number): Recipe | null {

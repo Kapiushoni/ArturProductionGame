@@ -21,7 +21,7 @@ describe('Slot', () => {
   it('reports every change with the old and the new item', () => {
     const slot = new Slot();
     const changes: any[] = [];
-    slot.onChange.add((c: any) => changes.push([c.getOldItem()?.getID() ?? null, c.getNewItem()?.getID() ?? null]));
+    slot.onChange.add((c: any) => changes.push([c.getOldItem()?.id ?? null, c.getNewItem()?.id ?? null]));
     const sword = item('sword');
     slot.add(sword);
     slot.add(sword); // same item: no change
@@ -85,7 +85,7 @@ describe('loot and trash', () => {
     expect(loot.canMoveFrom(item('sword'), bag)).toBe(false);
     bag.moveFrom(loot.getContent(), loot);
     expect(loot.isEmpty()).toBe(true);
-    expect(bag.getContent().getID()).toBe('potion');
+    expect(bag.getContent().id).toBe('potion');
   });
 
   it('the trash destroys what is dropped in it', () => {

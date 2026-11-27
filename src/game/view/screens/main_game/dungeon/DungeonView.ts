@@ -73,7 +73,7 @@ export class DungeonView extends Screen {
     this.innerView.pause();
     var dieAnimation = new DieAnimation();
     this.jinnView.animate(dieAnimation);
-    dieAnimation.getAtFinish().add(Util.removeParams(this.dungeon.getDungeon().suddenDeath));
+    dieAnimation.atFinish.add(Util.removeParams(this.dungeon.getDungeon().suddenDeath));
   }
   pauseFight() {
     if (this.windowShowing != null) {
@@ -100,7 +100,7 @@ export class DungeonView extends Screen {
     pause.enter();
   }
   getDungeonLevel() {
-    return main.game.getMap().getLevel(this.dungeon.getDungeon().getId());
+    return main.game.map.getLevel(this.dungeon.getDungeon().getId());
   }
   resume() {
     this.playMusic();
@@ -113,7 +113,7 @@ export class DungeonView extends Screen {
     this.gotoDungeonId(this.dungeon.getDungeon().getId());
   }
   gotoDungeonId(text: string) {
-    var level = main.game.getMap().getLevel(text);
+    var level = main.game.map.getLevel(text);
     this.dungeon.onToDungeon.emit(level);
   }
   onFight(fight: IFight) {
@@ -149,13 +149,13 @@ export class DungeonView extends Screen {
     joy = new JoyAnimation();
     this.jinnView.animate(joy);
     winWindow = this.makeWinWindow();
-    joy.getAtFinish().add((fighterAnimation) => {
+    joy.atFinish.add((fighterAnimation) => {
       this.showFinishWindow(winWindow);
     });
   }
   makeWinWindow() {
     var callback = null;
-    var nextLevel = main.game.getMap().getNextLevel(this.dungeon.getDungeon().getLevel());
+    var nextLevel = main.game.map.getNextLevel(this.dungeon.getDungeon().getLevel());
     if (nextLevel != null && nextLevel.getArea() == this.dungeon.getDungeon().getLevel().getArea()) {
       callback = Util.l(this.dungeon.onToDungeon.emit, nextLevel);
     }
@@ -163,8 +163,8 @@ export class DungeonView extends Screen {
   }
   showFinishWindow(windowShowing: EndDungeonWindow) {
     this.windowShowing = windowShowing;
-    windowShowing.getOnReplay().add(this.onReplay);
-    windowShowing.getOnBackToMap().add(this.onLevelSelect);
+    windowShowing.onReplay.add(this.onReplay);
+    windowShowing.onBackToMap.add(this.onLevelSelect);
     windowShowing.putIn(this.dungeon.pauseHolder);
     windowShowing.enter(this.endEnterFinishWindow);
   }

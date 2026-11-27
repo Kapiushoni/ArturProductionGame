@@ -48,8 +48,8 @@ export class DungeonFactory {
     return ids;
   }
   getDungeon(level: Level, game: any): Dungeon {
-    const config = DungeonFactory.getConfigFor(level.getDungeonId());
-    if (level.getDungeonId() == BossDungeon.idBossLevel) {
+    const config = DungeonFactory.getConfigFor(level.dungeonId);
+    if (level.dungeonId == BossDungeon.idBossLevel) {
       return new BossDungeon(level, config, this.getFirstLoot(level), game);
     }
     return new Dungeon(level, config, this.getFirstLoot(level), game);

@@ -52,7 +52,7 @@ describe('Fight', () => {
     expect(won).toHaveBeenCalledTimes(1);
     expect(lost).not.toHaveBeenCalled();
     expect(hits).toHaveBeenCalledTimes(3);
-    expect(fight.isFirst()).toBe(true);
+    expect(fight.first).toBe(true);
   });
 
   it('the jinn dies -> onLose', () => {

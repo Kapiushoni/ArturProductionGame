@@ -84,7 +84,7 @@ describe('Dungeon', () => {
     const d = new Dungeon(level(), new DungeonConfigParser(ROW), new ProbabilisticSet(), game);
     expect(d.enemies.map((e: any) => e.getName())).toEqual(['e1', 'e2']);
     expect(d.enemies.map((e: any) => e.stats.getLevel())).toEqual([1, 2]);
-    expect(d.currentFight.isFirst()).toBe(true);
+    expect(d.currentFight.first).toBe(true);
   });
 
   it('loot: first-time loot first, then the dungeon loot; an exhausted loot list leaves the slot empty', () => {
@@ -92,7 +92,7 @@ describe('Dungeon', () => {
     const ids = d
       .getLoot()
       .getBooty()
-      .map((s: any) => (s.isEmpty() ? null : s.getContent().getID()));
+      .map((s: any) => (s.isEmpty() ? null : s.getContent().id));
     expect(ids).toEqual(['potB', 'potA', null]);
   });
 
@@ -158,8 +158,8 @@ describe('Map', () => {
     expect(map.getLevel('5').isUnlocked()).toBe(true);
     expect(map.getLevel('26').isUnlocked()).toBe(true); // branch from 4
     expect(map.getLevel('6').isLocked()).toBe(true);
-    expect(map.biggestUnlockedLevel().getDungeonId()).toBe('5');
-    expect(map.getNextLevel(map.getLevel('1')).getDungeonId()).toBe('2');
+    expect(map.biggestUnlockedLevel().dungeonId).toBe('5');
+    expect(map.getNextLevel(map.getLevel('1')).dungeonId).toBe('2');
   });
 
   it('map pages', () => {

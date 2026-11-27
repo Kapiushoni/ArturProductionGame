@@ -121,7 +121,7 @@ export class SoundManager {
     this.soundMixer.stop(name);
   }
   playRequest(request: MusicRequest): any {
-    return this.soundMixer.play(request.getName(), request.getStartTime(), true, request.getVolume());
+    return this.soundMixer.play(request.getName(), request.startTime, true, request.volume);
   }
   resumeSound(name: string) {
     this.soundMixer.resumeSound(name);

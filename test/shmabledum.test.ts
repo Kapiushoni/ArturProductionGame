@@ -35,7 +35,7 @@ describe('MixChecker (mix proposals)', () => {
     expect(checker.checkForMixes([item('potB')])).toBe(true);
     const mix = checker.getMix();
     expect(mix.result).toBe('rock');
-    expect([mix.item1.getID(), mix.item2.getID()].sort()).toEqual(['potA', 'potB']);
+    expect([mix.item1.id, mix.item2.id].sort()).toEqual(['potA', 'potB']);
   });
 
   it('the same mix found twice is proposed once', () => {

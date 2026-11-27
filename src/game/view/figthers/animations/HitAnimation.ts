@@ -25,7 +25,7 @@ export class HitAnimation extends FighterAnimation {
   private atContact: Function;
 
   constructor(receiver: any, damage: Damage, callback: Function, atContact: Function = null) {
-    super(damage.isCritical() ? 'critical' : 'attack');
+    super(damage.critical ? 'critical' : 'attack');
     this.receiver = receiver;
     this.damage = damage;
     this.atContact = atContact;
@@ -35,7 +35,7 @@ export class HitAnimation extends FighterAnimation {
   make(fighterView: any) {
     if (this.name == 'critical') {
       fighterView.fighterSoundManager.playCritical();
-      if ((as3as(fighterView.getFighter(), Jinn) as Jinn).gear.shield.isEmpty()) {
+      if ((as3as(fighterView.fighter, Jinn) as Jinn).gear.shield.isEmpty()) {
         this.name += '_sword';
       }
     } else {
@@ -43,13 +43,13 @@ export class HitAnimation extends FighterAnimation {
     }
     fighterView.playAnimation(this);
     this.current_mc = fighterView.getMC();
-    if (fighterView.getFighter().isJinn()) {
-      const weapon = (as3as(fighterView.getFighter(), Jinn) as Jinn).gear.weapon.getContent();
+    if (fighterView.fighter.isJinn()) {
+      const weapon = (as3as(fighterView.fighter, Jinn) as Jinn).gear.weapon.getContent();
       if (weapon) {
         this.element = weapon.getElement();
       }
     } else {
-      this.element = (as3as(fighterView.getFighter(), Enemy) as Enemy).getElement();
+      this.element = (as3as(fighterView.fighter, Enemy) as Enemy).getElement();
     }
     this.current_smc = new SmartMC(this.current_mc);
     this.current_smc.trigger(
@@ -66,11 +66,11 @@ export class HitAnimation extends FighterAnimation {
   }
   hitReceiver(_clip: any) {
     const hurt = new HurtAnimation(this.damage, this.element);
-    hurt.getAtFinish().add((_animation: any) => {
+    hurt.atFinish.add((_animation: any) => {
       this.rule.check('took_hit');
     });
     this.receiver.animate(hurt);
-    this.receiver.getFighter().takeDamage(this.damage);
+    this.receiver.fighter.takeDamage(this.damage);
     if (this.atContact) {
       this.atContact();
     }

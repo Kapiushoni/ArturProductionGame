@@ -87,7 +87,7 @@ export class GameView extends Screen {
     dungeonState.onToDungeon.add(this.toLevel);
     dungeonState.onToMap.add(this.showMap);
     var bossDungeonState = new BossDungeonState('boss', this);
-    bossDungeonState.setNextDungeon(main.game.getMap().getLevel(BossDungeon.idBossLevel));
+    bossDungeonState.setNextDungeon(main.game.map.getLevel(BossDungeon.idBossLevel));
     bossDungeonState.onToDungeon.add(this.toLevel);
     bossDungeonState.onToMap.add(this.showMap);
     bossDungeonState.onToOutro.add(this.toOutro);
@@ -157,7 +157,7 @@ export class GameView extends Screen {
     }
   }
   resourcesForLevel(level: Level) {
-    if (level.getDungeonId() == BossDungeon.idBossLevel) {
+    if (level.dungeonId == BossDungeon.idBossLevel) {
       return GameSounds.bossSounds;
     }
     if (level.getArea() <= 1 && !level.isLegendary() && !level.isSpecial()) {
@@ -169,7 +169,7 @@ export class GameView extends Screen {
     main.waitForResources(this.resourcesForLevel(level), Util.l(this.toLevelWithoutWait, level));
   }
   toLevelWithoutWait(level: Level) {
-    if (level.getDungeonId() == BossDungeon.idBossLevel) {
+    if (level.dungeonId == BossDungeon.idBossLevel) {
       this.fsm.takeTransition('enterBoss');
     } else {
       as3as(this.fsm.getState('dungeon'), DungeonState).setNextDungeon(level);

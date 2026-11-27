@@ -18,17 +18,17 @@ import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
  * { NameString, MovieClip, MixTime, MaxMod, Duration, Element, Category, FirstModifier, SecondModifier }.
  */
 export class Item {
-  protected id: string;
+  id: string;
   /** locale keys separated by ";" */
   name: string;
   protected mc_name: string;
-  protected maxMod: number;
+  maxMod: number;
   protected mix_time: number;
-  protected primaryModifier: IModifier;
-  protected secondaryModifier: IModifier;
+  primaryModifier: IModifier;
+  secondaryModifier: IModifier;
   protected element: Element;
   protected category: Category;
-  protected duration: number;
+  duration: number;
 
   constructor(id: string, config: any) {
     this.id = id;
@@ -60,13 +60,6 @@ export class Item {
   getMcName(): string {
     return this.mc_name;
   }
-  /** limit for the modifier values of mixes made from this item */
-  getMaxMod(): number {
-    return this.maxMod;
-  }
-  getDuration(): number {
-    return this.duration;
-  }
   createModifier(config: { Category: string; Value: any }): IModifier {
     const type = int(StatType.parse(config.Category));
     if (type == StatType.MAX_HP) {
@@ -80,9 +73,6 @@ export class Item {
     }
     return new NullModifier();
   }
-  getID(): string {
-    return this.id;
-  }
   getNameToShow(): string {
     let text = '';
     for (const key of as3values(this.name.split(';'))) {
@@ -92,12 +82,6 @@ export class Item {
       text += services.texts.get(key);
     }
     return text;
-  }
-  getPrimaryModifier(): IModifier {
-    return this.primaryModifier;
-  }
-  getSecondaryModifier(): IModifier {
-    return this.secondaryModifier;
   }
   canBeContained(itemContainer: any): boolean {
     return this.category.canBeContained(itemContainer);

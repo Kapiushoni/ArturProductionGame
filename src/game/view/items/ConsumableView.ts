@@ -11,10 +11,10 @@ export class ConsumableView extends ItemView {
   getMC() {
     var mc = super.getMC();
     if (mc.potion.hasOwnProperty('liquid1')) {
-      ModifierIcons.show(this.item.getPrimaryModifier(), mc.potion.liquid1);
+      ModifierIcons.show(this.item.primaryModifier, mc.potion.liquid1);
     }
     if (mc.potion.hasOwnProperty('liquid2')) {
-      ModifierIcons.show(this.item.getSecondaryModifier(), mc.potion.liquid2);
+      ModifierIcons.show(this.item.secondaryModifier, mc.potion.liquid2);
     }
     return mc;
   }

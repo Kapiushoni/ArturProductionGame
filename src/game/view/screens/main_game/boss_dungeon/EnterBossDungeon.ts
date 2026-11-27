@@ -25,14 +25,14 @@ export class EnterBossDungeon {
   }
   start() {
     var num = Number(Dungeon.DungeonConfig['height_fighters']);
-    var jinnView = this.bossDungeonView.getJinnView();
-    var bossView = this.bossDungeonView.getBossView();
+    var jinnView = this.bossDungeonView.jinnView;
+    var bossView = this.bossDungeonView.bossView;
     jinnView.y = num;
     bossView.y = num;
     jinnView.x = Dungeon.DungeonConfig['position_jinn'] - 2.1 * Dungeon.DungeonConfig['lenght_step'];
     jinnView.putIn(this.bossDungeonView.background.arena);
     this.walk = new RunAnimation(4, true, false);
-    this.walk.getAtFinish().add(this.endPositionating);
+    this.walk.atFinish.add(this.endPositionating);
     jinnView.animate(this.walk);
     bossView.animate(new IdleAnimation());
     this.gameLoop.start();
@@ -40,22 +40,22 @@ export class EnterBossDungeon {
   resume() {
     if (this.paused) {
       this.gameLoop.start();
-      this.bossDungeonView.getJinnView().resume();
-      this.bossDungeonView.getBossView().resume();
+      this.bossDungeonView.jinnView.resume();
+      this.bossDungeonView.bossView.resume();
       this.paused = false;
     }
   }
   pause() {
     if (!this.paused) {
       this.gameLoop.stop();
-      this.bossDungeonView.getJinnView().pause();
-      this.bossDungeonView.getBossView().pause();
+      this.bossDungeonView.jinnView.pause();
+      this.bossDungeonView.bossView.pause();
       this.paused = true;
     }
   }
   refresh(num: number) {
     num = int(num);
-    this.bossDungeonView.getJinnView().x = this.bossDungeonView.getJinnView().x + BackgroundView.ARENA_VELOCITY;
+    this.bossDungeonView.jinnView.x = this.bossDungeonView.jinnView.x + BackgroundView.ARENA_VELOCITY;
   }
   endPositionating(fighterAnimation: IFighterAnimation) {
     this.walk = null;

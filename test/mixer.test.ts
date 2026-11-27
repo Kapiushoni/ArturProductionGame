@@ -28,7 +28,7 @@ describe('special recipes', () => {
       ['potLuck', 'potSmall'],
     ]) {
       const r = mix(a, b);
-      expect(r.item.getID()).toBe('potSpecial');
+      expect(r.item.id).toBe('potSpecial');
       expect(r.recipe.getId()).toBe(1);
     }
   });
@@ -64,26 +64,26 @@ describe('regular mixes', () => {
     const r = mix('potSmall', 'potBig');
     expect(r.recipe).toBe(null);
     const p = r.item;
-    expect(p.getID()).toBe('Mix_potSmall');
+    expect(p.id).toBe('Mix_potSmall');
     expect(p.getCategory().type).toBe(Category.CONSUMABLE_CATEGORY);
-    expect(p.getPrimaryModifier().getCategory()).toBe(StatType.HEALTH);
-    expect(p.getPrimaryModifier().getValue()).toBe(26); // 10*1 + floor(20*0.8)
-    expect(p.getSecondaryModifier().getCategory()).toBe(StatType.NULL);
-    expect(p.getDuration()).toBe(8); // a pure healing potion takes the second potion's duration
+    expect(p.primaryModifier.getCategory()).toBe(StatType.HEALTH);
+    expect(p.primaryModifier.getValue()).toBe(26); // 10*1 + floor(20*0.8)
+    expect(p.secondaryModifier.getCategory()).toBe(StatType.NULL);
+    expect(p.duration).toBe(8); // a pure healing potion takes the second potion's duration
   });
 
   it('different stats: the second item becomes the secondary modifier', () => {
     const p = mix('potBig', 'potLuck').item;
-    expect(p.getPrimaryModifier().getCategory()).toBe(StatType.HEALTH);
-    expect(p.getPrimaryModifier().getValue()).toBe(20);
-    expect(p.getSecondaryModifier().getCategory()).toBe(StatType.LUCK);
-    expect(p.getSecondaryModifier().getValue()).toBe(3); // floor(4 * 0.8)
+    expect(p.primaryModifier.getCategory()).toBe(StatType.HEALTH);
+    expect(p.primaryModifier.getValue()).toBe(20);
+    expect(p.secondaryModifier.getCategory()).toBe(StatType.LUCK);
+    expect(p.secondaryModifier.getValue()).toBe(3); // floor(4 * 0.8)
   });
 
   it('modifiers are capped by MaxMod', () => {
     const p = mix('sword', 'sword').item;
     expect(p.getCategory().type).toBe(Category.WEAPON_CATEGORY);
-    expect(p.getPrimaryModifier().getValue()).toBe(25); // 20 + floor(20*0.5) = 30, capped at 25
+    expect(p.primaryModifier.getValue()).toBe(25); // 20 + floor(20*0.5) = 30, capped at 25
     expect(p.getElement().type).toBe('F');
   });
 

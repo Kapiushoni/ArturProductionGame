@@ -68,7 +68,7 @@ export class TimeLine extends MovieClip {
       clip.level.gotoAndStop('special');
     } else {
       clip.level.gotoAndStop('level');
-      clip.level.text.text = level.getDungeonId();
+      clip.level.text.text = level.dungeonId;
     }
   }
   nextFight(fight: IFight) {

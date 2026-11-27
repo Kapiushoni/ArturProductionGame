@@ -33,7 +33,7 @@ export class TutorialStep extends BasicState {
     main.game.getShmabledum().getLocker().lock();
     main.tutorialHolder.addChild(this.theView);
     this.theView.enter();
-    this.setText(this.theView.getBg());
+    this.setText(this.theView.bg);
   }
   /** fills the texts of the window clip */
   setText(_clip: any) {}

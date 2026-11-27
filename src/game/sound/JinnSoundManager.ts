@@ -15,9 +15,9 @@ export class JinnSoundManager extends FighterSoundManager {
       attack = GameSounds.FIRE_ATTACK;
     } else if (weapon.getElement().isOfIce) {
       attack = GameSounds.ICE_ATTACK;
-    } else if (weapon.getID() == 'LegendarySword') {
+    } else if (weapon.id == 'LegendarySword') {
       attack = GameSounds.SORCERER_ATTACK;
-    } else if (weapon.getID() == 'MarcelineBass') {
+    } else if (weapon.id == 'MarcelineBass') {
       attack = GameSounds.AX_ATTACK;
     } else {
       attack = GameSounds.SWORD_ATTACK;

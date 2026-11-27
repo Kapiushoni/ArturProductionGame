@@ -18,7 +18,7 @@ export class Fight implements IFight {
   private theOnHit: Signal;
   private theOnLose: Signal;
   private theOnWin: Signal;
-  private first: boolean;
+  first: boolean;
 
   /** first: the first fight of the dungeon */
   constructor(jinn: Jinn, enemy: any, first = false) {
@@ -117,9 +117,6 @@ export class Fight implements IFight {
     this.theOnHit = null;
     this.theOnEnter = null;
     this.theOnExit = null;
-  }
-  isFirst(): boolean {
-    return this.first;
   }
 }
 bindMethods(Fight);
