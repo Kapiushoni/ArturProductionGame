@@ -10,7 +10,7 @@ import { Log } from '@/game/cb/logger/Log';
 import { DragDispatcher } from '@/game/drag_and_drop/DragDispatcher';
 import { PostLoader } from '@/game/loader/PostLoader';
 import { Preloader } from '@/game/loader/Preloader';
-import { SoundResourceLoader } from '@/game/loader/SoundResourceLoader';
+import { SoundLoader } from '@/game/cb/media/SoundLoader';
 import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { Game } from '@/game/main_game/Game';
@@ -30,7 +30,7 @@ import { services } from '@/game/services';
 import type { DiFile } from '@/game/bonus/DiFile';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 import type { Locale } from '@/game/cb/data/Locale';
-import type { SwfBulkLoader } from '@/game/cb/display/SwfBulkLoader';
+import type { SwfLibrary } from '@/game/cb/display/SwfLibrary';
 
 /**
  * The application (the document class of the original game). Its static fields are what the screens use;
@@ -46,7 +46,7 @@ export class main extends Sprite {
     services.texts = value;
   }
   /** asset libraries */
-  static swfLoader: SwfBulkLoader = null;
+  static swfLoader: SwfLibrary = null;
   static get soundManager(): SoundManager {
     return services.sound as SoundManager;
   }
@@ -140,7 +140,7 @@ export class main extends Sprite {
     preloader.onCharactersLoaded.add((rows: any) => CharacterFactory.setConfig(rows));
     preloader.onItemsLoaded.add((rows: any) => ItemFactory.setConfig(rows));
     preloader.onDungeonsLoaded.add((rows: any) => DungeonFactory.setConfig(rows));
-    preloader.onSwfLoaded.add((swfs: SwfBulkLoader) => (main.swfLoader = swfs));
+    preloader.onSwfLoaded.add((swfs: SwfLibrary) => (main.swfLoader = swfs));
     preloader.onSoundLoaded.add((sounds: any) => main.soundManager.start(sounds));
     preloader.onFinishLoading.add(this.preloadingComplete);
     main.achievementDispatcher = new AchievementDispatcher();
@@ -173,7 +173,19 @@ export class main extends Sprite {
     assert(main.soundManager.ready(), 'soundMixer is missing!');
     assert(main.config != null, 'config is missing!');
     assert(DailyBonus.config != null, 'dailybonus is missing!');
-    main.postLoader = new PostLoader(GameSounds.soundsToLoad, new SoundResourceLoader(main.soundManager));
+    // the other sound lists load in the background, one after another
+    main.postLoader = new PostLoader(
+      GameSounds.soundsToLoad,
+      (list) =>
+        new Promise((done) => {
+          const sounds = new SoundLoader(list);
+          sounds.loaded.add(() => {
+            main.soundManager.addSound(sounds);
+            done();
+          });
+          sounds.load();
+        }),
+    );
     main.postLoader.start();
     preloader.pop();
     this.fsmAplication.takeTransition('loaded');

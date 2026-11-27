@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { GM, randomSequence } from './helpers';
 
-const { Signal, Rule, ProbabilisticSet, Random, CsvLoader } = GM;
+const { Signal, Rule, ProbabilisticSet, Random, csvToObjects, textLines } = GM;
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -81,47 +81,51 @@ describe('Random', () => {
   });
 });
 
-describe('CsvLoader', () => {
-  const load = (text: string) => {
-    const csv = new CsvLoader('table.csv');
-    csv.load({
-      get: () =>
-        class {
-          toString() {
-            return text;
-          }
-        },
-    });
-    return csv;
-  };
+describe('CSV tables', () => {
+  const load = (text: string) => csvToObjects(textLines(text));
 
-  it('splits lines and cells, skipping empty lines', () => {
-    const csv = load('id,a,b\nx,1,2\n\ny,3,4\n');
-    expect(csv.getLines()).toBe(3);
-    expect(csv.getColumns()).toBe(3);
-    expect(csv.get(2, 3)).toBe('2');
+  it('lines lose the spaces at the start; empty lines are skipped', () => {
+    expect(textLines('a\n  b\n\tc')).toEqual(['a', 'b', 'c']);
+    const rows = load('id,a,b\n  x,1,2\n\ny,3,4\n');
+    expect(rows.get('x')).toEqual({ a: 1, b: 2 });
+    expect(rows.get('y')).toEqual({ a: 3, b: 4 });
   });
 
   it('converts rows to objects: numbers, null, nested "a.b" columns', () => {
-    const rows = load('id,Name,Mod.Category,Mod.Value\nsword,Sword,A,5\nnone,null,null,abc\n').convertToObjects();
+    const rows = load('id,Name,Mod.Category,Mod.Value\nsword,Sword,A,5\nnone,null,null,abc\n');
     expect(rows.get('sword')).toEqual({ Name: 'Sword', Mod: { Category: 'A', Value: 5 } });
     expect(rows.get('none')).toEqual({ Name: null, Mod: { Category: null, Value: 'abc' } });
   });
 });
 
-describe('Locale', () => {
-  const locale = (text: string) => {
-    const l = new GM.Locale('texts.txt');
-    l.load({
-      get: () =>
-        class {
-          toString() {
-            return text;
-          }
-        },
+describe('PostLoader', () => {
+  it('loads the resources one after another; isLoaded and onLoad follow', async () => {
+    const order: string[] = [];
+    let finish: () => void = null;
+    const loader = new GM.PostLoader(['a', 'b'], (r: string) => {
+      order.push(r);
+      return new Promise<void>((done) => (finish = done));
     });
-    return l;
-  };
+    const onLoad = vi.fn();
+    loader.onLoad.add(onLoad);
+    expect(loader.isLoaded('other')).toBe(false); // nothing counts as loaded before the start
+    const all = loader.start();
+    expect(order).toEqual(['a']);
+    expect(loader.isLoaded('a')).toBe(false);
+    expect(loader.isLoaded('other')).toBe(true);
+    finish();
+    await vi.waitFor(() => expect(order).toEqual(['a', 'b']));
+    expect(loader.isLoaded('a')).toBe(true);
+    expect(loader.isLoaded('b')).toBe(false);
+    finish();
+    await all;
+    expect(loader.isLoaded('b')).toBe(true);
+    expect(onLoad).toHaveBeenCalledTimes(3); // before a, before b, at the end
+  });
+});
+
+describe('Locale', () => {
+  const locale = (text: string) => new GM.Locale(text);
 
   it('"key: text" lines; $1, $2 are replaced by the parameters; "$$1" stays literal', () => {
     const l = locale('hello: Hello $1, you have $2 items\ntime: 10:30\nprice: costs $$1');

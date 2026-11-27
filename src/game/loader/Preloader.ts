@@ -1,20 +1,19 @@
-import { Event, MovieClip, as3as, bindMethods, int } from '@/flash/as3';
+import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { Log } from '@/game/cb/logger/Log';
-import { DiFile } from '@/game/bonus/DiFile';
-import { FileLoader } from '@/game/bonus/FileLoader';
+import type { DiFile } from '@/game/bonus/DiFile';
 import { Functor } from '@/game/cb/actions/Functor';
 import { AnimationFrameAt } from '@/game/cb/conditions/AnimationFrameAt';
-import { CsvLoader } from '@/game/cb/data/CsvLoader';
+import { Locale } from '@/game/cb/data/Locale';
 import { SmartMC } from '@/game/cb/display/SmartMC';
-import { SwfBulkLoader } from '@/game/cb/display/SwfBulkLoader';
+import { SwfLibrary } from '@/game/cb/display/SwfLibrary';
 import { SoundLoader } from '@/game/cb/media/SoundLoader';
 import { Signal } from '@/game/cb/signals/Signal';
-import { LoadingObject } from '@/game/cb/utils/LoadingObject';
 import { Rule } from '@/game/cb/utils/Rule';
 import { main } from '@/game/main';
 import { Experience } from '@/game/main_game/character/stats/Experience';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
+import { loadCsv, loadDi } from '@/game/loader/files';
 
 /**
  * Loads everything the game needs at start: first the preloader screen and the texts, then (showing the
@@ -35,7 +34,6 @@ export class Preloader {
   onFinishLoading: Signal;
   private loadedSoFar = 0;
   private rule: Rule = null;
-  private preloadingObject: LoadingObject = null;
   /** the preloader screen clip */
   private preloader: any = null;
   private bg: any;
@@ -45,10 +43,10 @@ export class Preloader {
     this.initSignals();
   }
   start() {
-    this.preloadingObject = new LoadingObject({ swfs: ['PreloaderAP.swf'], locale: 'locale.txt' });
-    this.preloadingObject.loaded.add(this.preloadComplete);
-    this.preloadingObject.load();
     Preloader.log.log('load');
+    Promise.all([SwfLibrary.load(['PreloaderAP.swf']), Locale.load('locale.txt')]).then(([swfs, locale]) =>
+      this.preloadComplete(swfs, locale),
+    );
   }
   initSignals() {
     this.onLocaleLoaded = new Signal();
@@ -61,17 +59,15 @@ export class Preloader {
     this.onFinishLoading = new Signal();
   }
   /** the preloader screen and the texts are ready: show it and load the rest */
-  preloadComplete(loadingObject: LoadingObject) {
+  preloadComplete(swfs: SwfLibrary, locale: Locale) {
     Preloader.log.log('preloadingComplete');
-    this.preloader = as3as(loadingObject.getSwfLoader().getObject('assets.PreloaderAP'), MovieClip);
+    this.preloader = as3as(swfs.getObject('assets.PreloaderAP'), MovieClip);
     this.preloader.width = 700;
     this.preloader.height = 500;
     this.preloader.stop();
     this.bg.addChild(this.preloader);
-    this.onLocaleLoaded.emit(loadingObject.getLocale());
+    this.onLocaleLoaded.emit(locale);
     this.onLocaleLoaded.clear();
-    this.preloadingObject.loaded.clear();
-    this.preloadingObject = null;
     this.loadedSoFar = 0;
     this.rule = new Rule(
       'swf',
@@ -87,24 +83,13 @@ export class Preloader {
     );
     this.rule.completed.add(this.endPreloader);
 
-    const swfs = new SwfBulkLoader('swfs.txt');
-    swfs.progress.add(this.loadingProgress);
-    swfs.loaded.add(this.loadComplete);
-    swfs.load();
-    const csv = (file: string, onLoaded: Function) => {
-      const loader = new CsvLoader(file);
-      loader.loaded.add(onLoaded);
-      loader.load();
-    };
+    SwfLibrary.load('swfs.txt', this.loadingProgress).then(this.loadComplete);
+    const csv = (file: string, onLoaded: (rows: any) => void) => loadCsv(file).then(onLoaded);
     csv('characters.csv', this.charactersComplete);
     csv('jinnXP.csv', this.levelingComplete);
     csv('mix.csv', this.mixComplete);
     csv('items.csv', this.itemsComplete);
-    const di = (file: string, onLoaded: (event: any) => void) => {
-      const loader = new FileLoader(file);
-      loader.addEventListener(Event.COMPLETE, onLoaded);
-      loader.load();
-    };
+    const di = (file: string, onLoaded: (di: DiFile) => void) => loadDi(file).then(onLoaded);
     di('config.di', this.configComplete);
     di('dailyBonus.di', this.bonusComplete);
     csv('dungeons.csv', this.dungeonsComplete);
@@ -121,56 +106,53 @@ export class Preloader {
     this.onSoundLoaded.clear();
     this.rule.check('sounds');
   }
-  configComplete(event: any) {
+  configComplete(config: DiFile) {
     Preloader.log.log('config Loaded');
-    event.currentTarget.removeEventListener(Event.COMPLETE, this.configComplete);
-    this.onConfigLoaded.emit(new DiFile(as3as(event.target, FileLoader)));
+    this.onConfigLoaded.emit(config);
     this.onConfigLoaded.clear();
     this.rule.check('config');
   }
-  bonusComplete(event: any) {
+  bonusComplete(bonus: DiFile) {
     Preloader.log.log('bonus Loaded');
-    event.currentTarget.removeEventListener(Event.COMPLETE, this.bonusComplete);
-    main.setDailyBonus(new DiFile(as3as(event.target, FileLoader)));
+    main.setDailyBonus(bonus);
     this.rule.check('bonus');
   }
-  dungeonsComplete(loader: CsvLoader) {
+  dungeonsComplete(rows: any) {
     Preloader.log.log('dungeons Loaded');
-    this.onDungeonsLoaded.emit(loader.convertToObjects());
+    this.onDungeonsLoaded.emit(rows);
     this.onDungeonsLoaded.clear();
     this.rule.check('dungeons');
   }
-  lootComplete(loader: CsvLoader) {
+  lootComplete(rows: any) {
     Preloader.log.log('First loot Complete');
-    DungeonFactory.firstLoot = loader.convertToObjects();
+    DungeonFactory.firstLoot = rows;
     this.rule.check('firstLoot');
   }
-  charactersComplete(loader: CsvLoader) {
+  charactersComplete(rows: any) {
     Preloader.log.log('characters Loaded');
-    this.onCharactersLoaded.emit(loader.convertToObjects());
+    this.onCharactersLoaded.emit(rows);
     this.onCharactersLoaded.clear();
     this.rule.check('characters');
   }
-  levelingComplete(loader: CsvLoader) {
+  levelingComplete(rows: any) {
     Preloader.log.log('leveling Loaded');
-    Experience.configuration = loader.convertToObjects();
+    Experience.configuration = rows;
     this.rule.check('jinn_level');
   }
-  mixComplete(loader: CsvLoader) {
+  mixComplete(rows: any) {
     Preloader.log.log('mix Loaded');
-    MixStrategy.config = loader.convertToObjects();
+    MixStrategy.config = rows;
     this.rule.check('mix');
   }
-  itemsComplete(loader: CsvLoader) {
+  itemsComplete(rows: any) {
     Preloader.log.log('items Loaded');
-    this.onItemsLoaded.emit(loader.convertToObjects());
+    this.onItemsLoaded.emit(rows);
     this.onItemsLoaded.clear();
     this.rule.check('items');
   }
-  loadComplete(loader: SwfBulkLoader) {
+  loadComplete(swfs: SwfLibrary) {
     Preloader.log.log('Swf Loaded');
-    loader.loaded.clear();
-    this.onSwfLoaded.emit(loader);
+    this.onSwfLoaded.emit(swfs);
     this.onSwfLoaded.clear();
     this.rule.check('swf');
   }
@@ -187,7 +169,6 @@ export class Preloader {
   clear() {
     this.bg = null;
     this.preloader = null;
-    this.preloadingObject = null;
     this.onCharactersLoaded.clear();
     this.onConfigLoaded.clear();
     this.onDungeonsLoaded.clear();

@@ -28,7 +28,7 @@ export class Util {
   static pass(): (...args: any[]) => void {
     return (..._args: any[]) => {};
   }
-  static areLoaded(resources: string[], loader: any): boolean {
+  static areLoaded(resources: string[], loader: { isLoaded(resource: string): boolean }): boolean {
     for (const resource of as3values(resources)) {
       if (!loader.isLoaded(resource)) {
         return false;
