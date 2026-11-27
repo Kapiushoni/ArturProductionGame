@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 import { app } from '@/game/app';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { HealthModifier } from '@/game/main_game/items/modifiers/HealthModifier';
@@ -61,4 +61,3 @@ export class ModifierIcons {
     textField.text = app.locale.get('popUpValue', [modifier.getValue().toString(), int(max).toString()]);
   }
 }
-bindMethods(ModifierIcons);

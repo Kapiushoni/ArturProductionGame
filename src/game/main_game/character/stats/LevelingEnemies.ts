@@ -41,6 +41,6 @@ export class LevelingEnemies extends LevelingStragegy {
     return newLevel;
   }
 }
-bindMethods(LevelingEnemies);
+bindMethods(LevelingEnemies, ['level']);
 
 class SingletonLock {}

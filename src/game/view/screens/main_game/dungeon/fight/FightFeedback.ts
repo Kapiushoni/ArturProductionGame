@@ -88,4 +88,4 @@ export class FightFeedback extends Sprite {
 // Defaults on the prototype, not field initializers: the Sprite constructor runs first and may set it,
 // and an initializer (run after the base constructor) would overwrite them.
 FightFeedback.prototype.slots = null;
-bindMethods(FightFeedback);
+bindMethods(FightFeedback, ['removePoster', 'pause', 'resume', 'clear']);

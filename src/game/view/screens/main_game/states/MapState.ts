@@ -42,4 +42,4 @@ export class MapState extends BasicPausableState {
     this.principal.toLevelWaiting(level);
   }
 }
-bindMethods(MapState);
+bindMethods(MapState, ['enter', 'leave', 'toMainMenu', 'toLevel']);

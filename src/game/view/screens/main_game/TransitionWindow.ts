@@ -57,4 +57,4 @@ export class TransitionWindow extends AnimatedScreen {
     this.resources = null;
   }
 }
-bindMethods(TransitionWindow);
+bindMethods(TransitionWindow, ['start', 'startWaiting', 'waitingForResources', 'leave', 'clear']);

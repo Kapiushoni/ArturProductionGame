@@ -174,4 +174,12 @@ export class SaveSystem {
     this.savePending();
   }
 }
-bindMethods(SaveSystem);
+bindMethods(SaveSystem, [
+  'tutorialStepCompleted',
+  'realSavePending',
+  'savePending',
+  'saveMix',
+  'saveRecipe',
+  'saveClearedLevel',
+  'getExperience',
+]);

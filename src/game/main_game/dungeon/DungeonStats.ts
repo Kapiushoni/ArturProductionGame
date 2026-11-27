@@ -67,4 +67,4 @@ export class DungeonStats {
     this.deactivate();
   }
 }
-bindMethods(DungeonStats);
+bindMethods(DungeonStats, ['start', 'onMix', 'onHit', 'end', 'deactivate', 'clear']);

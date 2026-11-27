@@ -59,4 +59,4 @@ export class BossFightView extends BasicFightView {
     app.soundManager.stopMusic(GameSounds.BOSS_MUSIC);
   }
 }
-bindMethods(BossFightView);
+bindMethods(BossFightView, ['enter', 'backgroundMove', 'won', 'lose']);

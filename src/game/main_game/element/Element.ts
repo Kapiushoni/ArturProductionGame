@@ -59,7 +59,7 @@ export class Element {
   }
   clear() {}
 }
-bindMethods(Element);
+bindMethods(Element, ['clear']);
 
 class Fire extends Element {
   constructor() {
@@ -72,7 +72,6 @@ class Fire extends Element {
     return Element.FIRE;
   }
 }
-bindMethods(Fire);
 
 class Ice extends Element {
   constructor() {
@@ -85,7 +84,6 @@ class Ice extends Element {
     return Element.ICE;
   }
 }
-bindMethods(Ice);
 
 class Normal extends Element {
   constructor() {
@@ -95,9 +93,7 @@ class Normal extends Element {
     return Element.NORMAL;
   }
 }
-bindMethods(Normal);
 
 class Lock {
   constructor() {}
 }
-bindMethods(Lock);

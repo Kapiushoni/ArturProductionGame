@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 import { removeMix } from '@/game/main_game/mixer/mixId';
 import type { Item } from '@/game/main_game/items/Item';
 
@@ -43,4 +43,3 @@ export class Recipe {
     return this.res;
   }
 }
-bindMethods(Recipe);

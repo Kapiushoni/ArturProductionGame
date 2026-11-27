@@ -44,4 +44,4 @@ export class Loot {
     this.slots = null;
   }
 }
-bindMethods(Loot);
+bindMethods(Loot, ['getSlot', 'clear']);

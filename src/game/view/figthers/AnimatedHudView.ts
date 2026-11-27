@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { HudView } from '@/game/view/figthers/HudView';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { HudSetter } from '@/game/view/figthers/HudSetter';
@@ -17,4 +16,3 @@ export class AnimatedHudView extends HudView {
     super.changeFighter(fighter);
   }
 }
-bindMethods(AnimatedHudView);

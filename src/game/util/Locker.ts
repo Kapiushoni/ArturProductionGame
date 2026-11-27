@@ -33,4 +33,4 @@ export class Locker {
     this.lockSignal = null;
   }
 }
-bindMethods(Locker);
+bindMethods(Locker, ['lock', 'unlock', 'clear']);

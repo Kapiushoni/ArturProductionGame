@@ -1,4 +1,4 @@
-import { as3keys, bindMethods, int } from '@/flash/as3';
+import { as3keys, int } from '@/flash/as3';
 import { Recipe } from '@/game/main_game/mixer/Recipe';
 
 /** All special recipes, from mix.csv: id -> { item1, item2, itemResult, showAdvice }. */
@@ -25,4 +25,3 @@ export class MixData {
     return this.recipes.find((recipe) => recipe.getId() == id) ?? null;
   }
 }
-bindMethods(MixData);

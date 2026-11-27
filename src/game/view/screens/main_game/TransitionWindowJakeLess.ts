@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { TransitionWindow } from '@/game/view/screens/main_game/TransitionWindow';
 import { app } from '@/game/app';
 
@@ -10,4 +9,3 @@ export class TransitionWindowJakeLess extends TransitionWindow {
     return app.swfLoader.getClass('assets.loadingJacky');
   }
 }
-bindMethods(TransitionWindowJakeLess);

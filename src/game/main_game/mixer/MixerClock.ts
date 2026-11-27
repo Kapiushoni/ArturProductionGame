@@ -45,4 +45,4 @@ export class MixerClock {
     }
   }
 }
-bindMethods(MixerClock);
+bindMethods(MixerClock, ['start', 'tic', 'endMix', 'stop', 'clear']);

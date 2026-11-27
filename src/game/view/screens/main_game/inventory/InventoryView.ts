@@ -62,4 +62,4 @@ export class InventoryView {
     this.trash = null;
   }
 }
-bindMethods(InventoryView);
+bindMethods(InventoryView, ['updatePage', 'nextPage', 'previousPage', 'clear']);

@@ -146,4 +146,4 @@ export class MainMenu extends Screen {
     super.clear();
   }
 }
-bindMethods(MainMenu);
+bindMethods(MainMenu, ['enter', 'continueGame', 'newGame', 'cancelPopUp', 'exit', 'clear']);

@@ -136,4 +136,4 @@ export class SoundManager {
     return this.soundMixer.isPlaying(name);
   }
 }
-bindMethods(SoundManager);
+bindMethods(SoundManager, ['start', 'ready', 'onSoundClick']);

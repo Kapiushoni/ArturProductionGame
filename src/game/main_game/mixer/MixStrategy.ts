@@ -1,4 +1,4 @@
-import { as3keys, as3values, bindMethods, int } from '@/flash/as3';
+import { as3keys, as3values, int } from '@/flash/as3';
 import { services } from '@/game/services';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { Category } from '@/game/main_game/items/Category';
@@ -183,4 +183,3 @@ export class MixStrategy {
     return modifier.getCategory() == StatType.MAX_HP || modifier.getCategory() == StatType.HEALTH;
   }
 }
-bindMethods(MixStrategy);

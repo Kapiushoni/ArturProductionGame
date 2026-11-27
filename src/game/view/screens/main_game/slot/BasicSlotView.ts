@@ -172,4 +172,14 @@ export class BasicSlotView {
     this.item_view = null;
   }
 }
-bindMethods(BasicSlotView);
+bindMethods(BasicSlotView, [
+  'enable',
+  'disable',
+  'refresh',
+  'startDrag',
+  'endDrag',
+  'mouseOver',
+  'mouseOut',
+  'select',
+  'clear',
+]);

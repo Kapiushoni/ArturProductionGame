@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { BasicSlotView } from '@/game/view/screens/main_game/slot/BasicSlotView';
 import { SlotStates } from '@/game/view/screens/main_game/slot/SlotStates';
 import type { ISlot } from '@/game/main_game/item_containers/ISlot';
@@ -20,4 +19,3 @@ export class SlotView extends BasicSlotView {
     }
   }
 }
-bindMethods(SlotView);

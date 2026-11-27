@@ -47,4 +47,4 @@ export class AnimatedScreen extends Screen {
     }
   }
 }
-bindMethods(AnimatedScreen);
+bindMethods(AnimatedScreen, ['enter', 'leave']);

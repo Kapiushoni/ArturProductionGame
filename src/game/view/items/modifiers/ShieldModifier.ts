@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { SimpleAnimationModifier } from '@/game/view/items/modifiers/SimpleAnimationModifier';
 import type { MovieClip } from '@/flash/as3';
 
@@ -10,4 +9,3 @@ export class ShieldModifier extends SimpleAnimationModifier {
     this.setIcon(clip.shield.shield.gem, text);
   }
 }
-bindMethods(ShieldModifier);

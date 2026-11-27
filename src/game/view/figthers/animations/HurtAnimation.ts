@@ -41,4 +41,4 @@ export class HurtAnimation extends FighterAnimation {
     return this.name != 'die';
   }
 }
-bindMethods(HurtAnimation);
+bindMethods(HurtAnimation, ['make']);

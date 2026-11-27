@@ -1,4 +1,4 @@
-import { Dictionary, Sprite, as3as, as3keys, as3values, bindMethods, uint } from '@/flash/as3';
+import { Dictionary, Sprite, as3as, as3keys, as3values, uint } from '@/flash/as3';
 import { GameLoop } from '@/game/cb/gameloop/GameLoop';
 
 /**
@@ -100,7 +100,6 @@ export class Tween {
     return (Number(change) * Number(time)) / Number(duration) + Number(from);
   }
 }
-bindMethods(Tween);
 
 class Properties {
   target: any;
@@ -120,7 +119,6 @@ class Properties {
     this.propsMap = new Dictionary();
   }
 }
-bindMethods(Properties);
 
 class Value {
   from: number;
@@ -133,4 +131,3 @@ class Value {
     this.change = this.to - this.from;
   }
 }
-bindMethods(Value);

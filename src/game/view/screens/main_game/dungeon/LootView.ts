@@ -105,4 +105,4 @@ export class LootView {
     return this.loot.getSlot(0).isEmpty();
   }
 }
-bindMethods(LootView);
+bindMethods(LootView, ['pause', 'resume', 'showOneLoot', 'clear', 'isEmpty']);

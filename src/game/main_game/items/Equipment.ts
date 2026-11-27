@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Category } from '@/game/main_game/items/Category';
 import type { ItemContainer } from '@/game/main_game/item_containers/ItemContainer';
 
@@ -11,4 +10,3 @@ export class Equipment extends Category {
     return itemContainer.canContainEquipment();
   }
 }
-bindMethods(Equipment);

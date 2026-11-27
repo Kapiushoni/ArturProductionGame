@@ -23,4 +23,4 @@ export class SlotChange {
     return this.new_item;
   }
 }
-bindMethods(SlotChange);
+bindMethods(SlotChange, ['getSlot']);

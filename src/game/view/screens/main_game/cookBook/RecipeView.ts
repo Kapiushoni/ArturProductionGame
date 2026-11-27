@@ -70,4 +70,4 @@ export class RecipeView {
     slot.clear();
   }
 }
-bindMethods(RecipeView);
+bindMethods(RecipeView, ['clear']);

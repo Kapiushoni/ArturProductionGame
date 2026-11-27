@@ -32,4 +32,4 @@ export class PostLoader {
     this.onLoad.emit();
   }
 }
-bindMethods(PostLoader);
+bindMethods(PostLoader, ['isLoaded', 'start']);

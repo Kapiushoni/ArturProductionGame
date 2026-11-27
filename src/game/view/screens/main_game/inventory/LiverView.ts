@@ -86,4 +86,4 @@ export class LiverView {
     this.stats = null;
   }
 }
-bindMethods(LiverView);
+bindMethods(LiverView, ['animate', 'refresh', 'refreshMask', 'removeConsumable', 'clear']);

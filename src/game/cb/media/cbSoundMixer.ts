@@ -103,4 +103,4 @@ export class cbSoundMixer implements SoundMixable {
     return this.sounds.get(name).playing();
   }
 }
-bindMethods(cbSoundMixer);
+bindMethods(cbSoundMixer, ['mute', 'pause', 'resume', 'loopSound', 'play', 'stop']);

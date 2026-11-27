@@ -67,4 +67,4 @@ export class ArrowView {
     this.click = null;
   }
 }
-bindMethods(ArrowView);
+bindMethods(ArrowView, ['onClick', 'over', 'out', 'hide', 'show', 'refreshAsButton', 'clear']);

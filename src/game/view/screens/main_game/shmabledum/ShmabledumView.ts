@@ -99,4 +99,4 @@ export class ShmabledumView {
     this.timer = null;
   }
 }
-bindMethods(ShmabledumView);
+bindMethods(ShmabledumView, ['changeInLock', 'click', 'interact', 'showTipNow', 'hideTip', 'clear']);

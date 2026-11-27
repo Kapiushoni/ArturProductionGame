@@ -35,4 +35,4 @@ export class AchievementDispatcher {
     this.log.log('Last dungeon cleared');
   }
 }
-bindMethods(AchievementDispatcher);
+bindMethods(AchievementDispatcher, ['gameLoaded', 'madeMix']);

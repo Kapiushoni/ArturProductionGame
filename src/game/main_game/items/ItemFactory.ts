@@ -43,7 +43,6 @@ export class ItemFactory {
     throw new SaveError('ItemCorrupted');
   }
 }
-bindMethods(ItemFactory);
+bindMethods(ItemFactory, ['getItem']);
 
 class SingletonLock {}
-bindMethods(SingletonLock);

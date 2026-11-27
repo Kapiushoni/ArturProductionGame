@@ -14,4 +14,4 @@ export class JoyAnimation extends FighterAnimation {
     super.make(fighterView);
   }
 }
-bindMethods(JoyAnimation);
+bindMethods(JoyAnimation, ['make']);

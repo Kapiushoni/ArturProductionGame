@@ -82,4 +82,4 @@ export class ConsumePotionStep extends TutorialStep {
     app.game.getJinn().stats.onChange.remove(this.statsChange);
   }
 }
-bindMethods(ConsumePotionStep);
+bindMethods(ConsumePotionStep, ['enter', 'statsChange', 'triggerTutorial', 'leave', 'clear']);

@@ -25,4 +25,4 @@ export class GameLoop {
     this.displayObject.removeEventListener(Event.ENTER_FRAME, this.update);
   }
 }
-bindMethods(GameLoop);
+bindMethods(GameLoop, ['start', 'update', 'stop']);

@@ -59,4 +59,4 @@ export class ProbabilisticSet {
     this.totalProb = this.totalProb + Number(weight);
   }
 }
-bindMethods(ProbabilisticSet);
+bindMethods(ProbabilisticSet, ['pop', 'remove', 'add']);

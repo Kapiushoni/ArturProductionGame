@@ -222,4 +222,4 @@ export class ShmabledumPrincess {
     this.onInteractionSignal = null;
   }
 }
-bindMethods(ShmabledumPrincess);
+bindMethods(ShmabledumPrincess, ['itemMixed', 'onDungeon', 'onWinDungeon', 'onLoseDungeon', 'onFight', 'clear']);

@@ -1,4 +1,4 @@
-import { as3as, bindMethods } from '@/flash/as3';
+import { as3as } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Stats } from '@/game/main_game/character/stats/Stats';
 import { Experience } from '@/game/main_game/character/stats/Experience';
@@ -24,4 +24,3 @@ export class JinnStats extends Stats {
     (as3as(this.stats.get(StatType.EXPERIENCE), PersistentExperience) as PersistentExperience).startPersistence();
   }
 }
-bindMethods(JinnStats);

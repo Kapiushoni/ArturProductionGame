@@ -44,11 +44,14 @@ export function as3is(v: any, T: any): boolean {
   return false;
 }
 
-/** AS3 method closures are bound: emulate with cached bound getters on the prototype */
-export function bindMethods(C: any) {
+/**
+ * AS3 method closures are bound: emulate with cached bound getters on the prototype.
+ * names: only these methods (the ones passed around as callbacks); all of them when omitted.
+ */
+export function bindMethods(C: any, names?: string[]) {
   const p = C.prototype;
-  for (const k of Object.getOwnPropertyNames(p)) {
-    if (k === 'constructor') continue;
+  for (const k of names ?? Object.getOwnPropertyNames(p)) {
+    if (k === 'constructor' || !Object.prototype.hasOwnProperty.call(p, k)) continue;
     const d = Object.getOwnPropertyDescriptor(p, k)!;
     if (typeof d.value !== 'function') continue;
     const orig = d.value;

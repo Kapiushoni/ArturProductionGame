@@ -120,4 +120,4 @@ export class Fight implements IFight {
     this.theOnExit = null;
   }
 }
-bindMethods(Fight);
+bindMethods(Fight, ['enter', 'leave', 'fight', 'atHit', 'start', 'suddenDeath', 'deactivate', 'clear']);

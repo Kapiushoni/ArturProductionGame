@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 import { GameSounds } from '@/game/sound/GameSounds';
 import type { Enemy } from '@/game/main_game/character/Enemy';
@@ -54,4 +53,3 @@ export class EnemySoundManager extends FighterSoundManager {
     super.playDie();
   }
 }
-bindMethods(EnemySoundManager);

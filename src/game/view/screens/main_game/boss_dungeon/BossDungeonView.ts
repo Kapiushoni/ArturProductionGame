@@ -69,4 +69,4 @@ export class BossDungeonView extends DungeonView {
 // Defaults on the prototype, not field initializers: the DungeonView constructor calls initialize(), which sets bossView,
 // and an initializer (run after the base constructor) would overwrite them.
 BossDungeonView.prototype.bossView = null;
-bindMethods(BossDungeonView);
+bindMethods(BossDungeonView, ['start', 'onToOutro', 'onFight', 'endEnterFinishWindow', 'clear']);

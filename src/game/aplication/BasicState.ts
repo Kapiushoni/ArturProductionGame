@@ -50,4 +50,4 @@ export class BasicState implements State {
     this.persistency = null;
   }
 }
-bindMethods(BasicState);
+bindMethods(BasicState, ['enter', 'leave', 'clear']);

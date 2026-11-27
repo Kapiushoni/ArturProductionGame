@@ -107,4 +107,4 @@ export class Item {
     return { id: this.id };
   }
 }
-bindMethods(Item);
+bindMethods(Item, ['clear', 'getCategory']);

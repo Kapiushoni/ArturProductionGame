@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { ItemView } from '@/game/view/items/ItemView';
 import { SlotStates } from '@/game/view/screens/main_game/slot/SlotStates';
@@ -21,4 +20,3 @@ export class EquipmentView extends ItemView {
     return SlotStates.EQUIPMENT;
   }
 }
-bindMethods(EquipmentView);

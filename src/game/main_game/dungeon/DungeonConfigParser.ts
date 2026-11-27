@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Util } from '@/game/util/Util';
 import type { DungeonConfigData } from '@/game/main_game/dungeon/DungeonConfigData';
 
@@ -45,4 +44,3 @@ export class DungeonConfigParser implements DungeonConfigData {
     return this.backgrounds;
   }
 }
-bindMethods(DungeonConfigParser);

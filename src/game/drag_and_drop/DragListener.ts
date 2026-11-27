@@ -101,4 +101,4 @@ export class DragListener {
     this.container = null;
   }
 }
-bindMethods(DragListener);
+bindMethods(DragListener, ['mouseOver', 'mouseOut', 'mouseDown', 'mouseUp', 'beginDrag', 'stopDrag', 'clear']);

@@ -13,4 +13,4 @@ export class AnimationFrameAt implements Condition {
     return clip.currentFrame == this.condFrame;
   }
 }
-bindMethods(AnimationFrameAt);
+bindMethods(AnimationFrameAt, ['complete']);

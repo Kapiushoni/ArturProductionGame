@@ -97,4 +97,4 @@ export class Pause extends AnimatedScreen {
     });
   }
 }
-bindMethods(Pause);
+bindMethods(Pause, ['enter', 'leave', 'clear', 'replay', 'levelSelect', 'emitAndLeave', 'help', 'cancel']);

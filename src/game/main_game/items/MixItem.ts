@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Item } from '@/game/main_game/items/Item';
 import { StatType } from '@/game/main_game/character/stats/StatType';
@@ -29,4 +29,3 @@ export class MixItem extends Item {
     };
   }
 }
-bindMethods(MixItem);

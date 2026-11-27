@@ -60,4 +60,4 @@ export class TrashView {
     this.trash = null;
   }
 }
-bindMethods(TrashView);
+bindMethods(TrashView, ['mouseOver', 'mouseOut', 'select', 'stop', 'throwItem', 'clear']);

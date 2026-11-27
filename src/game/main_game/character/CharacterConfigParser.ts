@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Element } from '@/game/main_game/element/Element';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 
@@ -43,4 +42,3 @@ export class CharacterConfigParser implements CharacterConfigData {
     return this.theNameString;
   }
 }
-bindMethods(CharacterConfigParser);

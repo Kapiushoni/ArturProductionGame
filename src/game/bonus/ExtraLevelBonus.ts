@@ -34,4 +34,4 @@ export class ExtraLevelBonus implements IDailyBonus {
     return BonusIcon.Kill;
   }
 }
-bindMethods(ExtraLevelBonus);
+bindMethods(ExtraLevelBonus, ['activate', 'apply']);

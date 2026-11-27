@@ -32,4 +32,4 @@ export class MixRecipe {
     return this.resultId;
   }
 }
-bindMethods(MixRecipe);
+bindMethods(MixRecipe, ['equals']);

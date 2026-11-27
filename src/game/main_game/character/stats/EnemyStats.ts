@@ -28,4 +28,4 @@ export class EnemyStats extends Stats {
     (as3as(this.stats.get(StatType.HEALTH), HealthStat) as HealthStat).fill();
   }
 }
-bindMethods(EnemyStats);
+bindMethods(EnemyStats, ['leveling']);

@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { Util } from '@/game/util/Util';
@@ -36,4 +35,3 @@ export class SimpleAnimationModifier {
     }
   }
 }
-bindMethods(SimpleAnimationModifier);

@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import type { Action } from '@/game/cb/actions/Action';
 import type { MovieClip } from '@/flash/as3';
 
@@ -8,4 +7,3 @@ export class RemoveFromParent implements Action {
     clip.parent.removeChild(clip);
   }
 }
-bindMethods(RemoveFromParent);

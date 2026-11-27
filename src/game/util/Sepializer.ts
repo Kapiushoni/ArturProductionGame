@@ -40,6 +40,6 @@ export class Sepializer {
     sprite.filters = [];
   }
 }
-bindMethods(Sepializer);
+bindMethods(Sepializer, ['sepialize', 'unsepialize']);
 
 class SingletonLock {}

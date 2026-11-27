@@ -67,4 +67,4 @@ export class Level {
     return this.dungeonId;
   }
 }
-bindMethods(Level);
+bindMethods(Level, ['unlock', 'clear']);

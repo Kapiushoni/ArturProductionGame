@@ -1,4 +1,4 @@
-import { MovieClip, as3as, bindMethods } from '@/flash/as3';
+import { MovieClip, as3as } from '@/flash/as3';
 import { Effect } from '@/game/view/effect/Effect';
 import { Random } from '@/game/cb/utils/Random';
 import { app } from '@/game/app';
@@ -16,4 +16,3 @@ export class SmokeEffect extends Effect {
     app.soundManager.playFx(GameSounds.SMOKE);
   }
 }
-bindMethods(SmokeEffect);

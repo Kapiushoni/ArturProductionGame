@@ -13,4 +13,4 @@ export class AnimationLabelAt implements Condition {
     return clip.currentLabel == this.condLabel;
   }
 }
-bindMethods(AnimationLabelAt);
+bindMethods(AnimationLabelAt, ['complete']);

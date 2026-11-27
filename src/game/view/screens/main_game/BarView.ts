@@ -58,4 +58,4 @@ export class BarView {
     this.locale = null;
   }
 }
-bindMethods(BarView);
+bindMethods(BarView, ['clear']);

@@ -232,4 +232,18 @@ export class WinWindow extends AnimatedScreen {
     this.pop();
   }
 }
-bindMethods(WinWindow);
+bindMethods(WinWindow, [
+  'pause',
+  'resume',
+  'enter',
+  'leave',
+  'showStats',
+  'giveXp',
+  'updateProperty',
+  'makeFinalCountAnimation',
+  'takeAllLoot',
+  'replay',
+  'toMap',
+  'next',
+  'exit',
+]);

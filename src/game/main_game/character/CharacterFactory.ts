@@ -41,6 +41,6 @@ export class CharacterFactory {
     return new CharacterConfigParser(CharacterFactory.config.get(name));
   }
 }
-bindMethods(CharacterFactory);
+bindMethods(CharacterFactory, ['getJinn']);
 
 class SingletonLock {}

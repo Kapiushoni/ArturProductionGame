@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { EnemyView } from '@/game/view/figthers/EnemyView';
 import { app } from '@/game/app';
 import { BossSoundManager } from '@/game/sound/BossSoundManager';
@@ -18,4 +17,3 @@ export class BossView extends EnemyView {
     this.soundManager = new BossSoundManager();
   }
 }
-bindMethods(BossView);

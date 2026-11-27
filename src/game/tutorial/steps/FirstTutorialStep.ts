@@ -32,4 +32,4 @@ export class FirstTutorialStep extends TutorialStep {
     app.game.getJinn().gear.weapon.onChange.remove(this.weaponChange);
   }
 }
-bindMethods(FirstTutorialStep);
+bindMethods(FirstTutorialStep, ['enter', 'weaponChange', 'leave', 'clear']);

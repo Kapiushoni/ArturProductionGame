@@ -39,4 +39,4 @@ export class Modifier implements IModifier {
     };
   }
 }
-bindMethods(Modifier);
+bindMethods(Modifier, ['getStat', 'getValue', 'getCategory', 'clear']);

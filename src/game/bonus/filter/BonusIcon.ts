@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { services } from '@/game/services';
 
 /** An icon of a daily bonus: library clip "assets.<prefix><type>", on frame `label`, with an optional title (see DailyBonusView). */
@@ -33,6 +32,5 @@ export class BonusIcon {
     return new BonusIcon(new ConstructorLock(), 'LevelIcon', services.texts.get('dailyLvl'), up ? 'up' : 'down');
   }
 }
-bindMethods(BonusIcon);
 
 class ConstructorLock {}

@@ -45,4 +45,4 @@ export class CookBookPage {
     this.bg = null;
   }
 }
-bindMethods(CookBookPage);
+bindMethods(CookBookPage, ['pop', 'clear']);

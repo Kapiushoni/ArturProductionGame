@@ -98,4 +98,4 @@ export class Screen extends Sprite {
     this.clear();
   }
 }
-bindMethods(Screen);
+bindMethods(Screen, ['added', 'clear', 'pop']);

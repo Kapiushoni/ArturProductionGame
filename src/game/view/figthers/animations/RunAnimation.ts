@@ -47,4 +47,4 @@ export class RunAnimation extends FighterAnimation {
     super.finish(null);
   }
 }
-bindMethods(RunAnimation);
+bindMethods(RunAnimation, ['make', 'finish']);

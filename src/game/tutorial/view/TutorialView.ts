@@ -26,4 +26,4 @@ export class TutorialView extends AnimatedScreen {
     });
   }
 }
-bindMethods(TutorialView);
+bindMethods(TutorialView, ['leave']);

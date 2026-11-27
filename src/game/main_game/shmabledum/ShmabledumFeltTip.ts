@@ -18,4 +18,4 @@ export class ShmabledumFeltTip implements ShmabledumInteraction {
     shmabledum.expressFeeling(this.feeling, Util.l(this.tip.make, shmabledum));
   }
 }
-bindMethods(ShmabledumFeltTip);
+bindMethods(ShmabledumFeltTip, ['make']);

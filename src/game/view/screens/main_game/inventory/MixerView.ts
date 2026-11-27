@@ -83,4 +83,4 @@ export class MixerView {
     this.slots = null;
   }
 }
-bindMethods(MixerView);
+bindMethods(MixerView, ['disable', 'enable', 'change', 'mix', 'mixButtonOut', 'clear']);

@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import type { MovieClip } from '@/flash/as3';
 
 export class NullShieldModifier {
@@ -8,4 +7,3 @@ export class NullShieldModifier {
     clip.visible = false;
   }
 }
-bindMethods(NullShieldModifier);

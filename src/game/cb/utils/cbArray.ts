@@ -64,4 +64,4 @@ export class cbArray extends Array<any> {
     return result;
   }
 }
-bindMethods(cbArray);
+bindMethods(cbArray, ['remove', 'clone', 'subtract']);

@@ -66,4 +66,4 @@ export class EnterDungeonView {
     this.walk = null;
   }
 }
-bindMethods(EnterDungeonView);
+bindMethods(EnterDungeonView, ['start', 'endEnter', 'refresh', 'resume', 'pause', 'clear']);

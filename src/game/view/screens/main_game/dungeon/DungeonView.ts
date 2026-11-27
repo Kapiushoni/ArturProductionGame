@@ -189,4 +189,17 @@ export class DungeonView extends Screen {
     this.dungeon = null;
   }
 }
-bindMethods(DungeonView);
+bindMethods(DungeonView, [
+  'start',
+  'potionConsumition',
+  'suddenDeath',
+  'pause',
+  'resume',
+  'onLevelSelect',
+  'onReplay',
+  'onFight',
+  'dungeonLost',
+  'dungeonWon',
+  'endEnterFinishWindow',
+  'close',
+]);

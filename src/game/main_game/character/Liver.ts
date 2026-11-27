@@ -112,4 +112,4 @@ export class Liver extends Slot {
     this.fighter = null;
   }
 }
-bindMethods(Liver);
+bindMethods(Liver, ['lock', 'unlock', 'moveFrom', 'add', 'remove', 'clearBuffs', 'clear']);

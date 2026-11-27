@@ -1,4 +1,4 @@
-import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
+import { MovieClip, as3as, int } from '@/flash/as3';
 import { app } from '@/game/app';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 
@@ -48,4 +48,3 @@ export class DamageFeedback {
     return null;
   }
 }
-bindMethods(DamageFeedback);

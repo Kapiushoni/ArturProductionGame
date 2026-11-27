@@ -1,4 +1,4 @@
-import { as3as, bindMethods } from '@/flash/as3';
+import { as3as } from '@/flash/as3';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { Boss } from '@/game/main_game/boss_dungeon/Boss';
 import { BossFight } from '@/game/main_game/boss_dungeon/BossFight';
@@ -17,4 +17,3 @@ export class BossDungeon extends Dungeon {
     return CharacterFactory.getInstance().getBoss(level);
   }
 }
-bindMethods(BossDungeon);

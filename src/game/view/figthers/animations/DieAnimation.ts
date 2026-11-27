@@ -24,4 +24,4 @@ export class DieAnimation extends FighterAnimation {
     return false;
   }
 }
-bindMethods(DieAnimation);
+bindMethods(DieAnimation, ['make']);

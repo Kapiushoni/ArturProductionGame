@@ -189,4 +189,21 @@ export class Preloader {
     this.onFinishLoading.emit(this);
   }
 }
-bindMethods(Preloader);
+bindMethods(Preloader, [
+  'start',
+  'soundLoadingCompleted',
+  'configComplete',
+  'bonusComplete',
+  'dungeonsComplete',
+  'lootComplete',
+  'charactersComplete',
+  'levelingComplete',
+  'mixComplete',
+  'itemsComplete',
+  'loadComplete',
+  'loadingProgress',
+  'pop',
+  'clear',
+  'endPreloader',
+  'emitFinish',
+]);

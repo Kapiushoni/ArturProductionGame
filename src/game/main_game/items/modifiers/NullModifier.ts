@@ -24,4 +24,4 @@ export class NullModifier implements IModifier {
     };
   }
 }
-bindMethods(NullModifier);
+bindMethods(NullModifier, ['getValue', 'getCategory', 'clear']);

@@ -28,4 +28,4 @@ export class MaxHealthModifier extends Modifier {
     return (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).getUpperBound();
   }
 }
-bindMethods(MaxHealthModifier);
+bindMethods(MaxHealthModifier, ['getStat']);

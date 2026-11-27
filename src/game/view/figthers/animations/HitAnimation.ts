@@ -85,4 +85,4 @@ export class HitAnimation extends FighterAnimation {
     return true;
   }
 }
-bindMethods(HitAnimation);
+bindMethods(HitAnimation, ['make', 'finishMe']);

@@ -96,4 +96,4 @@ export class Tutorial {
     this.fsm.clear();
   }
 }
-bindMethods(Tutorial);
+bindMethods(Tutorial, ['startTutorial', 'isMixKnown', 'lockLiver', 'next', 'endTutorial', 'clear']);

@@ -75,4 +75,4 @@ export class Consumable extends Category {
     super.clear();
   }
 }
-bindMethods(Consumable);
+bindMethods(Consumable, ['pause', 'tick', 'complete', 'clear']);

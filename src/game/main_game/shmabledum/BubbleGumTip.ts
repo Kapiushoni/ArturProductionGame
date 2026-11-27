@@ -34,4 +34,4 @@ export class BubbleGumTip implements ShmabledumInteraction {
     this.secondarySlot.clear();
   }
 }
-bindMethods(BubbleGumTip);
+bindMethods(BubbleGumTip, ['make', 'clear']);

@@ -246,4 +246,4 @@ export class MapView extends Screen {
     }
   }
 }
-bindMethods(MapView);
+bindMethods(MapView, ['updatePage', 'nextPage', 'previousPage', 'toMainMenu', 'close', 'clear', 'refreshLastLevel']);

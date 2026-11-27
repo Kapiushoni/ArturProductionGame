@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 import { Random } from '@/game/cb/utils/Random';
 
 /** Names of the game sounds (see the .snd lists) and which lists to load for each part of the game. */
@@ -86,4 +86,3 @@ export class GameSounds {
     return 'boss_hurt' + GameSounds.getVariation(2);
   }
 }
-bindMethods(GameSounds);

@@ -120,4 +120,4 @@ export class ShmabledumPopUp {
     this.clearSlots();
   }
 }
-bindMethods(ShmabledumPopUp);
+bindMethods(ShmabledumPopUp, ['cancel', 'hide', 'trueHide', 'show', 'clear']);

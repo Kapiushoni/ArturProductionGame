@@ -48,4 +48,4 @@ export class TakeAllStep extends TutorialStep {
     super.clear();
   }
 }
-bindMethods(TakeAllStep);
+bindMethods(TakeAllStep, ['enter', 'wonDungeon', 'loot', 'leave', 'clear']);

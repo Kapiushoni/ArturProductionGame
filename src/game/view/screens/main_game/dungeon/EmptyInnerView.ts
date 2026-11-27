@@ -16,4 +16,4 @@ export class EmptyInnerView {
     app.soundManager.stopMusic(this._soundTrack);
   }
 }
-bindMethods(EmptyInnerView);
+bindMethods(EmptyInnerView, ['resume', 'pause', 'clear']);

@@ -50,4 +50,4 @@ export class XpBonus implements IDailyBonus, IXpCalculator {
     return BonusIcon.Kill;
   }
 }
-bindMethods(XpBonus);
+bindMethods(XpBonus, ['activate']);

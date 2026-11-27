@@ -17,4 +17,4 @@ export class Stat {
   }
   clear() {}
 }
-bindMethods(Stat);
+bindMethods(Stat, ['getValue', 'clear']);

@@ -47,4 +47,4 @@ export class FighterSoundManager {
     }
   }
 }
-bindMethods(FighterSoundManager);
+bindMethods(FighterSoundManager, ['pause', 'resume']);

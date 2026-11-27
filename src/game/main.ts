@@ -198,4 +198,15 @@ export class main extends Sprite {
     app.game.exit();
   }
 }
-bindMethods(main);
+bindMethods(main, [
+  'init',
+  'preloadingComplete',
+  'showMainMenu',
+  'removeMainMenu',
+  'showIntro',
+  'removeIntro',
+  'showOutro',
+  'removeOutro',
+  'loadGame',
+  'leaveGame',
+]);

@@ -69,4 +69,4 @@ export class FightView extends BasicFightView {
     super.clear();
   }
 }
-bindMethods(FightView);
+bindMethods(FightView, ['won', 'lose', 'moveEnemy', 'enter', 'clear']);

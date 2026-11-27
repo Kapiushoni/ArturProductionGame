@@ -46,4 +46,4 @@ export class SoundLoader {
     throw new Error('error loading file: ' + event.text);
   }
 }
-bindMethods(SoundLoader);
+bindMethods(SoundLoader, ['load', 'ioError']);

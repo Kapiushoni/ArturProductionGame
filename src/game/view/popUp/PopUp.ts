@@ -37,4 +37,4 @@ export class PopUp {
     this.positioner = null;
   }
 }
-bindMethods(PopUp);
+bindMethods(PopUp, ['hide', 'show', 'clear']);

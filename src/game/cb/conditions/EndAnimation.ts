@@ -8,4 +8,4 @@ export class EndAnimation implements Condition {
     return clip.totalFrames == clip.currentFrame;
   }
 }
-bindMethods(EndAnimation);
+bindMethods(EndAnimation, ['complete']);

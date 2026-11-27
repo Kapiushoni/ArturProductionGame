@@ -29,4 +29,4 @@ export class Rule {
     this.rules.set(name, checked);
   }
 }
-bindMethods(Rule);
+bindMethods(Rule, ['check', 'set']);

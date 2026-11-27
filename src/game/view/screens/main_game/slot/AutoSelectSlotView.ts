@@ -21,4 +21,4 @@ export class AutoSelectSlotView extends SlotView {
     }
   }
 }
-bindMethods(AutoSelectSlotView);
+bindMethods(AutoSelectSlotView, ['startDrag', 'mouseOut']);

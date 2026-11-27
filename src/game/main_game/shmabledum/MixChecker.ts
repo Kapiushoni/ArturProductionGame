@@ -122,4 +122,4 @@ export class MixChecker {
     this.mixables = null;
   }
 }
-bindMethods(MixChecker);
+bindMethods(MixChecker, ['clear']);

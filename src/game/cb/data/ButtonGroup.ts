@@ -1,4 +1,4 @@
-import { as3values, bindMethods } from '@/flash/as3';
+import { as3values } from '@/flash/as3';
 import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
 import type { cbSoundMixer } from '@/game/cb/media/cbSoundMixer';
 
@@ -80,4 +80,3 @@ export class ButtonGroup {
     };
   }
 }
-bindMethods(ButtonGroup);

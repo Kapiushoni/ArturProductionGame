@@ -22,4 +22,4 @@ export class ShmabledumFeeling implements ShmabledumInteraction {
     shmabledum.expressFeeling(this);
   }
 }
-bindMethods(ShmabledumFeeling);
+bindMethods(ShmabledumFeeling, ['make']);

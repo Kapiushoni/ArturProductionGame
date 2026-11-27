@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Level } from '@/game/main_game/map/Level';
 import type { Element } from '@/game/main_game/element/Element';
@@ -36,4 +35,3 @@ export class LegendaryLevel extends Level {
     return 1;
   }
 }
-bindMethods(LegendaryLevel);

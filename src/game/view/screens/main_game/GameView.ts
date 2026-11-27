@@ -195,4 +195,17 @@ export class GameView extends Screen {
     super.clear();
   }
 }
-bindMethods(GameView);
+bindMethods(GameView, [
+  'updatePauseState',
+  'clickOnRecipes',
+  'enableCookButton',
+  'removeCookBook',
+  'start',
+  'showMap',
+  'toLevel',
+  'toLevelWithoutWait',
+  'toMainMenu',
+  'toOutro',
+  'exit',
+  'clear',
+]);

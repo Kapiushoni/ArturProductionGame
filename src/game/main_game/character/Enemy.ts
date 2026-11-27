@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Fighter } from '@/game/main_game/character/Fighter';
 import { EnemyStats } from '@/game/main_game/character/stats/EnemyStats';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
@@ -24,4 +23,3 @@ export class Enemy extends Fighter {
     return this.getName().charAt(5);
   }
 }
-bindMethods(Enemy);

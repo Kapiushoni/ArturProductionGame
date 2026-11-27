@@ -1,4 +1,4 @@
-import { DateTimeFormatter, as3keys, bindMethods, int } from '@/flash/as3';
+import { DateTimeFormatter, as3keys, int } from '@/flash/as3';
 import { ExtraDungeon } from '@/game/bonus/ExtraDungeon';
 import { ExtraLevelBonus } from '@/game/bonus/ExtraLevelBonus';
 import { XpBonus } from '@/game/bonus/XpBonus';
@@ -106,4 +106,3 @@ export class DailyBonus {
     return year > year2 || (year == year2 && month > month2) || (year == year2 && month == month2 && day > day2);
   }
 }
-bindMethods(DailyBonus);

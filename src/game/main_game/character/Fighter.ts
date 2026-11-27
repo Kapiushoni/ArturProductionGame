@@ -44,4 +44,4 @@ export class Fighter {
     return services.texts.get(this.nameString);
   }
 }
-bindMethods(Fighter);
+bindMethods(Fighter, ['hit', 'clear']);

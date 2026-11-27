@@ -90,4 +90,4 @@ export class Game {
     return this.mix;
   }
 }
-bindMethods(Game);
+bindMethods(Game, ['enter', 'exit', 'getJinn', 'getMixer']);

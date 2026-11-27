@@ -49,4 +49,4 @@ export class Jinn extends Fighter {
     this.liver.clear();
   }
 }
-bindMethods(Jinn);
+bindMethods(Jinn, ['consumePotion', 'clear']);

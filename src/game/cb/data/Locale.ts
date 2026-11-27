@@ -35,4 +35,4 @@ export class Locale {
     });
   }
 }
-bindMethods(Locale);
+bindMethods(Locale, ['get']);

@@ -57,4 +57,4 @@ export class Trash implements IDragContainer {
     this.locked = false;
   }
 }
-bindMethods(Trash);
+bindMethods(Trash, ['remove', 'moveFrom', 'add', 'getContent', 'isEmpty', 'clear', 'lock', 'unlock']);

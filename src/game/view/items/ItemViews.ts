@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Category } from '@/game/main_game/items/Category';
 import { ConsumableView } from '@/game/view/items/ConsumableView';
 import { EquipmentView } from '@/game/view/items/EquipmentView';
@@ -42,4 +41,3 @@ export class ItemViews {
     return new SwordModifier(item.getMcName(), item.secondaryModifier.toObject().Category);
   }
 }
-bindMethods(ItemViews);

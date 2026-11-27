@@ -23,4 +23,4 @@ export class TutorialViewWithOk extends TutorialView {
     super.leave(callback);
   }
 }
-bindMethods(TutorialViewWithOk);
+bindMethods(TutorialViewWithOk, ['endStep', 'enter', 'leave']);

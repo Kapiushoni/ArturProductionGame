@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Slot } from '@/game/main_game/item_containers/Slot';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
 import type { Item } from '@/game/main_game/items/Item';
@@ -15,4 +14,3 @@ export class MixSlot extends Slot {
     return false;
   }
 }
-bindMethods(MixSlot);

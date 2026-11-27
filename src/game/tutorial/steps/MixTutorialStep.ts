@@ -30,4 +30,4 @@ export class MixTutorialStep extends TutorialStep {
     app.game.getMixer().onMixStart.remove(this.theView.leave);
   }
 }
-bindMethods(MixTutorialStep);
+bindMethods(MixTutorialStep, ['enter', 'leave', 'clear']);

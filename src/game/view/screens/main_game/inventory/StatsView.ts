@@ -149,4 +149,4 @@ export class StatsView {
     this.experience.clear();
   }
 }
-bindMethods(StatsView);
+bindMethods(StatsView, ['refresh', 'interize', 'clear']);

@@ -80,4 +80,4 @@ export class FighterAnimation implements IFighterAnimation {
     return true;
   }
 }
-bindMethods(FighterAnimation);
+bindMethods(FighterAnimation, ['make', 'finish', 'pause', 'resume']);

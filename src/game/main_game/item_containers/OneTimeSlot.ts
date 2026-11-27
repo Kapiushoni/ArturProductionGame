@@ -24,4 +24,4 @@ export class OneTimeSlot extends Slot {
     return false;
   }
 }
-bindMethods(OneTimeSlot);
+bindMethods(OneTimeSlot, ['remove']);

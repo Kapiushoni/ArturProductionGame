@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 
 export class Random {
   /** 0..max, both included */
@@ -13,4 +13,3 @@ export class Random {
     return int(Random.nextInt(max - min) + min);
   }
 }
-bindMethods(Random);

@@ -1,4 +1,4 @@
-import { as3as, as3values, bindMethods, int } from '@/flash/as3';
+import { as3as, as3values, int } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Experience } from '@/game/main_game/character/stats/Experience';
 import { StatType } from '@/game/main_game/character/stats/StatType';
@@ -31,4 +31,3 @@ export class XpCalculator implements IXpCalculator {
     return Math.round((int(criticalHits) * this.requiredExperience(jinn) * this.config.critical) / 100);
   }
 }
-bindMethods(XpCalculator);

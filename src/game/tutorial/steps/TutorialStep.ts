@@ -52,4 +52,4 @@ export class TutorialStep extends BasicState {
     this.theView = null;
   }
 }
-bindMethods(TutorialStep);
+bindMethods(TutorialStep, ['enter', 'endStep', 'leave', 'clear']);

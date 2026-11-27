@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { DungeonState } from '@/game/view/screens/main_game/states/DungeonState';
 import { Signal } from '@/game/cb/signals/Signal';
 import type { GameView } from '@/game/view/screens/main_game/GameView';
@@ -12,4 +11,3 @@ export class BossDungeonState extends DungeonState {
     return this._onToOutro;
   }
 }
-bindMethods(BossDungeonState);

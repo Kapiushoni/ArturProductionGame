@@ -25,4 +25,4 @@ export class HealthStat extends Stat {
     return this.maxHealth;
   }
 }
-bindMethods(HealthStat);
+bindMethods(HealthStat, ['fill']);

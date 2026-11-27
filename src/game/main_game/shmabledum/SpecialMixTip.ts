@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { services } from '@/game/services';
 import { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
 import type { Item } from '@/game/main_game/items/Item';
@@ -9,4 +8,3 @@ export class SpecialMixTip extends BubbleGumTip {
     super(services.texts.get('pbSpecialMixEnd', [item.getNameToShow()]), item);
   }
 }
-bindMethods(SpecialMixTip);

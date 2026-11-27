@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Level } from '@/game/main_game/map/Level';
 
@@ -20,4 +19,3 @@ export class SpecialLevel extends Level {
     return 3;
   }
 }
-bindMethods(SpecialLevel);

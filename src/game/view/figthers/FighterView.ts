@@ -84,4 +84,4 @@ export class FighterView {
     Util.bringToFront(this.getMC());
   }
 }
-bindMethods(FighterView);
+bindMethods(FighterView, ['animate', 'endCurrentAnimation', 'pause', 'resume', 'clear', 'onHit']);

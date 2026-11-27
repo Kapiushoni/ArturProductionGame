@@ -27,4 +27,4 @@ export class StatsEffectGuardian {
     this.stats = null;
   }
 }
-bindMethods(StatsEffectGuardian);
+bindMethods(StatsEffectGuardian, ['clear']);

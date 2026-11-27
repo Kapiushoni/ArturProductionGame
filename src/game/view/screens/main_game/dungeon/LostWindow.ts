@@ -100,4 +100,4 @@ export class LostWindow extends AnimatedScreen {
     this.pop();
   }
 }
-bindMethods(LostWindow);
+bindMethods(LostWindow, ['pause', 'resume', 'enter', 'showStats', 'giveXp', 'replay', 'back', 'emitAndLeave', 'exit']);

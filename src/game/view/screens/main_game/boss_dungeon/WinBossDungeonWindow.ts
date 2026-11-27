@@ -20,4 +20,4 @@ export class WinBossDungeonWindow extends WinWindow {
 // Defaults on the prototype, not field initializers: the WinWindow constructor calls overridden methods that may set it,
 // and an initializer (run after the base constructor) would overwrite them.
 WinBossDungeonWindow.prototype._showMapAndReplay = false;
-bindMethods(WinBossDungeonWindow);
+bindMethods(WinBossDungeonWindow, ['enter']);

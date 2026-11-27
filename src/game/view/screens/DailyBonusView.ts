@@ -1,4 +1,4 @@
-import { Dictionary, bindMethods } from '@/flash/as3';
+import { Dictionary } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { app } from '@/game/app';
 import type { BonusIcon } from '@/game/bonus/filter/BonusIcon';
@@ -44,4 +44,3 @@ export class DailyBonusView extends AnimatedScreen {
     }
   }
 }
-bindMethods(DailyBonusView);

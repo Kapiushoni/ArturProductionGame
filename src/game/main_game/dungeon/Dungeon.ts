@@ -194,4 +194,4 @@ export class Dungeon {
     return this.level;
   }
 }
-bindMethods(Dungeon);
+bindMethods(Dungeon, ['enter', 'exit', 'startFight', 'suddenDeath', 'goToNextFight', 'clear']);

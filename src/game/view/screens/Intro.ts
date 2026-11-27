@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { ComicWindow } from '@/game/view/screens/ComicWindow';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
@@ -19,4 +18,3 @@ export class Intro extends ComicWindow {
     return GameSounds.INTRO_MUSIC;
   }
 }
-bindMethods(Intro);

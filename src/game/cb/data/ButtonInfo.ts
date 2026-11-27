@@ -1,5 +1,3 @@
-import { bindMethods } from '@/flash/as3';
-
 /**
  * The handlers of a button (see Screen): click, mouse over, mouse out. A string handler is a frame label:
  * the button (or, with a hit box, the button's parent) goes to it.
@@ -42,4 +40,3 @@ export class ButtonInfo {
     return this._out;
   }
 }
-bindMethods(ButtonInfo);

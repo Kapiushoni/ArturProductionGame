@@ -125,4 +125,4 @@ export class CookBook extends AnimatedScreen {
     this.previousButton.clear();
   }
 }
-bindMethods(CookBook);
+bindMethods(CookBook, ['toNextPage', 'toPreviousPage', 'updatePage', 'enter', 'leave', 'clear']);

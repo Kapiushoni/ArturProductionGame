@@ -39,4 +39,4 @@ export class MixInformationStep extends TutorialStep {
     return false;
   }
 }
-bindMethods(MixInformationStep);
+bindMethods(MixInformationStep, ['enter', 'checkForEnoughItems']);

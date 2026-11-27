@@ -81,4 +81,4 @@ export class Stats {
   /** loads saved values (the jinn's experience) */
   loadData() {}
 }
-bindMethods(Stats);
+bindMethods(Stats, ['getStat', 'clear', 'leveling']);

@@ -130,4 +130,4 @@ TimeLine.prototype.scale = NaN;
 TimeLine.prototype.fight = NaN;
 TimeLine.prototype.distance = NaN;
 TimeLine.prototype.skulls = null;
-bindMethods(TimeLine);
+bindMethods(TimeLine, ['nextFight', 'move', 'removeSkull', 'clear']);

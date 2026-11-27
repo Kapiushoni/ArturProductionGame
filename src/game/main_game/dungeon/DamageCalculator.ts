@@ -1,4 +1,4 @@
-import { as3as, bindMethods, int } from '@/flash/as3';
+import { as3as, int } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Enemy } from '@/game/main_game/character/Enemy';
 import { Jinn } from '@/game/main_game/character/Jinn';
@@ -85,4 +85,3 @@ export class DamageCalculator {
     return pair == Element.FIRE + Element.ICE || pair == Element.ICE + Element.FIRE;
   }
 }
-bindMethods(DamageCalculator);

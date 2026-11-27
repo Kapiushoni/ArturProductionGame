@@ -85,4 +85,4 @@ export class Gear {
     this.weapon = null;
   }
 }
-bindMethods(Gear);
+bindMethods(Gear, ['slots', 'change', 'lock', 'unlock', 'clear']);

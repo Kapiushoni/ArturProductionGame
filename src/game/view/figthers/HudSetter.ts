@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { app } from '@/game/app';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { Stats } from '@/game/main_game/character/stats/Stats';
@@ -17,4 +16,3 @@ export class HudSetter {
     }
   }
 }
-bindMethods(HudSetter);

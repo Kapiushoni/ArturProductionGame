@@ -28,4 +28,4 @@ export class LeftSlotView extends AutoSelectSlotView {
 // Defaults on the prototype, not field initializers: the AutoSelectSlotView constructor calls overridden methods that may set it,
 // and an initializer (run after the base constructor) would overwrite them.
 LeftSlotView.prototype.selectionBloked = false;
-bindMethods(LeftSlotView);
+bindMethods(LeftSlotView, ['select']);

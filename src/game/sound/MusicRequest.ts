@@ -18,4 +18,4 @@ export class MusicRequest {
     return this.soundName;
   }
 }
-bindMethods(MusicRequest);
+bindMethods(MusicRequest, ['equal']);

@@ -32,4 +32,4 @@ export class Damage {
     return this.hp_damage.toString();
   }
 }
-bindMethods(Damage);
+bindMethods(Damage, ['apply']);

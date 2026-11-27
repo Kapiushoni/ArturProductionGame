@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
@@ -47,4 +46,3 @@ export class JinnSoundManager extends FighterSoundManager {
     super.playDie();
   }
 }
-bindMethods(JinnSoundManager);

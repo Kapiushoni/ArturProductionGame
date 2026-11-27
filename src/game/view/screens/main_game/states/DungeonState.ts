@@ -71,4 +71,4 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
     super.clear();
   }
 }
-bindMethods(DungeonState);
+bindMethods(DungeonState, ['enter', 'pause', 'resume', 'leave', 'clear']);

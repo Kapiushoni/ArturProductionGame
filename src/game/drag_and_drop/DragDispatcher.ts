@@ -139,4 +139,4 @@ export class DragDispatcher {
     this.snapped = false;
   }
 }
-bindMethods(DragDispatcher);
+bindMethods(DragDispatcher, ['start', 'move', 'mouseUpStage', 'end', 'clear', 'removeTempView']);

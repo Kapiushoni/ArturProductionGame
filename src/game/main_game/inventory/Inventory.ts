@@ -69,4 +69,4 @@ export class Inventory {
     }
   }
 }
-bindMethods(Inventory);
+bindMethods(Inventory, ['getTrash', 'itemOfSlot', 'getSlot', 'clear']);

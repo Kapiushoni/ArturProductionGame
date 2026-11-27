@@ -82,4 +82,4 @@ export class JinnView extends FighterView {
 // and an initializer (run after the base constructor) would overwrite them.
 JinnView.prototype.mc = null;
 JinnView.prototype.dragger = null;
-bindMethods(JinnView);
+bindMethods(JinnView, ['consumePotion', 'clear', 'pop']);

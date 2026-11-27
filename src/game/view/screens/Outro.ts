@@ -1,4 +1,4 @@
-import { Dictionary, bindMethods } from '@/flash/as3';
+import { Dictionary } from '@/flash/as3';
 import { ComicWindow } from '@/game/view/screens/ComicWindow';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { app } from '@/game/app';
@@ -26,4 +26,3 @@ export class Outro extends ComicWindow {
     return GameSounds.WIN_MUSIC;
   }
 }
-bindMethods(Outro);

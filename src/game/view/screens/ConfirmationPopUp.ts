@@ -53,4 +53,4 @@ export class ConfirmationPopUp extends AnimatedScreen {
     this.background = null;
   }
 }
-bindMethods(ConfirmationPopUp);
+bindMethods(ConfirmationPopUp, ['sepialize', 'unsepialize', 'accept', 'cancel', 'clear']);

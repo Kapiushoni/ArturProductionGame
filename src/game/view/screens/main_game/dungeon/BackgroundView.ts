@@ -236,4 +236,4 @@ BackgroundView.prototype.enemyHudView = null;
 BackgroundView.prototype.jinnHudView = null;
 BackgroundView.prototype.jinnFeedback = null;
 BackgroundView.prototype.enemyFeedback = null;
-bindMethods(BackgroundView);
+bindMethods(BackgroundView, ['init', 'clear', 'scroll']);

@@ -1,4 +1,4 @@
-import { Point, bindMethods } from '@/flash/as3';
+import { Point } from '@/flash/as3';
 import { app } from '@/game/app';
 import type { DisplayObjectContainer } from '@/flash/as3';
 import type { Sprite } from '@/flash/as3';
@@ -23,4 +23,3 @@ export class PopUpPositioner {
     sprite.y = point.y;
   }
 }
-bindMethods(PopUpPositioner);

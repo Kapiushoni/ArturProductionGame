@@ -1,4 +1,4 @@
-import { as3keys, as3values, bindMethods } from '@/flash/as3';
+import { as3keys, as3values } from '@/flash/as3';
 import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { DungeonConfigParser } from '@/game/main_game/dungeon/DungeonConfigParser';
@@ -65,6 +65,5 @@ export class DungeonFactory {
     return loot;
   }
 }
-bindMethods(DungeonFactory);
 
 class SingletonLock {}

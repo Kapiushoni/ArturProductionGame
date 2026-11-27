@@ -55,4 +55,4 @@ export class FSM {
     this.actual_state = null;
   }
 }
-bindMethods(FSM);
+bindMethods(FSM, ['start', 'clear']);

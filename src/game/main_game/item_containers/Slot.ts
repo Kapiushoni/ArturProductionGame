@@ -105,4 +105,4 @@ export class Slot implements ISlot, ItemContainer {
     this.onChangeSignal = null;
   }
 }
-bindMethods(Slot);
+bindMethods(Slot, ['moveFrom', 'add', 'remove', 'empty', 'isEmpty', 'lock', 'unlock', 'getContent', 'clear']);

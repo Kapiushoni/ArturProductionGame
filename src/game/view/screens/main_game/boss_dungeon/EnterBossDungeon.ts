@@ -79,4 +79,4 @@ export class EnterBossDungeon {
     this.atEnd = null;
   }
 }
-bindMethods(EnterBossDungeon);
+bindMethods(EnterBossDungeon, ['start', 'resume', 'pause', 'refresh', 'endPositionating', 'clear']);

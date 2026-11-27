@@ -1,4 +1,4 @@
-import { bindMethods, int } from '@/flash/as3';
+import { int } from '@/flash/as3';
 
 /** Stat ids and their codes in the data files (L, A, D, H, MH, XP, MX). */
 export class StatType {
@@ -83,4 +83,3 @@ export class StatType {
     }
   }
 }
-bindMethods(StatType);

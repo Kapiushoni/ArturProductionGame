@@ -144,4 +144,4 @@ export class cbSound {
     return this.sound.willTrigger(type);
   }
 }
-bindMethods(cbSound);
+bindMethods(cbSound, ['progressListener', 'play', 'stop', 'pause', 'resume', 'soundComplete', 'dispatchEvent']);

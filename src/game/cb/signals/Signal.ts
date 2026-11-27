@@ -26,4 +26,4 @@ export class Signal {
     this.slots.remove(listener);
   }
 }
-bindMethods(Signal);
+bindMethods(Signal, ['add', 'emit', 'clear', 'remove']);

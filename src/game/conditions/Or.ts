@@ -15,4 +15,4 @@ export class Or implements Condition {
     return this.c1.complete(clip) || this.c2.complete(clip);
   }
 }
-bindMethods(Or);
+bindMethods(Or, ['complete']);

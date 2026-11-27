@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { Modifier } from '@/game/main_game/items/modifiers/Modifier';
 import { assert } from '@/game/assert';
 import { StatType } from '@/game/main_game/character/stats/StatType';
@@ -12,4 +11,3 @@ export class HealthModifier extends Modifier {
   }
   disaffect(_stats: Stats) {}
 }
-bindMethods(HealthModifier);

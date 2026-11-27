@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import type { Action } from '@/game/cb/actions/Action';
 import type { MovieClip } from '@/flash/as3';
 
@@ -25,4 +24,3 @@ export class Functor implements Action {
     }
   }
 }
-bindMethods(Functor);

@@ -27,4 +27,4 @@ export class NoneAnimation implements IFighterAnimation {
     return false;
   }
 }
-bindMethods(NoneAnimation);
+bindMethods(NoneAnimation, ['make', 'pause', 'resume']);

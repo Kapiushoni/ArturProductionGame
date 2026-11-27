@@ -71,4 +71,4 @@ export class EnemyView extends FighterView {
 // Defaults on the prototype, not field initializers: the FighterView constructor calls overridden methods that may set them,
 // and an initializer (run after the base constructor) would overwrite them.
 EnemyView.prototype.container = null;
-bindMethods(EnemyView);
+bindMethods(EnemyView, ['clear']);

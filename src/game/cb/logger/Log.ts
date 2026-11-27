@@ -20,4 +20,4 @@ export class Log {
     if (Log.enabled) console.log('[' + this.name + '] ' + parts.join(''));
   }
 }
-bindMethods(Log);
+bindMethods(Log, ['log']);

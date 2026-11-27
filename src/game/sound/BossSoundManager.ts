@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 import { GameSounds } from '@/game/sound/GameSounds';
 
@@ -12,4 +11,3 @@ export class BossSoundManager extends FighterSoundManager {
     super.playHurt();
   }
 }
-bindMethods(BossSoundManager);

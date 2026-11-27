@@ -53,4 +53,4 @@ export class SmartMC {
     this.mc.prevFrame();
   }
 }
-bindMethods(SmartMC);
+bindMethods(SmartMC, ['enterFrame', 'clear', 'equals', 'rewindFrame']);

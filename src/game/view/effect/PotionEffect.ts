@@ -121,4 +121,4 @@ export class PotionEffect {
     }
   }
 }
-bindMethods(PotionEffect);
+bindMethods(PotionEffect, ['endTimer', 'clear']);

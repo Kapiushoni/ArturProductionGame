@@ -58,4 +58,4 @@ export class Experience extends Stat {
     return this.level;
   }
 }
-bindMethods(Experience);
+bindMethods(Experience, ['getValue']);

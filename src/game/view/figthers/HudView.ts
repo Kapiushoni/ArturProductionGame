@@ -67,4 +67,4 @@ export class HudView {
     return as3as(this.stats.getStat(StatType.HEALTH), HealthStat);
   }
 }
-bindMethods(HudView);
+bindMethods(HudView, ['refresh', 'clear']);

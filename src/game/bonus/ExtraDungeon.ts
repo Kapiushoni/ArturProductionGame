@@ -32,4 +32,4 @@ export class ExtraDungeon implements IDailyBonus {
     return '';
   }
 }
-bindMethods(ExtraDungeon);
+bindMethods(ExtraDungeon, ['activate']);

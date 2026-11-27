@@ -23,4 +23,4 @@ export class MixerClockView extends Screen {
     this.pop();
   }
 }
-bindMethods(MixerClockView);
+bindMethods(MixerClockView, ['refresh', 'removeClock']);

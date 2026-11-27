@@ -78,4 +78,4 @@ export class ComicWindow extends AnimatedScreen {
     this.onBack.clear();
   }
 }
-bindMethods(ComicWindow);
+bindMethods(ComicWindow, ['enter', 'nextPage', 'endPageTransition', 'next', 'toMainMenu', 'exit', 'clear']);

@@ -1,4 +1,4 @@
-import { as3values, bindMethods, int } from '@/flash/as3';
+import { as3values, int } from '@/flash/as3';
 import { AnimationFrameAt } from '@/game/cb/conditions/AnimationFrameAt';
 import type { MovieClip } from '@/flash/as3';
 
@@ -15,4 +15,3 @@ export class EndCurrentLabel extends AnimationFrameAt {
     super(nextLabelFrame - 1);
   }
 }
-bindMethods(EndCurrentLabel);

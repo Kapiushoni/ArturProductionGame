@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import { services } from '@/game/services';
 import { Experience } from '@/game/main_game/character/stats/Experience';
 
@@ -19,4 +18,3 @@ export class PersistentExperience extends Experience {
     }
   }
 }
-bindMethods(PersistentExperience);

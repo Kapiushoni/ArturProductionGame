@@ -152,4 +152,15 @@ export class BasicFightView {
     this.enemy = null;
   }
 }
-bindMethods(BasicFightView);
+bindMethods(BasicFightView, [
+  'won',
+  'lose',
+  'countdown',
+  'enter',
+  'leave',
+  'onHit',
+  'showFeedback',
+  'pause',
+  'resume',
+  'clear',
+]);

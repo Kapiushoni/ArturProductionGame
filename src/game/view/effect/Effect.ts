@@ -36,4 +36,4 @@ export class Effect {
     this.effect = null;
   }
 }
-bindMethods(Effect);
+bindMethods(Effect, ['clear']);

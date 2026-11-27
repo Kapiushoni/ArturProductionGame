@@ -115,4 +115,4 @@ export class Mixer {
     this.clock = null;
   }
 }
-bindMethods(Mixer);
+bindMethods(Mixer, ['slots', 'canMix', 'endMix', 'lock', 'unlock', 'getSlot', 'clear']);

@@ -23,4 +23,4 @@ export class Category {
     this.item = null;
   }
 }
-bindMethods(Category);
+bindMethods(Category, ['clear']);

@@ -1,4 +1,4 @@
-import { MouseEvent, MovieClip, as3as, as3values, bindMethods, int } from '@/flash/as3';
+import { MouseEvent, MovieClip, as3as, as3values, int } from '@/flash/as3';
 
 export class Util {
   /** callback with extra arguments appended: l(f, a)(x) == f(x, a) */
@@ -80,4 +80,3 @@ export class Util {
     }
   }
 }
-bindMethods(Util);

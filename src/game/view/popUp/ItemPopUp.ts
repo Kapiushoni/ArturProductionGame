@@ -51,4 +51,4 @@ export class ItemPopUp extends PopUp {
 // Defaults on the prototype, not field initializers: the PopUp constructor runs first and may use them,
 // and an initializer (run after the base constructor) would overwrite them.
 ItemPopUp.prototype.item = null;
-bindMethods(ItemPopUp);
+bindMethods(ItemPopUp, ['hide', 'show', 'clear']);

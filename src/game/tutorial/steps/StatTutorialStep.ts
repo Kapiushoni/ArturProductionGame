@@ -25,4 +25,4 @@ export class StatTutorialStep extends TutorialStep {
     app.game.getShmabledum().selfAdvertise();
   }
 }
-bindMethods(StatTutorialStep);
+bindMethods(StatTutorialStep, ['leave']);

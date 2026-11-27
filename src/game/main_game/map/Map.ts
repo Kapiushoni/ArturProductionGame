@@ -97,4 +97,4 @@ export class Map {
     this.levels = null;
   }
 }
-bindMethods(Map);
+bindMethods(Map, ['clear']);

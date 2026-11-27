@@ -1,4 +1,4 @@
-import { as3values, bindMethods } from '@/flash/as3';
+import { as3values } from '@/flash/as3';
 import { Log } from '@/game/cb/logger/Log';
 import { Util } from '@/game/util/Util';
 import type { Sprite } from '@/flash/as3';
@@ -17,4 +17,3 @@ export class Buttons {
     }
   }
 }
-bindMethods(Buttons);

@@ -50,4 +50,4 @@ export class LevelingStragegy {
     stat.modifyValue(Math.round(after - before));
   }
 }
-bindMethods(LevelingStragegy);
+bindMethods(LevelingStragegy, ['level']);

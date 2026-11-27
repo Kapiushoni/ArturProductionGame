@@ -1,4 +1,4 @@
-import { MovieClip, as3as, bindMethods } from '@/flash/as3';
+import { MovieClip, as3as } from '@/flash/as3';
 import { RemoveFromParent } from '@/game/cb/actions/RemoveFromParent';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
@@ -15,4 +15,3 @@ export class LevelUp {
     new SmartMC(this.mc).trigger(new EndAnimation(), new RemoveFromParent());
   }
 }
-bindMethods(LevelUp);

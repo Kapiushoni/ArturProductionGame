@@ -34,4 +34,4 @@ export class ItemView {
     return '';
   }
 }
-bindMethods(ItemView);
+bindMethods(ItemView, ['clear']);

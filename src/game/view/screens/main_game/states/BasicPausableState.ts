@@ -10,4 +10,4 @@ export class BasicPausableState extends BasicState implements IPausable {
   pause() {}
   resume() {}
 }
-bindMethods(BasicPausableState);
+bindMethods(BasicPausableState, ['pause', 'resume']);

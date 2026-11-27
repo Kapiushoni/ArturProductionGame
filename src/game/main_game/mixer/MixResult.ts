@@ -1,4 +1,3 @@
-import { bindMethods } from '@/flash/as3';
 import type { Item } from '@/game/main_game/items/Item';
 import type { Recipe } from '@/game/main_game/mixer/Recipe';
 
@@ -18,4 +17,3 @@ export class MixResult {
     return this._item;
   }
 }
-bindMethods(MixResult);

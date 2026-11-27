@@ -49,4 +49,4 @@ export class NullSlot implements ISlot {
     this.onChangeSignal = null;
   }
 }
-bindMethods(NullSlot);
+bindMethods(NullSlot, ['remove', 'add', 'moveFrom', 'getContent', 'isEmpty', 'clear']);

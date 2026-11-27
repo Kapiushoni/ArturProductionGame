@@ -1,4 +1,4 @@
-import { SharedObject, as3keys, bindMethods, getQualifiedClassName } from '@/flash/as3';
+import { SharedObject, as3keys, getQualifiedClassName } from '@/flash/as3';
 import { Log } from '@/game/cb/logger/Log';
 
 /** Read/write of saved values (a SharedObject "cookie" = one localStorage entry); errors are logged, not thrown. */
@@ -52,4 +52,3 @@ export class SharedUtils {
     return false;
   }
 }
-bindMethods(SharedUtils);
