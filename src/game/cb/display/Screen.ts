@@ -1,10 +1,11 @@
-import { Event, MouseEvent, Sprite, __DEFER, as3keys, bindMethods } from '@/flash/as3';
+import { Event, MouseEvent, Sprite, as3keys, bindMethods } from '@/flash/as3';
 import type { ButtonInfo } from '@/game/cb/data/ButtonInfo';
 
 /**
  * A screen: a library clip (bg) plus its buttons. btnInfo maps a child path ("a.b", relative to
  * bg[container] when set) to its ButtonInfo; the handlers are attached once bg is on the stage.
- * new Screen(__DEFER) + __init_Screen(...) is used by the screens (view).
+ * new Screen(bgClass, btnInfo); subclasses call super() and then initScreen(...), because their buttons
+ * (getButtonInfo) use the subclass's methods and fields, which are not ready inside super(...).
  */
 export class Screen extends Sprite {
   bg: any = null;
@@ -14,11 +15,11 @@ export class Screen extends Sprite {
   container: string = null;
   protected bgClass: any = null;
 
-  constructor(...args: any[]) {
+  constructor(bgClass: any = null, btnInfo: any = null) {
     super();
-    if (args[0] !== __DEFER) this.__init_Screen(args[0], args[1]);
+    if (bgClass != null) this.initScreen(bgClass, btnInfo);
   }
-  __init_Screen(bgClass: any, btnInfo: any) {
+  initScreen(bgClass: any, btnInfo: any) {
     this.setNew(bgClass, btnInfo);
   }
   added(_event: any) {

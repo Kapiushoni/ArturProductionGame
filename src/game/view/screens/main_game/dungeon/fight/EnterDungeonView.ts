@@ -3,6 +3,8 @@ import { GameLoop } from '@/game/cb/gameloop/GameLoop';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { RunAnimation } from '@/game/view/figthers/animations/RunAnimation';
 import { BackgroundView } from '@/game/view/screens/main_game/dungeon/BackgroundView';
+import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
+import type { JinnView } from '@/game/view/figthers/JinnView';
 
 export class EnterDungeonView {
   bg: any = null;
@@ -11,7 +13,7 @@ export class EnterDungeonView {
   paused = false;
   gameLoop: any = null;
   walk: any = null;
-  constructor(jinnView, bg, atEnd) {
+  constructor(jinnView: JinnView, bg: BackgroundView, atEnd: Function) {
     this.bg = bg;
     this.jinnView = jinnView;
     this.atEnd = atEnd;
@@ -32,12 +34,12 @@ export class EnterDungeonView {
       this.gameLoop.start();
     }
   }
-  endEnter(fighterAnimation) {
+  endEnter(fighterAnimation: IFighterAnimation) {
     this.walk = null;
     this.gameLoop.stop();
     this.atEnd();
   }
-  refresh(num) {
+  refresh(num: number) {
     num = int(num);
     this.jinnView.x += BackgroundView.ARENA_VELOCITY;
   }

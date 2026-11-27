@@ -2,6 +2,9 @@ import { Mouse, MouseCursor, MouseEvent, Point, bindMethods } from '@/flash/as3'
 import { DragListener } from '@/game/drag_and_drop/DragListener';
 import { ItemViews } from '@/game/view/items/ItemViews';
 import { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
+import type { ISlot } from '@/game/main_game/item_containers/ISlot';
+import type { ItemView } from '@/game/view/items/ItemView';
+import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
 
 export class BasicSlotView {
   bg: any = null;
@@ -12,7 +15,7 @@ export class BasicSlotView {
   selected = false;
   enabled = true;
   hide = false;
-  constructor(slot) {
+  constructor(slot: ISlot) {
     this.slot = slot;
     this.createPopUp();
     this.selected = false;
@@ -49,7 +52,7 @@ export class BasicSlotView {
   createPopUp() {
     this.popUp = new ItemPopUp();
   }
-  initialize(bg) {
+  initialize(bg: any) {
     this.bg = bg;
     this.bg.gotoAndStop('mouseOver');
     this.drag_listener = new DragListener(this.bg, this.slot);
@@ -57,7 +60,7 @@ export class BasicSlotView {
     this.drag_listener.onStart.add(this.startDrag);
     this.refresh();
   }
-  refresh(slotChange = null) {
+  refresh(slotChange: SlotChange = null) {
     var point = null;
     this.removeEvents();
     if (this.item_view != null) {
@@ -80,7 +83,7 @@ export class BasicSlotView {
     this.updateState(this.item_view);
     this.addEvents();
   }
-  updateState(itemView) {}
+  updateState(itemView: ItemView) {}
   addEvents() {
     this.bg.addEventListener(MouseEvent.ROLL_OVER, this.mouseOver, false, 0, true);
     this.bg.addEventListener(MouseEvent.ROLL_OUT, this.mouseOut, false, 0, true);
@@ -89,14 +92,14 @@ export class BasicSlotView {
     this.bg.removeEventListener(MouseEvent.ROLL_OVER, this.mouseOver);
     this.bg.removeEventListener(MouseEvent.ROLL_OUT, this.mouseOut);
   }
-  startDrag(dragListener) {
+  startDrag(dragListener: DragListener) {
     this.popUp.hide();
     if (dragListener.isInState(DragListener.DRAGGER)) {
       this.item_view.getMC().alpha = 0.3;
       this.select();
     }
   }
-  endDrag(dragListener) {
+  endDrag(dragListener: DragListener) {
     if (dragListener.isInState(DragListener.DRAGGER)) {
       if (this.item_view) {
         this.item_view.getMC().alpha = 1;
@@ -106,7 +109,7 @@ export class BasicSlotView {
       this.deselect();
     }
   }
-  mouseOver(event) {
+  mouseOver(event: any) {
     if (this.hide) {
       return;
     }
@@ -130,7 +133,7 @@ export class BasicSlotView {
         this.popUp.show();
     }
   }
-  mouseOut(event) {
+  mouseOut(event: any) {
     if (this.hide) {
       return;
     }

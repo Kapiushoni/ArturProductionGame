@@ -3,7 +3,7 @@
 // (ES modules evaluate in import order; an import cycle can otherwise hit a class before it is defined).
 
 export { services } from '@/game/services';
-export type { Config, Texts, SoundEffects, Achievements, TutorialProgress, Assets } from '@/game/services';
+export type { Config, Texts, SoundEffects, Achievements, TutorialProgress } from '@/game/services';
 export { AchievementDispatcher } from '@/game/AchievementDispatcher';
 export { Lambda } from '@/game/actions/Lambda';
 export { Log } from '@/game/cb/logger/Log';
@@ -237,6 +237,7 @@ export { SwordModifier } from '@/game/view/items/modifiers/SwordModifier';
 export { ShieldView } from '@/game/view/items/ShieldView';
 export { WeaponView } from '@/game/view/items/WeaponView';
 export { ItemViews } from '@/game/view/items/ItemViews';
+export { ModifierIcons } from '@/game/view/items/ModifierIcons';
 export { PopUp } from '@/game/view/popUp/PopUp';
 export { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
 export { LevelUp } from '@/game/view/popUp/LevelUp';

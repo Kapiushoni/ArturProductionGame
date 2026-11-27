@@ -6,6 +6,10 @@ import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
 import { main } from '@/game/main';
 import { Util } from '@/game/util/Util';
 import { ShmabledumPopUp } from '@/game/view/screens/main_game/shmabledum/ShmabledumPopUp';
+import type { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
+import type { Locker } from '@/game/util/Locker';
+import type { ShmabledumFeeling } from '@/game/main_game/shmabledum/ShmabledumFeeling';
+import type { ShmabledumInteraction } from '@/game/main_game/shmabledum/ShmabledumInteraction';
 
 export class ShmabledumView {
   bg: any = null;
@@ -21,7 +25,7 @@ export class ShmabledumView {
     this.timer = new Timer(2000, 1);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.hideTip);
   }
-  initialize(bg) {
+  initialize(bg: any) {
     this.bg = bg;
     this.popUp.addIn(main.tutorialHolder);
     bg.gotoAndPlay('idleFront');
@@ -31,7 +35,7 @@ export class ShmabledumView {
   get hitbox() {
     return this.bg.hitbox;
   }
-  changeInLock(locker) {
+  changeInLock(locker: Locker) {
     if (locker.isLocked) {
       if (this.tips.length != 0) {
         this.hideTip();
@@ -41,7 +45,7 @@ export class ShmabledumView {
       this.hitbox.buttonMode = true;
     }
   }
-  click(event) {
+  click(event: any) {
     if (this.tips.length != 0) {
       this.hideTip();
     }
@@ -49,16 +53,16 @@ export class ShmabledumView {
       main.game.getShmabledum().giveSomeTip();
     }
   }
-  interact(shmabledumInteraction) {
+  interact(shmabledumInteraction: ShmabledumInteraction) {
     shmabledumInteraction.make(this);
   }
-  expressFeeling(shmabledumFeeling, callback = null) {
+  expressFeeling(shmabledumFeeling: ShmabledumFeeling, callback: Function = null) {
     this.bg.gotoAndPlay(shmabledumFeeling.feeling);
     if (callback != null) {
       new SmartMC(this.bg).trigger(new EndCurrentLabel(this.bg), Functor.wrap(callback));
     }
   }
-  sayTip(bubbleGumTip) {
+  sayTip(bubbleGumTip: BubbleGumTip) {
     if (this.tips.length == 0) {
       this.tips.push(bubbleGumTip);
       this.showTipNow();

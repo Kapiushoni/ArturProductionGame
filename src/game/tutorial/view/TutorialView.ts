@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods } from '@/flash/as3';
+import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { Signal } from '@/game/cb/signals/Signal';
 
@@ -8,8 +8,8 @@ export class TutorialView extends AnimatedScreen {
 
   /** cls: library class of the window clip */
   constructor(cls: any) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(cls, this.getButtonInfo(), 'start', 'end');
+    super();
+    this.initAnimatedScreen(cls, this.getButtonInfo(), 'start', 'end');
     this.onEnd = new Signal();
   }
   /** buttons of the window (none) */

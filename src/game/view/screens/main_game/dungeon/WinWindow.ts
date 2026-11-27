@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods, int, uint } from '@/flash/as3';
+import { Dictionary, bindMethods, int, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
@@ -9,6 +9,8 @@ import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { LevelUp } from '@/game/view/popUp/LevelUp';
 import { LootView } from '@/game/view/screens/main_game/dungeon/LootView';
+import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
+import type { Loot } from '@/game/main_game/dungeon/Loot';
 
 export class WinWindow extends AnimatedScreen {
   static onShow = null;
@@ -26,9 +28,9 @@ export class WinWindow extends AnimatedScreen {
   loot: any = null;
   values: any = null;
   stats: any = null;
-  constructor(loot, stats, onNext = null) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.LevelWin'), this.getButtonInfo());
+  constructor(loot: Loot, stats: DungeonStats, onNext: Function = null) {
+    super();
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.LevelWin'), this.getButtonInfo());
     this.stats = stats;
     this.loot = new LootView(loot, this.bg);
     this.onReplay = new Signal();
@@ -52,7 +54,7 @@ export class WinWindow extends AnimatedScreen {
   getOnBackToMap() {
     return this.onBackToMap;
   }
-  putIn(displayObjectContainer) {
+  putIn(displayObjectContainer: any) {
     displayObjectContainer['window'] = this;
     displayObjectContainer.addChild(this);
   }
@@ -73,7 +75,7 @@ export class WinWindow extends AnimatedScreen {
     this.infoMc[WinWindow.MIX_BONUS].title.text = main.locale.get('win_mix_bonus');
     this.infoMc[WinWindow.TOTAL_BONUS].title.text = main.locale.get('win_total', [this.stats.level.getName()]);
   }
-  set combatXp(value) {
+  set combatXp(value: number) {
     value = int(value);
     this.values[WinWindow.COMBAT] = value;
     this.infoMc[WinWindow.COMBAT_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
@@ -81,7 +83,7 @@ export class WinWindow extends AnimatedScreen {
   get combatXp() {
     return int(this.values[WinWindow.COMBAT]);
   }
-  set criticalXp(value) {
+  set criticalXp(value: number) {
     value = int(value);
     this.values[WinWindow.CRITICAL] = value;
     this.infoMc[WinWindow.CRITICAL_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
@@ -89,7 +91,7 @@ export class WinWindow extends AnimatedScreen {
   get criticalXp() {
     return int(this.values[WinWindow.CRITICAL]);
   }
-  set mixXp(value) {
+  set mixXp(value: number) {
     value = int(value);
     this.values[WinWindow.MIX] = value;
     this.infoMc[WinWindow.MIX_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
@@ -97,7 +99,7 @@ export class WinWindow extends AnimatedScreen {
   get mixXp() {
     return int(this.values[WinWindow.MIX]);
   }
-  set totalXp(value) {
+  set totalXp(value: number) {
     value = int(value);
     this.values[WinWindow.TOTAL] = value;
     this.infoMc[WinWindow.TOTAL_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [
@@ -107,7 +109,7 @@ export class WinWindow extends AnimatedScreen {
   get totalXp() {
     return int(this.values[WinWindow.TOTAL]);
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     super.enter(Util.l(this.showStats, callback));
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot', 'next'], true);
     if (this.onNext == null) {
@@ -115,13 +117,13 @@ export class WinWindow extends AnimatedScreen {
     }
     main.soundManager.playMusic(GameSounds.WIN_MUSIC);
   }
-  leave(callback = null) {
+  leave(callback: Function = null) {
     this.loot.pause();
     main.soundManager.stopFx(GameSounds.DUNGEON_COMPLETED);
     main.soundManager.stopMusic(GameSounds.WIN_MUSIC);
     super.leave(Util.concatenate(this.loot.clear, callback));
   }
-  showStats(callback = null) {
+  showStats(callback: Function = null) {
     if (callback != null) {
       callback();
     }
@@ -156,7 +158,7 @@ export class WinWindow extends AnimatedScreen {
       new LevelUp();
     }
   }
-  updateProperty(property, target, label, callback) {
+  updateProperty(property: string, target: number, label: string, callback: Function) {
     target = int(target);
     var obj = null;
     if (target == this[property]) {
@@ -167,7 +169,7 @@ export class WinWindow extends AnimatedScreen {
       Tween.to(this, 700, obj, Util.l(this.makeFinalCountAnimation, this.infoMc[label + '_xp'], callback));
     }
   }
-  makeFinalCountAnimation(clip, callback) {
+  makeFinalCountAnimation(clip: any, callback: Function) {
     clip.gotoAndPlay(1);
     callback();
   }
@@ -180,11 +182,11 @@ export class WinWindow extends AnimatedScreen {
     dict.set('loot', buttonGroup.createButton(this.takeAllLoot, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  takeAllLoot(event) {
+  takeAllLoot(event: any) {
     this.loot.takeAll();
     Buttons.setButtons(this.bg, ['loot'], !this.loot.isEmpty());
   }
-  replay(event) {
+  replay(event: any) {
     var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
@@ -196,7 +198,7 @@ export class WinWindow extends AnimatedScreen {
       this.exit();
     });
   }
-  toMap(event) {
+  toMap(event: any) {
     var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
@@ -208,7 +210,7 @@ export class WinWindow extends AnimatedScreen {
       this.exit();
     });
   }
-  next(event) {
+  next(event: any) {
     var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);

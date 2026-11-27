@@ -1,11 +1,12 @@
 import { bindMethods } from '@/flash/as3';
 import { HudSetter } from '@/game/view/figthers/HudSetter';
+import type { Stats } from '@/game/main_game/character/stats/Stats';
 
 export class HudSetterWithStats extends HudSetter {
   constructor() {
     super();
   }
-  setHud(clip, stats = null) {
+  setHud(clip: any, stats: Stats = null) {
     super.setHud(clip, stats);
     if (stats != null) {
       clip.bar.title.visible = true;

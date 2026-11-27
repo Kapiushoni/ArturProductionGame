@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods, int, uint } from '@/flash/as3';
+import { Dictionary, bindMethods, int, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
@@ -7,15 +7,16 @@ import { main } from '@/game/main';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { LevelUp } from '@/game/view/popUp/LevelUp';
+import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 
 export class LostWindow extends AnimatedScreen {
   onReplay: any = null;
   onBackToMap: any = null;
   experience = 0;
   stats: any = null;
-  constructor(stats) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.LevelLose'), this.getButtonInfo());
+  constructor(stats: DungeonStats) {
+    super();
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.LevelLose'), this.getButtonInfo());
     this.stats = stats;
     this.onReplay = new Signal();
     this.onBackToMap = new Signal();
@@ -27,7 +28,7 @@ export class LostWindow extends AnimatedScreen {
   getOnBackToMap() {
     return this.onBackToMap;
   }
-  putIn(displayObjectContainer) {
+  putIn(displayObjectContainer: any) {
     displayObjectContainer.addChild(this);
   }
   pause() {}
@@ -40,16 +41,16 @@ export class LostWindow extends AnimatedScreen {
   get xp() {
     return int(this.experience);
   }
-  set xp(value) {
+  set xp(value: number) {
     value = int(value);
     this.experience = int(value);
     this.bg.total.total_xp.numbers.title.text = main.locale.get('lose_xp_amount', [this.experience]);
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     super.enter(Util.l(this.showStats, callback));
     Buttons.setButtons(this.bg, ['replay', 'level_select'], true);
   }
-  showStats(callback = null) {
+  showStats(callback: Function = null) {
     var end = callback;
     if (end != null) {
       end();
@@ -74,13 +75,13 @@ export class LostWindow extends AnimatedScreen {
     dict.set('level_select', buttonGroup.createButton(this.back, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  replay(event) {
+  replay(event: any) {
     this.emitAndLeave(this.onReplay);
   }
-  back(event) {
+  back(event: any) {
     this.emitAndLeave(this.onBackToMap);
   }
-  emitAndLeave(signal2) {
+  emitAndLeave(signal2: Signal) {
     var signal = signal2;
     this.killTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select'], false);

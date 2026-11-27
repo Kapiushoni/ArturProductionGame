@@ -1,15 +1,4 @@
-import {
-  Dictionary,
-  MovieClip,
-  Timer,
-  TimerEvent,
-  __DEFER,
-  as3as,
-  as3values,
-  bindMethods,
-  int,
-  uint,
-} from '@/flash/as3';
+import { Dictionary, MovieClip, Timer, TimerEvent, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { Lambda } from '@/game/actions/Lambda';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -25,6 +14,8 @@ import { Buttons } from '@/game/util/Buttons';
 import { Sepializer } from '@/game/util/Sepializer';
 import { Util } from '@/game/util/Util';
 import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
+import type { Level } from '@/game/main_game/map/Level';
+import type { MapState } from '@/game/view/screens/main_game/states/MapState';
 
 export class MapView extends Screen {
   static readonly NEXT_BUTTON = 'pages.arrow_right';
@@ -37,11 +28,11 @@ export class MapView extends Screen {
   prevArrow: any = null;
   actual_page = 0;
   lastPlayedTimer = new Timer(500, 1);
-  constructor(map) {
-    super(__DEFER);
+  constructor(map: MapState) {
+    super();
     this.map = map;
     this.lastPlayedTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.refreshLastLevel);
-    this.__init_Screen(main.swfLoader.getClass('assets.Map'), this.getButtonInfo());
+    this.initScreen(main.swfLoader.getClass('assets.Map'), this.getButtonInfo());
     this.actual_page = uint(this.pageOfLevel(this.map.getMap().getLevel(main.saveSystem.getLastPlayed())));
     this.initialize();
     this.bg.pages.gotoAndStop('page_' + this.actual_page);
@@ -66,13 +57,13 @@ export class MapView extends Screen {
     }
     return dict;
   }
-  getButtonName(level) {
+  getButtonName(level: Level) {
     return 'pages.page_' + this.pageOfLevel(level) + '.dungeon_' + level.getDungeonId();
   }
-  pageOfLevel(level) {
+  pageOfLevel(level: Level) {
     return uint(level.getArea());
   }
-  getGoToDungeon(level2) {
+  getGoToDungeon(level2: Level) {
     var level = level2;
     return (event) => {
       Buttons.setButtons(this.bg, this.buttonsNames, false);
@@ -132,7 +123,7 @@ export class MapView extends Screen {
       }
     }
   }
-  putEnemies(button, level) {
+  putEnemies(button: any, level: Level) {
     var enemy = null;
     var skulls = null;
     var element = null;
@@ -162,7 +153,7 @@ export class MapView extends Screen {
     }
     button.addChild(skulls);
   }
-  updatePage(value, actual_page) {
+  updatePage(value, actual_page: number) {
     actual_page = uint(actual_page);
     this.actual_page = uint(actual_page);
     this.refreshArrows(actual_page);
@@ -173,7 +164,7 @@ export class MapView extends Screen {
   previousPage() {
     this.goToPage(this.actual_page - 1);
   }
-  goToPage(num) {
+  goToPage(num: number) {
     num = uint(num);
     if (this.actual_page == num) {
       this.updatePage(null, num);
@@ -192,7 +183,7 @@ export class MapView extends Screen {
     this.nextArrow.hide();
     this.prevArrow.hide();
   }
-  refreshArrows(num) {
+  refreshArrows(num: number) {
     num = uint(num);
     var clip = null;
     if (num + 1 <= this.pageOfLevel(this.map.getMap().biggestUnlockedLevel())) {
@@ -202,7 +193,7 @@ export class MapView extends Screen {
       this.prevArrow.show();
     }
   }
-  toMainMenu(event) {
+  toMainMenu(event: any) {
     this.onToMainMenu.emit();
   }
   close() {
@@ -217,7 +208,7 @@ export class MapView extends Screen {
     this.onToMainMenu.clear();
     this.map = null;
   }
-  refreshUnlocked(levels) {
+  refreshUnlocked(levels: cbArray) {
     var button = null;
     var level = null;
     var buttonName = null;
@@ -249,7 +240,7 @@ export class MapView extends Screen {
     this.lastPlayedTimer.start();
     this.refreshArrows(this.actual_page);
   }
-  refreshLastLevel(event) {
+  refreshLastLevel(event: any) {
     var clip = as3as(
       Util.getSprite(this.bg, this.getButtonName(this.map.getMap().getLevel(main.saveSystem.getLastPlayed()))),
       MovieClip,

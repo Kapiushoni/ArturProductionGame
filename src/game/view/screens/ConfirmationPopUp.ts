@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods } from '@/flash/as3';
+import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { main } from '@/game/main';
@@ -10,9 +10,9 @@ export class ConfirmationPopUp extends AnimatedScreen {
   background: any = null;
   onAccept: any = null;
   onCancel: any = null;
-  constructor(background, onAccept, onCancel, text) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.NewGamePopup'), this.getButtonInfo());
+  constructor(background: any, onAccept: Function, onCancel: Function, text: string) {
+    super();
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.NewGamePopup'), this.getButtonInfo());
     this.onAccept = onAccept;
     this.onCancel = onCancel;
     this.background = background;
@@ -28,18 +28,18 @@ export class ConfirmationPopUp extends AnimatedScreen {
     dict.set('cancel', buttonGroup.createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  sepialize(event) {
+  sepialize(event: any) {
     Sepializer.getInstance().sepialize(this.background);
   }
-  unsepialize(event) {
+  unsepialize(event: any) {
     Sepializer.getInstance().unsepialize(this.background);
   }
-  accept(event) {
+  accept(event: any) {
     Buttons.setButtons(this.bg, ['accept', 'cancel'], false);
     this.onAccept();
     this.pop();
   }
-  cancel(event) {
+  cancel(event: any) {
     Buttons.setButtons(this.bg, ['accept', 'cancel'], false);
     this.leave(Util.concatenate(this.onCancel, this.pop));
   }

@@ -9,10 +9,6 @@ export class HealthModifier extends Modifier {
     super(config);
     assert(this.characteristic == StatType.HEALTH, 'Health must be health');
   }
-  modifyIcon(clip: any) {
-    clip.visible = true;
-    clip.gotoAndStop('health');
-  }
   disaffect(_stats: any) {}
 }
 bindMethods(HealthModifier);

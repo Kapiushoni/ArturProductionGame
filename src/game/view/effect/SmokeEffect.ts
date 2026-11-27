@@ -10,7 +10,7 @@ export class SmokeEffect extends Effect {
     clip.rotation = Random.nextInt(360);
     super(clip);
   }
-  playOn(displayObjectContainer, displayObjectContainer2 = null) {
+  playOn(displayObjectContainer: any, displayObjectContainer2: any = null) {
     super.playOn(displayObjectContainer, displayObjectContainer2);
     main.soundManager.playFx(GameSounds.SMOKE);
   }

@@ -6,10 +6,10 @@ import { main } from '@/game/main';
 
 export class Effect {
   effect: any = null;
-  constructor(effect) {
+  constructor(effect: any) {
     this.effect = effect;
   }
-  playOn(displayObjectContainer, displayObjectContainer2 = null) {
+  playOn(displayObjectContainer: any, displayObjectContainer2: any = null) {
     var point = null;
     var popUpHolder = null;
     var point2 = null;

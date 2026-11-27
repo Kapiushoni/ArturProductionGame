@@ -2,6 +2,7 @@ import { Timer, TimerEvent, as3as, as3values, bindMethods, int, uint } from '@/f
 import { main } from '@/game/main';
 import { SmokeEffect } from '@/game/view/effect/SmokeEffect';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { Loot } from '@/game/main_game/dungeon/Loot';
 
 export class LootView {
   loot: any = null;
@@ -9,7 +10,7 @@ export class LootView {
   bg: any = null;
   timer: any = null;
   showing = 0;
-  constructor(loot, bg) {
+  constructor(loot: Loot, bg: any) {
     this.bg = bg;
     this.loot = loot;
     this.slots = [];
@@ -55,7 +56,7 @@ export class LootView {
       this.clearTimer();
     }
   }
-  showLootOf(num) {
+  showLootOf(num: number) {
     num = int(num);
     var smokeEffect = new SmokeEffect();
     smokeEffect.playOn(this.bg['slot_' + num]);

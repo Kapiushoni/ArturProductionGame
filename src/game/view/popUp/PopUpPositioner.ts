@@ -4,17 +4,17 @@ import { main } from '@/game/main';
 export class PopUpPositioner {
   src: any = null;
   dst: any = null;
-  constructor(src, dst = null) {
+  constructor(src: any, dst: any = null) {
     this.src = src;
     if (dst == null) {
       dst = main.popUpHolder;
     }
     this.dst = dst;
   }
-  addMc(sprite) {
+  addMc(sprite: any) {
     this.dst.addChild(sprite);
   }
-  refreshPos(sprite) {
+  refreshPos(sprite: any) {
     var point = this.src.localToGlobal(new Point(0, 0));
     point = this.dst.globalToLocal(point);
     sprite.x = point.x;

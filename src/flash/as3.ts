@@ -441,9 +441,6 @@ export const System = { totalMemory: 0, gc() { /* */ } };
 export const navigateToURL = (req: URLRequest, target = '_blank') => window.open(req.url, target);
 void clock;
 
-/** sentinel for two-phase constructors (see tools/as2ts.mjs DEFERRABLE) */
-export const __DEFER = Symbol('defer');
-
 /** AS3 `x as T`: x when x is a T, otherwise null */
 export function as3as(v: any, T: any): any {
   if (v == null || typeof T !== 'function') return v ?? null;

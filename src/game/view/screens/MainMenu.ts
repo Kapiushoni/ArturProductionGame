@@ -1,4 +1,4 @@
-import { Dictionary, TextFormat, __DEFER, bindMethods, int } from '@/flash/as3';
+import { Dictionary, TextFormat, bindMethods, int } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { DailyBonus } from '@/game/bonus/DailyBonus';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -19,8 +19,8 @@ export class MainMenu extends Screen {
   currentBonus: any = null;
   nextBonus: any = null;
   constructor() {
-    super(__DEFER);
-    this.__init_Screen(main.swfLoader.getClass('assets.MainMenu'), this.getButtonInfo());
+    super();
+    this.initScreen(main.swfLoader.getClass('assets.MainMenu'), this.getButtonInfo());
     this.container = 'container';
     this.initialize();
     this.initializeDailyBonus();
@@ -83,10 +83,10 @@ export class MainMenu extends Screen {
       this.bg.container.hoder_2.addChild(this.nextBonus);
     }
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     this.showBonus(callback);
   }
-  showBonus(callback = null) {
+  showBonus(callback: Function = null) {
     var rule = null;
     var next = callback;
     rule = new Rule('start');
@@ -107,11 +107,11 @@ export class MainMenu extends Screen {
     }
     rule.check('start');
   }
-  continueGame(event) {
+  continueGame(event: any) {
     Buttons.setButtons(this.bg.container, MainMenu.BUTTONS, false);
     this.onContinueGame.emit();
   }
-  newGame(event) {
+  newGame(event: any) {
     Buttons.setButtons(this.bg.container, MainMenu.BUTTONS, false);
     if (main.saveSystem.hasPlayed()) {
       this.showConfirmationPopUp();

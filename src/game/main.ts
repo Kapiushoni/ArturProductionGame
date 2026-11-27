@@ -46,12 +46,7 @@ export class main extends Sprite {
     services.texts = value;
   }
   /** asset libraries */
-  static get swfLoader(): SwfBulkLoader {
-    return services.assets as SwfBulkLoader;
-  }
-  static set swfLoader(value: SwfBulkLoader) {
-    services.assets = value;
-  }
+  static swfLoader: SwfBulkLoader = null;
   static get soundManager(): SoundManager {
     return services.sound as SoundManager;
   }

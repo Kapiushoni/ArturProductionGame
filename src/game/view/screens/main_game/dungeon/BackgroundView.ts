@@ -9,6 +9,7 @@ import { HudSetterWithStats } from '@/game/view/figthers/HudSetterWithStats';
 import { HudView } from '@/game/view/figthers/HudView';
 import { BackgroundSet } from '@/game/view/screens/main_game/dungeon/BackgroundSet';
 import { FightFeedback } from '@/game/view/screens/main_game/dungeon/fight/FightFeedback';
+import type { DungeonConfigData } from '@/game/main_game/dungeon/DungeonConfigData';
 
 export class BackgroundView extends MovieClip {
   declare layer1: any;
@@ -91,7 +92,7 @@ export class BackgroundView extends MovieClip {
     this.information = new MovieClip();
     this.addChild(this.information);
   }
-  init(dungeonConfigData) {
+  init(dungeonConfigData: DungeonConfigData) {
     this.backgrounds1 = new BackgroundSet(dungeonConfigData.backgroundsData[0]);
     this.backgrounds2 = new BackgroundSet(dungeonConfigData.backgroundsData[1]);
     this.backgrounds3 = new BackgroundSet(dungeonConfigData.backgroundsData[2]);
@@ -113,22 +114,22 @@ export class BackgroundView extends MovieClip {
     clip.x = Dungeon.DungeonConfig['pause_btn_x'];
     clip.y = Dungeon.DungeonConfig['pause_btn_y'];
   }
-  addJinnFeddback(clip) {
+  addJinnFeddback(clip: any) {
     this.jinnFeedback.addFeedback(clip);
   }
-  addEnemyFeddback(clip) {
+  addEnemyFeddback(clip: any) {
     this.enemyFeedback.addFeedback(clip);
     clip.scaleX = -1;
     clip.number_heathl_parts_blocked.title.scaleX = -1;
   }
-  setBackground(clip, backgroundSet) {
+  setBackground(clip: any, backgroundSet: BackgroundSet) {
     var background = null;
     background = backgroundSet.getBackground();
     clip.addChild(background);
     clip['1'] = background;
     this.checkLayer(clip, backgroundSet);
   }
-  checkLayer(clip, backgroundSet) {
+  checkLayer(clip: any, backgroundSet: BackgroundSet) {
     var background = null;
     if (clip['1'].x < -clip['1'].width) {
       clip.removeChild(clip['1']);
@@ -173,7 +174,7 @@ export class BackgroundView extends MovieClip {
     this.enemyFeedback.resume();
     this.gameLoop.start();
   }
-  scroll(num) {
+  scroll(num: number) {
     num = int(num);
     var MIST_VELOCITY = NaN;
     var VELOCITY1 = NaN;
@@ -206,7 +207,7 @@ export class BackgroundView extends MovieClip {
       }
     }
   }
-  scrollMist(num) {
+  scrollMist(num: number) {
     num = Number(num);
     this.mist1.x -= num;
     this.mist2.x -= num;

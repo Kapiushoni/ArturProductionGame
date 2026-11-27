@@ -2,6 +2,8 @@ import { bindMethods } from '@/flash/as3';
 import { NullSlot } from '@/game/main_game/item_containers/NullSlot';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { ISlot } from '@/game/main_game/item_containers/ISlot';
+import type { Recipe } from '@/game/main_game/mixer/Recipe';
 
 export class RecipeView {
   primarySlot: any = null;
@@ -11,12 +13,12 @@ export class RecipeView {
   secondaryView: any = null;
   resultView: any = null;
   bg: any = null;
-  constructor(bg, recipe = null) {
+  constructor(bg: any, recipe: Recipe = null) {
     this.bg = bg;
     this.initializeSlots(recipe);
     this.initializeViews();
   }
-  initializeSlots(recipe) {
+  initializeSlots(recipe: Recipe) {
     var instance = null;
     this.primarySlot = new NullSlot();
     this.secondarySlot = new NullSlot();
@@ -59,7 +61,7 @@ export class RecipeView {
     this.secondarySlot = null;
     this.resultSlot = null;
   }
-  clearSlot(slot) {
+  clearSlot(slot: ISlot) {
     var content = slot.getContent();
     if (content != null) {
       content.clear();

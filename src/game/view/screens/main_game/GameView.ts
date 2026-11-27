@@ -1,4 +1,4 @@
-import { Dictionary, MovieClip, __DEFER, as3as, bindMethods } from '@/flash/as3';
+import { Dictionary, MovieClip, as3as, bindMethods } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { FSM } from '@/game/aplication/FSM';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -18,6 +18,7 @@ import { ShmabledumView } from '@/game/view/screens/main_game/shmabledum/Shmable
 import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPausableState';
 import { DungeonState } from '@/game/view/screens/main_game/states/DungeonState';
 import { MapState } from '@/game/view/screens/main_game/states/MapState';
+import type { Level } from '@/game/main_game/map/Level';
 
 export class GameView extends Screen {
   inventory = new InventoryView();
@@ -31,8 +32,8 @@ export class GameView extends Screen {
   onExit: any = null;
   onEnd: any = null;
   constructor() {
-    super(__DEFER);
-    this.__init_Screen(main.swfLoader.getClass('assets.Inventory'), this.getButtonInfo());
+    super();
+    this.initScreen(main.swfLoader.getClass('assets.Inventory'), this.getButtonInfo());
     this.up_holder = new MovieClip();
     this.addChildAt(this.up_holder, 0);
     this.up_holder.game = new MovieClip();
@@ -67,7 +68,7 @@ export class GameView extends Screen {
     Buttons.setButtons(this.bg.inventory, ['recipes'], true);
     main.game.onPause.add(this.updatePauseState);
   }
-  updatePauseState(flag) {
+  updatePauseState(flag: boolean) {
     if (flag) {
       this.bg.mouseChildren = false;
       this.bg.mouseEnabled = false;
@@ -111,7 +112,7 @@ export class GameView extends Screen {
   get recipesButton() {
     return this.bg.inventory.recipes.book;
   }
-  clickOnRecipes(event = null) {
+  clickOnRecipes(event: any = null) {
     if (!this.cookBookEnalbed) {
       return;
     }
@@ -148,14 +149,14 @@ export class GameView extends Screen {
   showMap() {
     this.fsm.takeTransition('enterMap');
   }
-  toLevel(level) {
+  toLevel(level: Level) {
     if (!Util.areLoaded(this.resourcesForLevel(level), main.theLoader)) {
       this.toLevelWaiting(level);
     } else {
       this.toLevelWithoutWait(level);
     }
   }
-  resourcesForLevel(level) {
+  resourcesForLevel(level: Level) {
     if (level.getDungeonId() == BossDungeon.idBossLevel) {
       return GameSounds.bossSounds;
     }
@@ -164,10 +165,10 @@ export class GameView extends Screen {
     }
     return GameSounds.combatSounds;
   }
-  toLevelWaiting(level) {
+  toLevelWaiting(level: Level) {
     main.waitForResources(this.resourcesForLevel(level), Util.l(this.toLevelWithoutWait, level));
   }
-  toLevelWithoutWait(level) {
+  toLevelWithoutWait(level: Level) {
     if (level.getDungeonId() == BossDungeon.idBossLevel) {
       this.fsm.takeTransition('enterBoss');
     } else {

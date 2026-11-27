@@ -1,40 +1,42 @@
 import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
+import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { PopUp } from '@/game/view/popUp/PopUp';
 import { main } from '@/game/main';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
+import type { Item } from '@/game/main_game/items/Item';
 
 export class ItemPopUp extends PopUp {
   static LEFT = 'Left';
   static RIGHT = 'Right';
   declare item: any;
-  constructor(text = 'Left') {
+  constructor(text: string = 'Left') {
     var clip = as3as(main.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
     super(clip);
     this.item = null;
   }
-  refreshItem(item) {
+  refreshItem(item: Item) {
     this.item = item;
     if (item) {
       this.refreshInfo(item);
     }
   }
-  refreshInfo(item) {
+  refreshInfo(item: Item) {
     this.mc.container.title.title.text = item.getNameToShow();
     var maxMod = int(item.getMaxMod());
-    item.getPrimaryModifier().modifyIcon(this.mc.container.armor_icon_1);
-    item.getPrimaryModifier().modifyValue(this.mc.container.numbers_1.title, maxMod);
-    item.getSecondaryModifier().modifyIcon(this.mc.container.armor_icon_2);
+    ModifierIcons.show(item.getPrimaryModifier(), this.mc.container.armor_icon_1);
+    ModifierIcons.showValue(item.getPrimaryModifier(), this.mc.container.numbers_1.title, maxMod);
+    ModifierIcons.show(item.getSecondaryModifier(), this.mc.container.armor_icon_2);
     maxMod = int(Math.round((maxMod * MixStrategy.mixConfig.secondModMaxPercent) / 100));
-    item.getSecondaryModifier().modifyValue(this.mc.container.numbers_2.title, maxMod);
+    ModifierIcons.showValue(item.getSecondaryModifier(), this.mc.container.numbers_2.title, maxMod);
   }
-  hide(callback = null) {
+  hide(callback: Function = null) {
     if (this.item) {
       super.hide();
     } else if (callback != null) {
       callback();
     }
   }
-  show(callback = null) {
+  show(callback: Function = null) {
     if (this.item) {
       super.show();
     } else if (callback != null) {

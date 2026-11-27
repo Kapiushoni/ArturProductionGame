@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods } from '@/flash/as3';
+import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { main } from '@/game/main';
 import { GameSounds } from '@/game/sound/GameSounds';
@@ -8,9 +8,9 @@ export class TransitionWindow extends AnimatedScreen {
   resources: any = null;
   onFinish: any = null;
   onStart: any = null;
-  constructor(resources, onStart, onFinish = null) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(this.assetClass, new Dictionary(), 'start', 'end');
+  constructor(resources: any[], onStart: Function, onFinish: Function = null) {
+    super();
+    this.initAnimatedScreen(this.assetClass, new Dictionary(), 'start', 'end');
     this.resources = resources;
     if (onFinish == null) {
       onFinish = Util.pass();
@@ -21,7 +21,7 @@ export class TransitionWindow extends AnimatedScreen {
   get assetClass() {
     return main.swfLoader.getClass('assets.loading');
   }
-  start(sprite) {
+  start(sprite: any) {
     sprite.addChild(this);
     this.enter(this.startWaiting);
     main.soundManager.playFx(GameSounds.TRANSITION_IN);
@@ -40,7 +40,7 @@ export class TransitionWindow extends AnimatedScreen {
     this.onFinish();
     this.leave();
   }
-  leave(callback = null) {
+  leave(callback: Function = null) {
     var end = callback;
     main.soundManager.playFx(GameSounds.TRANSITION_OUT);
     super.leave(() => {

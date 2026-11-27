@@ -30,4 +30,20 @@ describe('architecture', () => {
     }
     expect(offenders).toEqual([]);
   });
+
+  it("the game logic does not work with clips (that is the views' job)", () => {
+    const offenders: string[] = [];
+    for (const dir of LOGIC) {
+      for (const file of files(join(SRC, dir))) {
+        readFileSync(file, 'utf8')
+          .split('\n')
+          .forEach((line, i) => {
+            if (/\.(gotoAndStop|gotoAndPlay|addChild|removeChild)\(/.test(line)) {
+              offenders.push(`${relative(SRC, file)}:${i + 1}: ${line.trim()}`);
+            }
+          });
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
 });

@@ -8,7 +8,7 @@ export class RunAnimation extends FighterAnimation {
   private withStart: boolean;
   private withFinish: boolean;
 
-  constructor(steps: number, withStart = true, withFinish = true) {
+  constructor(steps: number, withStart: boolean = true, withFinish: boolean = true) {
     super(withStart ? 'idle2run' : 'run');
     this.steps = uint(steps);
     this.withFinish = withFinish;

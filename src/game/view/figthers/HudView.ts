@@ -4,17 +4,19 @@ import { main } from '@/game/main';
 import { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { BarView } from '@/game/view/screens/main_game/BarView';
+import type { Fighter } from '@/game/main_game/character/Fighter';
+import type { HudSetter } from '@/game/view/figthers/HudSetter';
 
 export class HudView {
   stats: any = null;
   mc: any = null;
   bar: any = null;
   setter: any = null;
-  constructor(cls, setter) {
+  constructor(cls: any, setter: HudSetter) {
     this.mc = new cls();
     this.setter = setter;
   }
-  changeFighter(fighter) {
+  changeFighter(fighter: Fighter) {
     if (this.stats != null) {
       this.stats.onChange.remove(this.refresh);
     }
@@ -27,7 +29,7 @@ export class HudView {
     }
     this.refresh();
   }
-  initialize(displayObjectContainer) {
+  initialize(displayObjectContainer: any) {
     this.mc.x = 0;
     this.mc.y = 0;
     displayObjectContainer.addChild(this.mc);

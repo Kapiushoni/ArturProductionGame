@@ -1,4 +1,4 @@
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { Functor } from '@/game/cb/actions/Functor';
 import { SmartMC } from '@/game/cb/display/SmartMC';
@@ -7,20 +7,21 @@ import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
 export class AnimatedScreen extends Screen {
   enterLabel: any = null;
   leaveLabel: any = null;
-  constructor(...__a) {
-    super(__DEFER);
-    if (__a[0] !== __DEFER) this.__init_AnimatedScreen(__a[0], __a[1], __a[2], __a[3]);
+  /** like Screen: subclasses call super() and then initAnimatedScreen(...) */
+  constructor(cls: any = null, dict: any = null, enterLabel: string = 'in', leaveLabel: string = 'out') {
+    super();
+    if (cls != null) this.initAnimatedScreen(cls, dict, enterLabel, leaveLabel);
   }
-  __init_AnimatedScreen(cls, dict, enterLabel = 'in', leaveLabel = 'out') {
-    this.__init_Screen(cls, dict);
+  initAnimatedScreen(cls: any, dict: any, enterLabel: string = 'in', leaveLabel: string = 'out') {
+    this.initScreen(cls, dict);
     this.enterLabel = enterLabel;
     this.leaveLabel = leaveLabel;
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     this.bg.gotoAndPlay(this.enterLabel);
     this.callOnEnd(this.bg, callback);
   }
-  leave(callback = null) {
+  leave(callback: Function = null) {
     if (!this.bg) {
       if (callback) callback();
       return;
@@ -28,7 +29,7 @@ export class AnimatedScreen extends Screen {
     this.bg.gotoAndPlay(this.leaveLabel);
     this.callOnEnd(this.bg, callback);
   }
-  callOnEnd(clip, callback = null) {
+  callOnEnd(clip: any, callback: Function = null) {
     var smc = null;
     var mc = clip;
     var fc = callback;

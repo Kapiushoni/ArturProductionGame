@@ -13,10 +13,10 @@ export class FightFeedback extends Sprite {
     this.slots[1] = null;
     this.slots[2] = null;
   }
-  showIn(displayObjectContainer) {
+  showIn(displayObjectContainer: any) {
     displayObjectContainer.addChild(this);
   }
-  addFeedback(clip) {
+  addFeedback(clip: any) {
     var above = null;
     var i = 0;
     while (i < 3) {
@@ -32,13 +32,13 @@ export class FightFeedback extends Sprite {
       i++;
     }
   }
-  makeAppear(clip) {
+  makeAppear(clip: any) {
     this.addChild(clip);
     clip.gotoAndPlay(1);
     var smartMC = new SmartMC(clip);
     smartMC.trigger(new EndAnimation(), new Functor(this.removePoster, clip));
   }
-  removePoster(clip, params) {
+  removePoster(clip: any, params: any[]) {
     var poster = params[0];
     var i = 0;
     while (i < 3) {

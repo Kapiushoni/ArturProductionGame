@@ -1,13 +1,15 @@
 import { bindMethods } from '@/flash/as3';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
+import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
+import type { Loot } from '@/game/main_game/dungeon/Loot';
 
 export class WinBossDungeonWindow extends WinWindow {
   declare _showMapAndReplay: any;
-  constructor(loot, dungeonStats, showMapAndReplay, callback = null) {
+  constructor(loot: Loot, dungeonStats: DungeonStats, showMapAndReplay: boolean, callback: Function = null) {
     super(loot, dungeonStats, callback);
     this._showMapAndReplay = showMapAndReplay;
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     super.enter(callback);
     if (!this._showMapAndReplay) {
       this.bg.removeChild(this.bg.replay);

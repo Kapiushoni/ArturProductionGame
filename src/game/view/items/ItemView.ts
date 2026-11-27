@@ -1,10 +1,12 @@
 import { bindMethods } from '@/flash/as3';
 import { main } from '@/game/main';
+import type { Item } from '@/game/main_game/items/Item';
+import type { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 
 export class ItemView {
   item: any = null;
   mc: any = null;
-  constructor(item) {
+  constructor(item: Item) {
     this.item = item;
   }
   getMC() {
@@ -15,7 +17,7 @@ export class ItemView {
     }
     return this.mc;
   }
-  putIn(displayObjectContainer) {
+  putIn(displayObjectContainer: any) {
     var mc = this.getMC();
     displayObjectContainer.addChild(mc);
   }
@@ -26,7 +28,7 @@ export class ItemView {
     this.item = null;
     this.mc = null;
   }
-  getStateForSlot(slotView) {
+  getStateForSlot(slotView: SlotView) {
     return '';
   }
 }

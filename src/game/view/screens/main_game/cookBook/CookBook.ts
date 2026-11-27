@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods, int, uint } from '@/flash/as3';
+import { Dictionary, bindMethods, int, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { Functor } from '@/game/cb/actions/Functor';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -18,9 +18,9 @@ export class CookBook extends AnimatedScreen {
   nextButton: any = null;
   previousButton: any = null;
   actualIndex = 0;
-  constructor(callback) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.Recipes'), this.getButtonInfo(callback));
+  constructor(callback: Function) {
+    super();
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.Recipes'), this.getButtonInfo(callback));
     this.container = 'container';
     this.initialize();
     this.initializeArrows();
@@ -38,7 +38,7 @@ export class CookBook extends AnimatedScreen {
   get pagesContainer() {
     return this.bg.container;
   }
-  getButtonInfo(callback) {
+  getButtonInfo(callback: Function) {
     var dict = new Dictionary();
     dict.set('cancel', ButtonGroup.get('gui').createButton(callback, 'mouseOver', 'mouseOut'));
     return dict;
@@ -50,7 +50,7 @@ export class CookBook extends AnimatedScreen {
     this.actualPage = this.makePage(this.actualIndex);
     this.initPageContainer.addChild(this.actualPage.getMc());
   }
-  makePage(num) {
+  makePage(num: number) {
     num = uint(num);
     var list = new Array();
     var i = int(num * 6);
@@ -84,7 +84,7 @@ export class CookBook extends AnimatedScreen {
     --this.actualIndex;
     this.toActualPage(this.PREVIOUS_ANIMATION);
   }
-  toActualPage(text) {
+  toActualPage(text: string) {
     this.nextPage = this.makePage(this.actualIndex);
     this.nextPageContainer.addChild(this.nextPage.getMc());
     this.pagesContainer.gotoAndPlay(text);
@@ -101,10 +101,10 @@ export class CookBook extends AnimatedScreen {
     this.gotoIdle();
     this.refreshArrows();
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     super.enter(Util.concatenate(callback, Util.l(Buttons.setButtons, this.bg.container, ['cancel'], true)));
   }
-  leave(callback = null) {
+  leave(callback: Function = null) {
     Buttons.setButtons(this.bg.container, ['cancel'], false);
     this.pagesContainer.stop();
     super.leave(callback);

@@ -1,20 +1,22 @@
 import { bindMethods } from '@/flash/as3';
+import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { ItemView } from '@/game/view/items/ItemView';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { Item } from '@/game/main_game/items/Item';
 
 export class EquipmentView extends ItemView {
-  constructor(item) {
+  constructor(item: Item) {
     super(item);
   }
   getMC() {
     var mc = super.getMC();
     if (mc.hasOwnProperty('equip')) {
-      this.item.getPrimaryModifier().modifyIcon(mc.equip.gem1);
-      this.item.getSecondaryModifier().modifyIcon(mc.equip.gem2);
+      ModifierIcons.show(this.item.getPrimaryModifier(), mc.equip.gem1);
+      ModifierIcons.show(this.item.getSecondaryModifier(), mc.equip.gem2);
     }
     return mc;
   }
-  getStateForSlot(slotView) {
+  getStateForSlot(slotView: SlotView) {
     return SlotView.EQUIPMENT;
   }
 }

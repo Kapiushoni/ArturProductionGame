@@ -8,11 +8,13 @@ import { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/Bos
 import { BossFightView } from '@/game/view/screens/main_game/boss_dungeon/BossFightView';
 import { EnterBossDungeon } from '@/game/view/screens/main_game/boss_dungeon/EnterBossDungeon';
 import { WinBossDungeonWindow } from '@/game/view/screens/main_game/boss_dungeon/WinBossDungeonWindow';
+import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 export class BossDungeonView extends DungeonView {
   declare bossView: any;
   won = false;
-  constructor(dungeonState) {
+  constructor(dungeonState: IDungeonState) {
     super(dungeonState);
     this.timeLine.clear();
   }
@@ -48,7 +50,7 @@ export class BossDungeonView extends DungeonView {
   onToOutro() {
     as3as(this.dungeon, BossDungeonState).onToOutro.emit();
   }
-  onFight(fight) {
+  onFight(fight: IFight) {
     this.innerView.clear();
     this.innerView = new BossFightView(this, as3as(this.dungeon.getDungeon().currentFight, BossFight));
   }

@@ -1,5 +1,6 @@
 import { bindMethods, uint } from '@/flash/as3';
 import { main } from '@/game/main';
+import type { Locale } from '@/game/cb/data/Locale';
 
 export class BarView {
   mc: any = null;
@@ -7,7 +8,7 @@ export class BarView {
   totalVal = NaN;
   locale: any = null;
   localeText: any = null;
-  constructor(mc, locale = null, localeText = '', currentVal = 0, totalVal = 100) {
+  constructor(mc: any, locale: Locale = null, localeText: string = '', currentVal: number = 0, totalVal: number = 100) {
     currentVal = Number(currentVal);
     totalVal = Number(totalVal);
 
@@ -25,7 +26,7 @@ export class BarView {
   get total() {
     return Number(this.totalVal);
   }
-  set current(value) {
+  set current(value: number) {
     value = Number(value);
     this.currentVal = Math.round(value);
     if (this.locale != null && this.localeText != '') {
@@ -37,7 +38,7 @@ export class BarView {
     }
     this.mc.gotoAndStop(num);
   }
-  set total(value) {
+  set total(value: number) {
     value = Number(value);
     this.totalVal = Math.ceil(value);
     if (this.locale != null && this.localeText != '') {

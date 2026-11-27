@@ -7,11 +7,11 @@ export class CookBookPage {
   static readonly RECIPES = 6;
   bg: any = null;
   recipes: any = null;
-  constructor(list) {
+  constructor(list: any[]) {
     this.bg = as3as(main.swfLoader.getObject('assets.RecipesContainer'), MovieClip);
     this.initializeRecipes(list);
   }
-  initializeRecipes(list) {
+  initializeRecipes(list: any[]) {
     var recipe = null;
     var recipeView = null;
     this.recipes = [];

@@ -4,7 +4,7 @@ import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 
 export class BackgroundSet {
   types: any = null;
-  constructor(backgrounds) {
+  constructor(backgrounds: any[]) {
     var background = null;
 
     this.types = new ProbabilisticSet();

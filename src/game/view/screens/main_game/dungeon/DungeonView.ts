@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, as3as, bindMethods } from '@/flash/as3';
+import { Dictionary, as3as, bindMethods } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { main } from '@/game/main';
@@ -17,6 +17,10 @@ import { LostWindow } from '@/game/view/screens/main_game/dungeon/LostWindow';
 import { TimeLine } from '@/game/view/screens/main_game/dungeon/TimeLine';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { Pause } from '@/game/view/screens/Pause';
+import type { EndDungeonWindow } from '@/game/view/screens/main_game/dungeon/EndDungeonWindow';
+import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
+import type { Item } from '@/game/main_game/items/Item';
 
 export class DungeonView extends Screen {
   dungeon: any = null;
@@ -24,12 +28,12 @@ export class DungeonView extends Screen {
   timeLine: any = null;
   innerView: any = null;
   windowShowing: any = null;
-  constructor(dungeon) {
-    super(__DEFER);
+  constructor(dungeon: IDungeonState) {
+    super();
     this.dungeon = dungeon;
     dungeon.getDungeon().onFight.add(this.onFight);
     this.innerView = new EmptyInnerView(this.soundTrack);
-    this.__init_Screen(BackgroundView, this.getButtonInfo());
+    this.initScreen(BackgroundView, this.getButtonInfo());
     main.game.getJinn().onPotionConsumition.add(this.potionConsumition);
     this.background.jinnHud.changeFighter(main.game.getJinn());
     this.initialize();
@@ -60,7 +64,7 @@ export class DungeonView extends Screen {
     this.innerView.clear();
     this.innerView = new EnterDungeonView(this.jinnView, this.background, this.dungeon.getDungeon().startFight);
   }
-  potionConsumition(item) {
+  potionConsumition(item: Item) {
     if (main.game.getJinn().stats.isDead()) {
       this.suddenDeath();
     }
@@ -83,7 +87,7 @@ export class DungeonView extends Screen {
     }
     this.innerView.resume();
   }
-  pause(event) {
+  pause(event: any) {
     if (main.game.getJinn().stats.isDead()) {
       return;
     }
@@ -108,11 +112,11 @@ export class DungeonView extends Screen {
   onReplay() {
     this.gotoDungeonId(this.dungeon.getDungeon().getId());
   }
-  gotoDungeonId(text) {
+  gotoDungeonId(text: string) {
     var level = main.game.getMap().getLevel(text);
     this.dungeon.onToDungeon.emit(level);
   }
-  onFight(fight) {
+  onFight(fight: IFight) {
     this.innerView.clear();
     this.innerView = new FightView(fight, this.jinnView, this.background);
   }
@@ -157,7 +161,7 @@ export class DungeonView extends Screen {
     }
     return new WinWindow(this.getLoot(), this.getStats(), callback);
   }
-  showFinishWindow(windowShowing) {
+  showFinishWindow(windowShowing: EndDungeonWindow) {
     this.windowShowing = windowShowing;
     windowShowing.getOnReplay().add(this.onReplay);
     windowShowing.getOnBackToMap().add(this.onLevelSelect);

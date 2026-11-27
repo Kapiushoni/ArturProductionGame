@@ -3,7 +3,7 @@ import { main } from '@/game/main';
 
 export class EmptyInnerView {
   _soundTrack: any = null;
-  constructor(soundTrack) {
+  constructor(soundTrack: string) {
     this._soundTrack = soundTrack;
   }
   resume() {}

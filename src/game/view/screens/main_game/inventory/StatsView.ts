@@ -24,7 +24,7 @@ export class StatsView {
   constructor() {
     this.liver = new LiverView(this);
   }
-  initialize(bg) {
+  initialize(bg: any) {
     this.bg = bg;
     this.drag_listener = new DragListener(bg, main.game.getJinn().liver);
     var stats = main.game.getJinn().stats;
@@ -69,7 +69,7 @@ export class StatsView {
     this.weapon_slot.initialize(this.bg.weapon_slot_2);
     this.shield_slot.initialize(this.bg.weapon_slot_1);
   }
-  updateLevelAndXp(lastLevel, persistentExperience) {
+  updateLevelAndXp(lastLevel: number, persistentExperience: PersistentExperience) {
     lastLevel = uint(lastLevel);
     this.bg['level'].title_1.text = main.locale.get('level', [lastLevel]);
     if (lastLevel != this.lastLevel) {
@@ -79,7 +79,7 @@ export class StatsView {
     this.updateBar(this.experience, persistentExperience.getValue(), persistentExperience.getUpperBound());
     this.lastLevel = uint(lastLevel);
   }
-  updateBar(barView, current, total) {
+  updateBar(barView: BarView, current: number, total: number) {
     current = Number(current);
     total = Number(total);
     Tween.killTweensOf(barView);
@@ -88,44 +88,44 @@ export class StatsView {
       total: total,
     });
   }
-  makeGlow(flag, textField) {
+  makeGlow(flag: boolean, textField: any) {
     if (flag) {
       textField.textColor = 16776960;
     } else {
       textField.textColor = 14605481;
     }
   }
-  glowDefense(flag) {
+  glowDefense(flag: boolean) {
     this.makeGlow(flag, this.bg.defence.title.title);
   }
-  glowAttack(flag) {
+  glowAttack(flag: boolean) {
     this.makeGlow(flag, this.bg.weapon.title.title);
   }
-  glowLuck(flag) {
+  glowLuck(flag: boolean) {
     this.makeGlow(flag, this.bg.luck.title.title);
   }
-  updateHealth(num) {
+  updateHealth(num: number) {
     num = int(num);
     this.updateText(this.bg.health.title.title, num);
   }
-  updateDefense(num) {
+  updateDefense(num: number) {
     num = int(num);
     this.updateText(this.bg.defence.title.title, num);
   }
-  updateAttack(num) {
+  updateAttack(num: number) {
     num = int(num);
     this.updateText(this.bg.weapon.title.title, num);
   }
-  updateLuck(num) {
+  updateLuck(num: number) {
     num = int(num);
     this.updateText(this.bg.luck.title.title, num);
   }
-  updateText(textField, num) {
+  updateText(textField: any, num: number) {
     num = Number(num);
     Tween.killTweensOf(textField);
     Tween.to(textField, 300, { text: num }, null, Util.l(this.interize, textField));
   }
-  interize(textField) {
+  interize(textField: any) {
     var text = textField.text;
     textField.text = text.split('.')[0];
   }

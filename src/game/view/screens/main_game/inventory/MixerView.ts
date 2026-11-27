@@ -16,7 +16,7 @@ export class MixerView {
   constructor() {
     this.slots = new Array();
   }
-  initialize(bg) {
+  initialize(bg: any) {
     var slot = null;
     var autoSelectSlotView = null;
     this.bg = bg;
@@ -51,7 +51,7 @@ export class MixerView {
   change(value = null) {
     this.refreshButton();
   }
-  mix(event) {
+  mix(event: any) {
     var mixer = main.game.getMixer();
     mixer.startMix();
     this.clock_view = new MixerClockView(mixer.clock);
@@ -67,7 +67,7 @@ export class MixerView {
       this.bg['mix_button'].gotoAndStop('locked');
     }
   }
-  mixButtonOut(event) {
+  mixButtonOut(event: any) {
     if (!main.game.getMixer().canMix()) {
       event.stopPropagation();
       this.bg['mix_button'].gotoAndStop('locked');

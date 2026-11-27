@@ -9,7 +9,7 @@ export class ArrowView {
   mc: any = null;
   showing = false;
   click: any = null;
-  constructor(mc, click = null, flag = false) {
+  constructor(mc: any, click: Function = null, flag: boolean = false) {
     this.click = click;
     this.mc = mc;
     this.showing = false;
@@ -22,22 +22,22 @@ export class ArrowView {
     this.initializeButton(mc);
     this.refreshAsButton();
   }
-  initializeButton(clip) {
+  initializeButton(clip: any) {
     clip.hitbox.addEventListener(MouseEvent.CLICK, this.onClick, false, 0, true);
     clip.hitbox.addEventListener(MouseEvent.ROLL_OVER, this.over, false, 0, true);
     clip.hitbox.addEventListener(MouseEvent.ROLL_OUT, this.out, false, 0, true);
   }
-  onClick(event) {
+  onClick(event: any) {
     main.soundManager.playFx(GameSounds.BUTTON_CLICK);
     this.click();
   }
-  over(event) {
+  over(event: any) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOver');
       main.soundManager.playFx(GameSounds.MOUSE_OVER);
     }
   }
-  out(event) {
+  out(event: any) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOut');
       main.soundManager.playFx(GameSounds.MOUSE_OVER);

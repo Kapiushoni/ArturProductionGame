@@ -1,4 +1,4 @@
-import { __DEFER, as3as, bindMethods } from '@/flash/as3';
+import { as3as, bindMethods } from '@/flash/as3';
 import { BasicFightView } from '@/game/view/screens/main_game/dungeon/fight/BasicFightView';
 import { main } from '@/game/main';
 import { EnemyView } from '@/game/view/figthers/EnemyView';
@@ -7,13 +7,15 @@ import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
 import { RunAnimation } from '@/game/view/figthers/animations/RunAnimation';
 import { FighterView } from '@/game/view/figthers/FighterView';
 import { JinnView } from '@/game/view/figthers/JinnView';
+import type { BackgroundView } from '@/game/view/screens/main_game/dungeon/BackgroundView';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 export class FightView extends BasicFightView {
-  constructor(fight, fighterView, backgroundView) {
-    super(__DEFER);
-    this.__init_BasicFightView(fight, backgroundView, fighterView);
+  constructor(fight: IFight, fighterView: FighterView, backgroundView: BackgroundView) {
+    super();
+    this.initFightView(fight, backgroundView, fighterView);
   }
-  initializeViews(list) {
+  initializeViews(list: any[]) {
     var jinnView = list[0];
     this.views.set(main.game.getJinn(), jinnView);
     this.views.set(this.fight.getEnemy(), new EnemyView(this.fight.getEnemy()));
@@ -42,11 +44,11 @@ export class FightView extends BasicFightView {
   lose() {
     main.game.getDungeon().lostFight();
   }
-  moveEnemy(num) {
+  moveEnemy(num: number) {
     num = Number(num);
     this.views.get(this.enemy).x -= num;
   }
-  enter(callback2) {
+  enter(callback2: Function) {
     var callback = callback2;
     var steps = Number(Dungeon.DungeonConfig['steps_to_find_enemy']);
     var walk = new RunAnimation(steps, !this.fight.isFirst());
@@ -57,7 +59,7 @@ export class FightView extends BasicFightView {
     this.bg.onMove.add(this.moveEnemy);
     this.bg.beginScroll();
   }
-  atEndEnter(callback) {
+  atEndEnter(callback: Function) {
     this.bg.endScroll();
     this.bg.onMove.remove(this.moveEnemy);
     super.enter(callback);

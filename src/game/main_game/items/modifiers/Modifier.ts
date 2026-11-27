@@ -12,13 +12,6 @@ export class Modifier implements IModifier {
     this.characteristic = int(StatType.parse(config.Category));
     this.value = Number(config.Value);
   }
-  modifyIcon(clip: any) {
-    clip.visible = true;
-    StatType.setMcIcon(clip, this.characteristic);
-  }
-  modifyValue(textField: any, num: number) {
-    textField.text = services.texts.get('popUpValue', [this.value.toString(), int(num).toString()]);
-  }
   affect(stats: any) {
     this.getStat(stats).modifyValue(this.value);
   }

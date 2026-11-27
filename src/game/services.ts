@@ -28,12 +28,6 @@ export interface Achievements {
 export interface TutorialProgress {
   isMixKnown(): boolean;
 }
-/** the loaded asset libraries */
-export interface Assets {
-  getClass(name: string): any;
-  getObject(name: string): any;
-}
-
 export const services = {
   config: null as Config,
   texts: null as Texts,
@@ -41,5 +35,4 @@ export const services = {
   sound: null as SoundEffects,
   achievements: null as Achievements,
   tutorial: null as TutorialProgress,
-  assets: null as Assets,
 };

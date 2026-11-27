@@ -1,10 +1,11 @@
 import { bindMethods } from '@/flash/as3';
 import { AutoSelectSlotView } from '@/game/view/screens/main_game/slot/AutoSelectSlotView';
 import { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
+import type { ISlot } from '@/game/main_game/item_containers/ISlot';
 
 export class LeftSlotView extends AutoSelectSlotView {
   declare selectionBloked: any;
-  constructor(slot) {
+  constructor(slot: ISlot) {
     super(slot);
     this.selectionBloked = false;
   }

@@ -4,6 +4,10 @@ import { main } from '@/game/main';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { LegendaryLevel } from '@/game/main_game/map/LegendaryLevel';
 import { Util } from '@/game/util/Util';
+import type { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
+import type { Enemy } from '@/game/main_game/character/Enemy';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
+import type { Level } from '@/game/main_game/map/Level';
 
 export class TimeLine extends MovieClip {
   static readonly jinnStart = 74;
@@ -14,7 +18,7 @@ export class TimeLine extends MovieClip {
   declare distance: any;
   declare skulls: any;
   alphalize = false;
-  constructor(dungeonView) {
+  constructor(dungeonView: DungeonView) {
     super();
     this.skulls = new Array();
     this.dungeonView = dungeonView;
@@ -57,7 +61,7 @@ export class TimeLine extends MovieClip {
     this.jinn.x = TimeLine.jinnStart;
     dungeon.onWin.add(Util.l(this.removeSkull, this.skulls[this.skulls.length - 1]));
   }
-  setLevel(clip, level) {
+  setLevel(clip: any, level: Level) {
     if (level.isLegendary()) {
       clip.level.gotoAndStop(as3as(level, LegendaryLevel).element.type);
     } else if (level.isSpecial()) {
@@ -67,18 +71,18 @@ export class TimeLine extends MovieClip {
       clip.level.text.text = level.getDungeonId();
     }
   }
-  nextFight(fight) {
+  nextFight(fight: IFight) {
     this.alphalize = true;
     if (this.fight != 0) {
       this.jinn.x = this.positionOfFight(this.fight);
     }
     this.fight = Number(this.fight + 1);
   }
-  positionOfFight(num) {
+  positionOfFight(num: number) {
     num = uint(num);
     return Number(num * this.distance + 40);
   }
-  move(num) {
+  move(num: number) {
     num = Number(num);
     if (this.alphalize && this.fight > 1) {
       this.removeSkull(this.skulls[this.fight - 2]);
@@ -86,7 +90,7 @@ export class TimeLine extends MovieClip {
     }
     this.jinn.x = Math.min(this.jinn.x + num * this.scale, this.positionOfFight(this.fight));
   }
-  removeSkull(clip) {
+  removeSkull(clip: any) {
     Tween.to(
       clip,
       800,
@@ -97,7 +101,7 @@ export class TimeLine extends MovieClip {
       Util.l(this.removeChild, clip),
     );
   }
-  newStep(enemy) {
+  newStep(enemy: Enemy) {
     var cls = null;
     var element = enemy.getElement();
     if (element.isOfFire) {

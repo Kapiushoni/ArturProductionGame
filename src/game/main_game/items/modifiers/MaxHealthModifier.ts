@@ -16,12 +16,6 @@ export class MaxHealthModifier extends Modifier {
       this.primary_char = int(StatType.EXPERIENCE);
     }
   }
-  modifyIcon(clip: any) {
-    super.modifyIcon(clip);
-    if (clip.max_health) {
-      clip.max_health.gotoAndStop(this.value >= 0 ? 'up' : 'down');
-    }
-  }
   affect(stats: any) {
     (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).modifyUpperBound(this.value);
   }

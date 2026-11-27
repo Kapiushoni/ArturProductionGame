@@ -4,24 +4,24 @@ import { PopUpPositioner } from '@/game/view/popUp/PopUpPositioner';
 export class PopUp {
   theMc: any = null;
   positioner: any = null;
-  constructor(theMc) {
+  constructor(theMc: any) {
     this.theMc = theMc;
     this.mc.visible = false;
   }
   get mc() {
     return this.theMc;
   }
-  addIn(displayObjectContainer) {
+  addIn(displayObjectContainer: any) {
     this.positioner = new PopUpPositioner(displayObjectContainer);
     this.positioner.addMc(this.mc);
   }
-  hide(callback = null) {
+  hide(callback: Function = null) {
     this.mc.visible = false;
     if (callback != null) {
       callback();
     }
   }
-  show(callback = null) {
+  show(callback: Function = null) {
     this.positioner.refreshPos(this.mc);
     this.mc.visible = true;
     if (callback != null) {

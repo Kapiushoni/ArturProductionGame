@@ -82,23 +82,5 @@ export class StatType {
         throw new Error('Parse error');
     }
   }
-  static setMcIcon(clip: any, type: number) {
-    switch (int(type)) {
-      case StatType.LUCK:
-        clip.gotoAndStop('luck');
-        break;
-      case StatType.DEFENSE:
-        clip.gotoAndStop('defence');
-        break;
-      case StatType.ATTACK:
-        clip.gotoAndStop('attack');
-        break;
-      case StatType.HEALTH:
-        clip.gotoAndStop('health');
-        break;
-      case StatType.MAX_HP:
-        clip.gotoAndStop('max_health');
-    }
-  }
 }
 bindMethods(StatType);

@@ -1,6 +1,7 @@
 import { MouseEvent, bindMethods } from '@/flash/as3';
 import { DragListener } from '@/game/drag_and_drop/DragListener';
 import { main } from '@/game/main';
+import type { Item } from '@/game/main_game/items/Item';
 
 export class TrashView {
   trash: any = null;
@@ -10,7 +11,7 @@ export class TrashView {
     main.game.getInventory().getTrash().onThrow.add(this.throwItem);
     this.selected = false;
   }
-  initialize(trash) {
+  initialize(trash: any) {
     this.trash = trash;
     this.drag_listener = new DragListener(trash.hit_box, main.game.getInventory().getTrash());
     this.stop();
@@ -24,12 +25,12 @@ export class TrashView {
     this.trash.hit_box.removeEventListener(MouseEvent.ROLL_OVER, this.mouseOver);
     this.trash.hit_box.removeEventListener(MouseEvent.ROLL_OUT, this.mouseOut);
   }
-  mouseOver(event) {
+  mouseOver(event: any) {
     if (this.drag_listener.dragState == DragListener.ACTIVE_DRAG) {
       this.select();
     }
   }
-  mouseOut(event) {
+  mouseOut(event: any) {
     this.deselect();
   }
   select() {
@@ -47,7 +48,7 @@ export class TrashView {
   stop() {
     this.trash.trash.gotoAndStop(1);
   }
-  throwItem(item) {
+  throwItem(item: Item) {
     this.deselect();
     this.trash.trash.gotoAndPlay(1);
   }

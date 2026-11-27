@@ -1,29 +1,31 @@
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { BasicFightView } from '@/game/view/screens/main_game/dungeon/fight/BasicFightView';
 import { main } from '@/game/main';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Util } from '@/game/util/Util';
 import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
+import type { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
+import type { BossFight } from '@/game/main_game/boss_dungeon/BossFight';
 
 export class BossFightView extends BasicFightView {
   bossDungeonView: any = null;
-  constructor(bossDungeonView, bossFight) {
-    super(__DEFER);
+  constructor(bossDungeonView: BossDungeonView, bossFight: BossFight) {
+    super();
     this.bossDungeonView = bossDungeonView;
-    this.__init_BasicFightView(bossFight, bossDungeonView.background);
+    this.initFightView(bossFight, bossDungeonView.background);
     main.soundManager.playMusic(GameSounds.BOSS_MUSIC);
   }
   get bossView() {
     return this.bossDungeonView.getBossView();
   }
-  initializeViews(list) {
+  initializeViews(list: any[]) {
     this.enemy = this.fight.getEnemy();
     var jinnView = this.bossDungeonView.getJinnView();
     this.views.set(jinnView.getFighter(), jinnView);
     this.views.set(this.bossView.getFighter(), this.bossView);
   }
-  enter(callback) {
+  enter(callback: Function) {
     this.bossView.animate(new IdleAnimation());
     this.bossView.x =
       this.bossDungeonView.getJinnView().x +
@@ -34,7 +36,7 @@ export class BossFightView extends BasicFightView {
     this.bossDungeonView.background.onMove.add(Util.l(this.backgroundMove, callback));
     this.bossDungeonView.background.beginScroll();
   }
-  backgroundMove(num, callback) {
+  backgroundMove(num: number, callback: Function) {
     num = Number(num);
     this.bossDungeonView.getJinnView().x = this.bossDungeonView.getJinnView().x - num;
     this.bossDungeonView.getBossView().x = this.bossDungeonView.getBossView().x - num;

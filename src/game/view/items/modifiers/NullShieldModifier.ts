@@ -2,7 +2,7 @@ import { bindMethods } from '@/flash/as3';
 
 export class NullShieldModifier {
   constructor() {}
-  modify(clip) {
+  modify(clip: any) {
     clip.stop();
     clip.visible = false;
   }

@@ -10,6 +10,7 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
 
 export class ShmabledumPopUp {
   screen: any = null;
@@ -32,16 +33,16 @@ export class ShmabledumPopUp {
     dict.set('container.cancel', ButtonGroup.get('gui').createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  cancel(event) {
+  cancel(event: any) {
     this.onCancel.emit();
   }
   get mc() {
     return this.screen.getBg();
   }
-  addIn(displayObjectContainer) {
+  addIn(displayObjectContainer: any) {
     displayObjectContainer.addChild(this.screen);
   }
-  hide(callback = null) {
+  hide(callback: Function = null) {
     if (this.showing) {
       Buttons.setButtons(this.screen.getBg(), ['container.cancel'], false);
       this.mc.gotoAndPlay('out');
@@ -51,14 +52,14 @@ export class ShmabledumPopUp {
       callback();
     }
   }
-  trueHide(callback = null) {
+  trueHide(callback: Function = null) {
     this.clearSlots();
     this.mc.visible = false;
     if (callback != null) {
       callback();
     }
   }
-  show(callback = null) {
+  show(callback: Function = null) {
     this.mc.visible = true;
     Buttons.setButtons(this.screen.getBg(), ['container.cancel'], true);
     if (!this.showing) {
@@ -85,7 +86,7 @@ export class ShmabledumPopUp {
       this.secondarySlot = null;
     }
   }
-  refreshTip(bubbleGumTip) {
+  refreshTip(bubbleGumTip: BubbleGumTip) {
     this.clearSlots();
     if (!bubbleGumTip.principalSlot.isEmpty() && !bubbleGumTip.secondarySlot.isEmpty()) {
       this.container.gotoAndStop('item_2');

@@ -1,4 +1,4 @@
-import { MovieClip, as3as, bindMethods, int, uint } from '@/flash/as3';
+import { bindMethods, uint } from '@/flash/as3';
 import { services } from '@/game/services';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { ElementBonus } from '@/game/main_game/dungeon/ElementBonus';

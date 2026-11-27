@@ -4,16 +4,19 @@ import { StatType } from '@/game/main_game/character/stats/StatType';
 import { Consumable } from '@/game/main_game/items/Consumable';
 import { PotionEffect } from '@/game/view/effect/PotionEffect';
 import { LeftSlotView } from '@/game/view/screens/main_game/slot/LeftSlotView';
+import type { Item } from '@/game/main_game/items/Item';
+import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
+import type { StatsView } from '@/game/view/screens/main_game/inventory/StatsView';
 
 export class LiverView {
   bg: any = null;
   stats: any = null;
   slot: any = null;
   showing = false;
-  constructor(stats) {
+  constructor(stats: StatsView) {
     this.stats = stats;
   }
-  initialize(liver, bg) {
+  initialize(liver: Liver, bg: any) {
     this.bg = bg;
     this.showing = false;
     bg.gotoAndStop('stop');
@@ -25,7 +28,7 @@ export class LiverView {
     liver.onChange.add(this.refresh);
     this.trueRefresh(liver);
   }
-  animate(flag) {
+  animate(flag: boolean) {
     var text = null;
     if (flag == this.showing) {
       this.showing = !flag;
@@ -33,20 +36,20 @@ export class LiverView {
       this.bg.gotoAndPlay(text);
     }
   }
-  refresh(slotChange) {
+  refresh(slotChange: SlotChange) {
     var liver = as3as(slotChange.getSlot(), Liver);
     this.trueRefresh(liver);
     if (slotChange.getOldItem() != null) {
       this.removeConsumable(slotChange.getOldItem());
     }
   }
-  refreshGlow(liver) {
+  refreshGlow(liver: Liver) {
     var cbArray = liver.activeBuffs();
     this.stats.glowAttack(cbArray.indexOf(StatType.ATTACK) >= 0);
     this.stats.glowDefense(cbArray.indexOf(StatType.DEFENSE) >= 0);
     this.stats.glowLuck(cbArray.indexOf(StatType.LUCK) >= 0);
   }
-  trueRefresh(liver) {
+  trueRefresh(liver: Liver) {
     var potionEffect = null;
     var consumable = null;
     this.refreshGlow(liver);
@@ -60,11 +63,11 @@ export class LiverView {
       this.removeMask();
     }
   }
-  refreshMask(num) {
+  refreshMask(num: number) {
     num = int(num);
     this.bg.potion_mask.gotoAndStop(100 - num);
   }
-  removeConsumable(item) {
+  removeConsumable(item: Item) {
     var consumable = as3as(item.getCategory(), Consumable);
     consumable.onChange.remove(this.refreshMask);
     consumable.atEndEffect.remove(this.removeConsumable);

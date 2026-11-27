@@ -6,6 +6,8 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
 import { RunAnimation } from '@/game/view/figthers/animations/RunAnimation';
 import { BackgroundView } from '@/game/view/screens/main_game/dungeon/BackgroundView';
+import type { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
+import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
 
 export class EnterBossDungeon {
   bossDungeonView: any = null;
@@ -13,7 +15,7 @@ export class EnterBossDungeon {
   gameLoop: any = null;
   paused = false;
   walk: any = null;
-  constructor(bossDungeonView, atEnd) {
+  constructor(bossDungeonView: BossDungeonView, atEnd: Function) {
     this.bossDungeonView = bossDungeonView;
     this.atEnd = atEnd;
     this.gameLoop = new GameLoop(bossDungeonView.background);
@@ -51,11 +53,11 @@ export class EnterBossDungeon {
       this.paused = true;
     }
   }
-  refresh(num) {
+  refresh(num: number) {
     num = int(num);
     this.bossDungeonView.getJinnView().x = this.bossDungeonView.getJinnView().x + BackgroundView.ARENA_VELOCITY;
   }
-  endPositionating(fighterAnimation) {
+  endPositionating(fighterAnimation: IFighterAnimation) {
     this.walk = null;
     this.gameLoop.stop();
     this.atEnd();

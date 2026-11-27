@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods, uint } from '@/flash/as3';
+import { Dictionary, bindMethods, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
@@ -8,6 +8,7 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
+import type { Level } from '@/game/main_game/map/Level';
 
 export class Pause extends AnimatedScreen {
   static BUTTONS = ['cancel', 'help', 'level_select', 'replay', 'sound'];
@@ -15,10 +16,10 @@ export class Pause extends AnimatedScreen {
   onReplay: any = null;
   onCancel: any = null;
   level: any = null;
-  constructor(level) {
-    super(__DEFER);
+  constructor(level: Level) {
+    super();
     this.level = level;
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.Pause'), this.getButtonInfo());
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.Pause'), this.getButtonInfo());
     this.initializeSignals();
     this.initialize();
   }
@@ -44,7 +45,7 @@ export class Pause extends AnimatedScreen {
     main.soundManager.playMusic(GameSounds.MAP_MUSIC);
     this.putAdvice(this.bg.tips.tip_text.title);
   }
-  putAdvice(textField) {
+  putAdvice(textField: any) {
     var num = 1;
     if (!main.theTutorial.isMixKnown()) {
       num = uint(main.config.get('InitialConfig').mixAdvices + 1);
@@ -52,11 +53,11 @@ export class Pause extends AnimatedScreen {
     var text = main.locale.get('advice' + Random.nextRange(num, main.config.get('InitialConfig').advices).toString());
     textField.text = text;
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     main.game.onPause.emit(true);
     super.enter(callback);
   }
-  leave(callback = null) {
+  leave(callback: Function = null) {
     main.game.onPause.emit(false);
     Buttons.setButtons(this.bg, Pause.BUTTONS, false);
     super.leave(callback);
@@ -67,27 +68,27 @@ export class Pause extends AnimatedScreen {
     this.onLevelSelect.clear();
     this.onReplay.clear();
   }
-  replay(event = null) {
+  replay(event: any = null) {
     this.showConfirmation(Util.l(this.emitAndLeave, this.onReplay), Util.pass);
   }
-  levelSelect(event = null) {
+  levelSelect(event: any = null) {
     this.showConfirmation(Util.l(this.emitAndLeave, this.onLevelSelect), Util.pass);
   }
-  emitAndLeave(signal2) {
+  emitAndLeave(signal2: Signal) {
     var signal = signal2;
     signal.emit();
     this.leave(() => {
       this.pop();
     });
   }
-  showConfirmation(callback, callback2) {
+  showConfirmation(callback: Function, callback2: Function) {
     var text = main.locale.get('leave_dungeonConfirmation');
     var confirmationPopUp = new ConfirmationPopUp(this.bg, callback, callback2, text);
     main.tutorialHolder.addChild(confirmationPopUp);
     confirmationPopUp.enter();
   }
-  help(event = null) {}
-  cancel(event = null) {
+  help(event: any = null) {}
+  cancel(event: any = null) {
     var ev = event;
     this.leave(() => {
       this.onCancel.emit();

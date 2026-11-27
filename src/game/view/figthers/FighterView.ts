@@ -3,13 +3,16 @@ import { Util } from '@/game/util/Util';
 import { HitAnimation } from '@/game/view/figthers/animations/HitAnimation';
 import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
 import { NoneAnimation } from '@/game/view/figthers/animations/NoneAnimation';
+import type { Damage } from '@/game/main_game/dungeon/Damage';
+import type { Fighter } from '@/game/main_game/character/Fighter';
+import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
 
 export class FighterView {
   fighter: any = null;
   currentAnimation: any = null;
   nextAnimation: any = null;
   soundManager: any = null;
-  constructor(fighter) {
+  constructor(fighter: Fighter) {
     this.fighter = fighter;
     this.setSoundManager();
   }
@@ -22,7 +25,7 @@ export class FighterView {
   get fighterSoundManager() {
     return this.soundManager;
   }
-  animate(nextAnimation) {
+  animate(nextAnimation: IFighterAnimation) {
     this.nextAnimation = nextAnimation;
     if (this.currentAnimation == null) {
       this.endCurrentAnimation(null);
@@ -31,7 +34,7 @@ export class FighterView {
       this.endCurrentAnimation(this.currentAnimation);
     }
   }
-  endCurrentAnimation(fighterAnimation) {
+  endCurrentAnimation(fighterAnimation: IFighterAnimation) {
     if (this.nextAnimation == null) {
       if (fighterAnimation.mustGoToIdle()) {
         this.nextAnimation = new IdleAnimation();
@@ -56,14 +59,14 @@ export class FighterView {
     this.currentAnimation.kill();
     this.currentAnimation = null;
   }
-  playAnimation(fighterAnimation) {}
-  set x(value) {
+  playAnimation(fighterAnimation: IFighterAnimation) {}
+  set x(value: number) {
     value = Number(value);
   }
   get x() {
     return 0;
   }
-  set y(value) {
+  set y(value: number) {
     value = Number(value);
   }
   get y() {
@@ -72,8 +75,8 @@ export class FighterView {
   getMC() {
     return null;
   }
-  putIn(displayObjectContainer) {}
-  onHit(fighterView, damage, callback, callback2 = null) {
+  putIn(displayObjectContainer: any) {}
+  onHit(fighterView: FighterView, damage: Damage, callback: Function, callback2: Function = null) {
     this.bringToFront();
     var hitAnimation = new HitAnimation(fighterView, damage, callback, callback2);
     this.animate(hitAnimation);

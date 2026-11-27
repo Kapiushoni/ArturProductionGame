@@ -19,7 +19,7 @@ export class InventoryView {
     this.trash = new TrashView();
     this.slots = new Array(Inventory.SLOTS);
   }
-  initialize(bg) {
+  initialize(bg: any) {
     this.bg = bg;
     this.trash.initialize(bg.trash);
     var inventory = main.game.getInventory();
@@ -30,17 +30,17 @@ export class InventoryView {
       i++;
     }
   }
-  updatePage(value, actual_page) {
+  updatePage(value, actual_page: number) {
     actual_page = uint(actual_page);
     this.actual_page = uint(actual_page);
   }
-  nextPage(event) {
+  nextPage(event: any) {
     this.goToPage(this.actual_page + 1);
   }
-  previousPage(event) {
+  previousPage(event: any) {
     this.goToPage(this.actual_page - 1);
   }
-  goToPage(num) {
+  goToPage(num: number) {
     num = uint(num);
     if (this.actual_page == num) {
       this.updatePage(null, num);

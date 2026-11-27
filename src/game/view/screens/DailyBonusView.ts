@@ -1,34 +1,46 @@
-import { Dictionary, __DEFER, bindMethods } from '@/flash/as3';
+import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { main } from '@/game/main';
+import type { BonusIcon } from '@/game/bonus/filter/BonusIcon';
+import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
 export class DailyBonusView extends AnimatedScreen {
   message: any = null;
-  constructor(dailyBonus, message) {
-    super(__DEFER);
-    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.Bonus'), new Dictionary());
+  constructor(dailyBonus: IDailyBonus, message: string) {
+    super();
+    this.initAnimatedScreen(main.swfLoader.getClass('assets.Bonus'), new Dictionary());
     this.container = 'bonus';
     this.message = message;
     this.initialize(dailyBonus);
     this.bg.gotoAndStop(0);
   }
-  initialize(dailyBonus) {
+  /** adds the icon's clip ("assets.<prefix><type>" on frame label) to the holder */
+  addIcon(icon: BonusIcon, holder: any, prefix = '') {
+    const cls = main.swfLoader.getClass('assets.' + prefix + icon.type);
+    const clip = new cls();
+    if (icon.title != null) {
+      clip.title.title.text = icon.title;
+    }
+    clip.gotoAndStop(icon.label);
+    holder.addChild(clip);
+  }
+  initialize(dailyBonus: IDailyBonus) {
     this.bg[this.container].title.title.text = this.message;
     var icon = dailyBonus.getIcon();
     var icons = dailyBonus.getFilter().getIcons();
     switch (icons.length) {
       case 3:
-        icons[0].addToHolder(this.bg[this.container].holder_1a, dailyBonus.getAction());
-        icons[1].addToHolder(this.bg[this.container].holder_1b, dailyBonus.getAction());
-        icons[2].addToHolder(this.bg[this.container].holder_1c, dailyBonus.getAction());
-        icon.addToHolder(this.bg[this.container].holder_1d);
+        this.addIcon(icons[0], this.bg[this.container].holder_1a, dailyBonus.getAction());
+        this.addIcon(icons[1], this.bg[this.container].holder_1b, dailyBonus.getAction());
+        this.addIcon(icons[2], this.bg[this.container].holder_1c, dailyBonus.getAction());
+        this.addIcon(icon, this.bg[this.container].holder_1d);
         break;
       case 1:
-        icons[0].addToHolder(this.bg[this.container].holder_2a, dailyBonus.getAction());
-        icon.addToHolder(this.bg[this.container].holder_2b);
+        this.addIcon(icons[0], this.bg[this.container].holder_2a, dailyBonus.getAction());
+        this.addIcon(icon, this.bg[this.container].holder_2b);
         break;
       case 0:
-        icon.addToHolder(this.bg[this.container].holder_3b);
+        this.addIcon(icon, this.bg[this.container].holder_3b);
     }
   }
 }

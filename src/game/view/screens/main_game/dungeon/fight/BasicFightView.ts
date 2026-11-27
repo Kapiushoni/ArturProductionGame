@@ -1,4 +1,4 @@
-import { Dictionary, MovieClip, Timer, TimerEvent, __DEFER, as3as, as3values, bindMethods } from '@/flash/as3';
+import { Dictionary, MovieClip, Timer, TimerEvent, as3as, as3values, bindMethods } from '@/flash/as3';
 import { Functor } from '@/game/cb/actions/Functor';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
@@ -6,6 +6,10 @@ import { main } from '@/game/main';
 import { Util } from '@/game/util/Util';
 import { FighterView } from '@/game/view/figthers/FighterView';
 import { DamageFeedback } from '@/game/view/screens/main_game/dungeon/fight/DamageFeedback';
+import type { BackgroundView } from '@/game/view/screens/main_game/dungeon/BackgroundView';
+import type { Damage } from '@/game/main_game/dungeon/Damage';
+import type { Fighter } from '@/game/main_game/character/Fighter';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 export class BasicFightView {
   bg: any = null;
@@ -14,13 +18,13 @@ export class BasicFightView {
   views: any = null;
   timer: any = null;
   /**
-   * new BasicFightView(fight, bg, ...views), or (subclasses that must set fields first)
-   * super(__DEFER) then __init_BasicFightView(...): initializeViews() is called during the initialization.
+   * new BasicFightView(fight, bg, ...views), or super() then initFightView(...) in subclasses that must set
+   * their fields first: the initialization calls initializeViews(), which subclasses override.
    */
-  constructor(...args: any[]) {
-    if (args[0] !== __DEFER) this.__init_BasicFightView(args[0], args[1], ...args.slice(2));
+  constructor(fight: any = null, bg: any = null, ...views: any[]) {
+    if (fight != null) this.initFightView(fight, bg, ...views);
   }
-  __init_BasicFightView(fight, bg, ...rest) {
+  initFightView(fight: IFight, bg: BackgroundView, ...rest) {
     this.fight = fight;
     this.bg = bg;
     this.views = new Dictionary();
@@ -30,7 +34,7 @@ export class BasicFightView {
   getFightConfig() {
     return main.config.get('FightConfig');
   }
-  initializeViews(list) {
+  initializeViews(list: any[]) {
     throw new Error('Must implement');
   }
   initialize() {
@@ -46,7 +50,7 @@ export class BasicFightView {
   lose() {
     throw new Error('Must implement');
   }
-  countdown(callback) {
+  countdown(callback: Function) {
     var next = callback;
     this.bg.enemyHud.changeFighter(this.enemy);
     this.timer = new Timer(100, this.getFightConfig().countdown * 10);
@@ -56,14 +60,14 @@ export class BasicFightView {
     });
     this.timer.start();
   }
-  enter(callback) {
+  enter(callback: Function) {
     this.countdown(callback);
   }
-  leave(callback) {
+  leave(callback: Function) {
     this.bg.enemyHud.changeFighter(null);
     callback();
   }
-  onHit(fighter, fighter2, damage2, callback) {
+  onHit(fighter: Fighter, fighter2: Fighter, damage2: Damage, callback: Function) {
     var hitter = fighter;
     var reciver = fighter2;
     var damage = damage2;
@@ -77,7 +81,7 @@ export class BasicFightView {
     });
     this.timer.start();
   }
-  showFeedback(fighter, fighter2, damage2) {
+  showFeedback(fighter: Fighter, fighter2: Fighter, damage2: Damage) {
     var hitterView = null;
     var jinnFeedbacks = null;
     var enemyFeedbacks = null;

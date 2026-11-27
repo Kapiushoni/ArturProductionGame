@@ -4,10 +4,12 @@ import { main } from '@/game/main';
 import { Enemy } from '@/game/main_game/character/Enemy';
 import { EnemySoundManager } from '@/game/sound/EnemySoundManager';
 import { Util } from '@/game/util/Util';
+import type { Fighter } from '@/game/main_game/character/Fighter';
+import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
 
 export class EnemyView extends FighterView {
   declare container: any;
-  constructor(fighter) {
+  constructor(fighter: Fighter) {
     super(fighter);
     this.container = new MovieClip();
     this.container.enemy = null;
@@ -18,7 +20,7 @@ export class EnemyView extends FighterView {
   setSoundManager() {
     this.soundManager = new EnemySoundManager(as3as(this.fighter, Enemy));
   }
-  playAnimation(fighterAnimation) {
+  playAnimation(fighterAnimation: IFighterAnimation) {
     if (this.getMC() != null) {
       this.container.removeChild(this.getMC());
     }
@@ -26,23 +28,23 @@ export class EnemyView extends FighterView {
     this.container.addChild(this.container.enemy);
     this.container.enemy.gotoAndPlay(1);
   }
-  getNewMc(fighterAnimation) {
+  getNewMc(fighterAnimation: IFighterAnimation) {
     var text = 'assets.' + this.fighter.getName() + '.' + fighterAnimation.getName();
     var cls = main.swfLoader.getClass(text);
     return new cls();
   }
-  putIn(displayObjectContainer) {
+  putIn(displayObjectContainer: any) {
     displayObjectContainer['enemy'] = this.container;
     displayObjectContainer.addChild(this.container);
   }
-  set x(value) {
+  set x(value: number) {
     value = Number(value);
     this.container.x = value;
   }
   get x() {
     return Number(this.container.x);
   }
-  set y(value) {
+  set y(value: number) {
     value = Number(value);
     this.container.y = value;
   }

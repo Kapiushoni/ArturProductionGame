@@ -1,4 +1,4 @@
-import { Dictionary, __DEFER, bindMethods, uint } from '@/flash/as3';
+import { Dictionary, bindMethods, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { Functor } from '@/game/cb/actions/Functor';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -16,10 +16,10 @@ export class ComicWindow extends AnimatedScreen {
   nextArrow: any = null;
   actualPage = 0;
   totalPages = 0;
-  constructor(cls, totalPages) {
-    super(__DEFER);
+  constructor(cls: any, totalPages: number) {
+    super();
     this.totalPages = uint(totalPages);
-    this.__init_AnimatedScreen(cls, this.getButtonInfo(), 'pic_1', 'end_pic_' + totalPages);
+    this.initAnimatedScreen(cls, this.getButtonInfo(), 'pic_1', 'end_pic_' + totalPages);
     totalPages = uint(totalPages);
     this.onNext = new Signal();
     this.onBack = new Signal();
@@ -35,7 +35,7 @@ export class ComicWindow extends AnimatedScreen {
   get music(): string {
     throw new Error('Abstract Class');
   }
-  enter(callback = null) {
+  enter(callback: Function = null) {
     super.enter(callback);
     this.nextArrow.show();
     main.soundManager.playMusic(this.music);
@@ -59,11 +59,11 @@ export class ComicWindow extends AnimatedScreen {
       this.nextArrow.show();
     }
   }
-  next(event) {
+  next(event: any) {
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], false);
     this.onNext.emit();
   }
-  toMainMenu(event) {
+  toMainMenu(event: any) {
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], false);
     this.onBack.emit();
   }
