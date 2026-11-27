@@ -133,6 +133,8 @@ export { ShmabledumPrincess } from '@/game/main_game/shmabledum/ShmabledumPrince
 export { SpecialMixTip } from '@/game/main_game/shmabledum/SpecialMixTip';
 export { SaveError } from '@/game/persistence/SaveError';
 export { SaveSystem } from '@/game/persistence/SaveSystem';
+export { Roguelite } from '@/game/roguelite/Roguelite';
+export type { RunResult } from '@/game/roguelite/Roguelite';
 export { SharedUtils } from '@/game/persistence/SharedUtils';
 export { services } from '@/game/services';
 export type { Config, Texts, SoundEffects, Achievements, TutorialProgress } from '@/game/services';

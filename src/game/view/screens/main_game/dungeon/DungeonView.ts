@@ -14,6 +14,8 @@ import { EmptyInnerView } from '@/game/view/screens/main_game/dungeon/EmptyInner
 import { EnterDungeonView } from '@/game/view/screens/main_game/dungeon/fight/EnterDungeonView';
 import { FightView } from '@/game/view/screens/main_game/dungeon/fight/FightView';
 import { LostWindow } from '@/game/view/screens/main_game/dungeon/LostWindow';
+import { Roguelite } from '@/game/roguelite/Roguelite';
+import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
 import { TimeLine } from '@/game/view/screens/main_game/dungeon/TimeLine';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { Pause } from '@/game/view/screens/Pause';
@@ -139,8 +141,24 @@ export class DungeonView extends Screen {
   dungeonLost() {
     this.stopMusic();
     Buttons.setButtons(this.background.information, ['pause'], false);
+    if (Roguelite.enabled) {
+      this.runOver();
+      return;
+    }
     const lostWindow = new LostWindow(this.getStats());
     this.showFinishWindow(lostWindow);
+  }
+  /** roguelite: one life, the run is over */
+  runOver() {
+    const result = Roguelite.endRun();
+    app.saveSystem.switched();
+    // above the whole game screen (the pause layer is under the inventory): the veil also blocks the game
+    const holder = app.tutorialHolder;
+    const window = new RunOverWindow(result, () => {
+      holder.removeChild(window);
+      this.dungeon.onToMainMenu.emit();
+    });
+    holder.addChild(window);
   }
   dungeonWon() {
     this.stopMusic();

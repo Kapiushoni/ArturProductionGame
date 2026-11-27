@@ -8,6 +8,7 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import type { Level } from '@/game/main_game/map/Level';
 import type { MouseEvent } from '@/flash/as3';
 import type { TextField } from '@/flash/as3';
@@ -43,6 +44,11 @@ export class Pause extends AnimatedScreen {
   initialize() {
     this.bg.container.dungeon.title.text = this.level.getName();
     Buttons.setButtons(this.bg, Pause.BUTTONS, true);
+    // roguelite: one life, no replaying or leaving a fight
+    if (Roguelite.enabled) {
+      Buttons.setButtons(this.bg, ['replay', 'level_select'], false);
+      this.bg.replay.alpha = this.bg.level_select.alpha = 0.35;
+    }
     app.soundManager.updateSoundButton(this.bg['sound']);
     app.soundManager.playMusic(GameSounds.MAP_MUSIC);
     this.putAdvice(this.bg.tips.tip_text.title);

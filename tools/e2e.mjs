@@ -1,7 +1,8 @@
 // End-to-end test: plays the game in headless Chrome like a player.
 //   1. a new game: intro, the whole tutorial (sword, stats, fight, potion, loot, mixer);
 //   2. after a reload: continue, cook book, map pages, a tip of the princess, a dungeon with the pause menu, the end of the fight,
-//      back to the map and to the main menu.
+//      back to the map and to the main menu;
+//   3. the roguelite mod: switch on, a run lost in the first dungeon, the run over window, switch off.
 // Fails on any page error or when an expected screen does not show up.
 // usage: npm run e2e   (starts its own Vite dev server: the scenario uses the dev helpers G / GM / dbg)
 // Chrome: $CHROME, or the default Windows install path.
@@ -171,6 +172,48 @@ const SCREENS = [
     await E.until(() => G.state() === 'mainMenu' && !G.find('TransitionWindow'), 'main menu', 60000);
   }],
 ];
+const ROGUELITE = [
+  ['switch the mod on: its own empty save', async () => {
+    await E.until(() => G.find('MainMenu'), 'main menu', 60000);
+    await E.sleep(6000);
+    E.check(GM.app.saveSystem.hasPlayed(), 'the normal game has a save');
+    await G.tap(85, 25); // the mod switch, top left
+    await E.until(() => GM.Roguelite.enabled, 'mod on', 3000);
+    E.check(!GM.app.saveSystem.hasPlayed(), 'the run save is empty: continue is locked');
+    GM.Roguelite.tutorialCompleted(); // (the tutorial was played in the normal game above)
+  }],
+  ['a new run, one life: losing ends the run', async () => {
+    await E.tapUntil(/^new_game$/, () => G.state() !== 'mainMenu', 'leaving the menu');
+    const t0 = Date.now();
+    while (G.state() === 'intro' && Date.now() - t0 < 120000) {
+      const arrow = E.named(/^arrow_right$/)[0];
+      if (arrow) await G.tap(arrow.x, arrow.y);
+      await E.sleep(1500);
+    }
+    await E.until(() => G.state() === 'game' && G.find('MapView') && !G.find('TransitionWindow'), 'map', 60000);
+    await E.sleep(2000);
+    E.check(!G.find('TutorialView') && !G.find('TutorialViewWithOk'), 'no tutorial in the run');
+    await E.tapUntil(/^dungeon_1$/, () => !G.find('MapView') || G.find('TransitionWindow'), 'leaving the map');
+    await E.until(() => G.find('DungeonView') && !G.find('TransitionWindow'), 'dungeon', 60000);
+    E.check(GM.Roguelite.leftDuringFight, 'the run is marked as fighting');
+    GM.app.game.getJinn().stats.getStat(GM.StatType.HEALTH).value = 1;
+    const runOver = () => { let w = null; (function f(o) { if (!o || w) return; if (o.constructor.name === 'RunOverWindow') w = o; for (const c of o._ch || []) f(c); })(dbg.player.stage); return w; };
+    await E.until(runOver, 'the run over window', 120000);
+    E.check(GM.Roguelite.runs === 1 && GM.Roguelite.best === 1, 'the run is recorded');
+    let button = null;
+    (function f(o) { if (!o || button) return; if (o.constructor.name === 'TextButton') button = o; for (const c of o._ch || []) f(c); })(runOver());
+    await E.tapClip(button);
+    await E.until(() => G.state() === 'mainMenu' && G.find('MainMenu') && !G.find('TransitionWindow'), 'main menu', 60000);
+    await E.sleep(3000);
+    E.check(!GM.app.saveSystem.hasPlayed(), 'continue is locked after the run');
+  }],
+  ['switch the mod off: the normal game is still there', async () => {
+    await G.tap(85, 25);
+    await E.until(() => !GM.Roguelite.enabled, 'mod off', 3000);
+    E.check(GM.app.saveSystem.hasPlayed(), 'the normal game has its save');
+    E.check(GM.app.saveSystem.tutorialStepCompleted() === 6, 'and its tutorial');
+  }],
+];
 
 // ---------------- runner
 const server = await createServer({ root: WEB, logLevel: 'error', server: { port: 5199 } });
@@ -224,6 +267,11 @@ try {
     console.log('screens:');
     await open(true);
     await run(SCREENS);
+  }
+  if (!failed) {
+    console.log('roguelite mod:');
+    await open(true);
+    await run(ROGUELITE);
   }
 } catch (e) {
   failed = String(e.message);

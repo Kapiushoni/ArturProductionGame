@@ -3,15 +3,19 @@ import { services } from '@/game/services';
 import { GameLoop } from '@/game/cb/gameloop/GameLoop';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { SharedUtils } from '@/game/persistence/SharedUtils';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import type { Item } from '@/game/main_game/items/Item';
 import type { DisplayObject } from '@/flash/as3';
 
 /**
- * The game save (one SharedObject "cbjs"). Simple values are written at once; items, the last played dungeon
+ * The game save (one SharedObject: "cbjs", or the run of the roguelite mod when it is on). Simple values are written at once; items, the last played dungeon
  * and recipes are collected in pendingSaves and written together on the next frame (savePendingItems()).
  */
 export class SaveSystem {
-  static readonly SAVE_FILE = 'cbjs';
+  /** the normal save, or the roguelite run */
+  static get SAVE_FILE(): string {
+    return Roguelite.enabled ? Roguelite.SAVE_FILE : 'cbjs';
+  }
   static readonly SOUND = 'm';
   static readonly PLAYED = 'p';
   static readonly LAST_PLAYED = 'lp';
@@ -19,6 +23,8 @@ export class SaveSystem {
   static readonly EXPERIENCE = 'xp';
   static readonly TUTORIAL = 't';
   static readonly RECIPES = 'r';
+  /** the tutorial step saved once it is over */
+  static readonly TUTORIAL_DONE = 6;
   private pendingSaves: Record<string, any>;
   private _recipes: number[] = null;
   private gameLoop: GameLoop;
@@ -49,6 +55,16 @@ export class SaveSystem {
   }
   onTutorialComplete(step: number) {
     SharedUtils.save(SaveSystem.SAVE_FILE, SaveSystem.TUTORIAL, uint(step));
+    if (Roguelite.enabled && step >= SaveSystem.TUTORIAL_DONE) {
+      Roguelite.tutorialCompleted();
+    }
+  }
+  /** the save file changed (the mod was switched): forget what was read from the other one */
+  switched() {
+    this._recipes = null;
+    this.recipesChange = false;
+    this.lastPlayed = null;
+    this.pendingSaves = {};
   }
   tutorialStepCompleted(): number {
     return uint(SharedUtils.load(SaveSystem.SAVE_FILE, SaveSystem.TUTORIAL));
@@ -161,8 +177,9 @@ export class SaveSystem {
     this.pendingSaves[SaveSystem.SOUND] = muted;
     this.pendingSaves[SaveSystem.EXPERIENCE] = initial.initialExperience;
     this.pendingSaves[SaveSystem.LAST_PLAYED] = '1';
-    if (!initial.tutorialOn) {
-      this.pendingSaves[SaveSystem.TUTORIAL] = 6;
+    // the roguelite mod plays the tutorial in the first run only
+    if (!initial.tutorialOn || (Roguelite.enabled && Roguelite.tutorialDone)) {
+      this.pendingSaves[SaveSystem.TUTORIAL] = SaveSystem.TUTORIAL_DONE;
     }
     for (let level = int(initial.clearedLevel); level > 0; level--) {
       this.saveClearedLevel(level.toString());

@@ -24,6 +24,7 @@ import { TransitionWindowJakeLess } from '@/game/view/screens/main_game/Transiti
 import { MainMenu } from '@/game/view/screens/MainMenu';
 import { Outro } from '@/game/view/screens/Outro';
 import { app } from '@/game/app';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import type { DiFile } from '@/game/bonus/DiFile';
 import type { Locale } from '@/game/cb/data/Locale';
 import type { SwfLibrary } from '@/game/cb/display/SwfLibrary';
@@ -144,20 +145,25 @@ export class main extends Sprite {
   /** a new game: the save is reset */
   showIntro() {
     app.saveSystem.reset();
+    const start = () => {
+      app.saveSystem.onFirstPlay();
+      this.fsmAplication.takeTransition('next');
+    };
+    // the roguelite mod shows the intro in the first run only
+    if (Roguelite.enabled && Roguelite.runs > 0) {
+      this.currentScreen = null;
+      app.waitForResources(GameSounds.mapSounds, start);
+      return;
+    }
     const intro = new Intro();
     this.currentScreen = intro;
     app.gameHolder.addChild(intro);
-    intro.onNext.add(
-      Util.l(app.waitForResources, GameSounds.mapSounds, () => {
-        app.saveSystem.onFirstPlay();
-        this.fsmAplication.takeTransition('next');
-      }),
-    );
+    intro.onNext.add(Util.l(app.waitForResources, GameSounds.mapSounds, start));
     intro.onBack.add(Util.l(app.waitForResourcesJakeLess, [], () => this.fsmAplication.takeTransition('back')));
     intro.enter();
   }
   removeIntro() {
-    as3as(this.currentScreen, Intro).exit();
+    (as3as(this.currentScreen, Intro) as Intro)?.exit();
   }
   showOutro() {
     app.achievementDispatcher.gameWon();

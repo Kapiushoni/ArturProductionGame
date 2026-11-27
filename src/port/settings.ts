@@ -286,10 +286,10 @@ export function installSettings(mainApp: any, gameClasses: { MainMenu: any; Paus
       const ps = findDO((o) => o instanceof GC.Pause);
       if (ps) { host = ps; gx = 48; gy = 37; }
     }
-    // version label in the menu's top-left corner (inside the menu, so transitions cover it too)
+    // version label in the menu's bottom-left corner (the mod switch is top left; inside the menu, so transitions cover it too)
     if (st === 'mainMenu' && menuRef?.bg && versionLabel?.parent !== menuRef.bg) {
       versionLabel = new TextField();
-      versionLabel.width = 120; versionLabel.height = 20; versionLabel.x = 10; versionLabel.y = 6;
+      versionLabel.width = 120; versionLabel.height = 20; versionLabel.x = 10; versionLabel.y = 476;
       versionLabel.defaultTextFormat = new TextFormat('Ander Hedge', 14, 0xc9b27a);
       versionLabel.text = 'v' + VERSION; versionLabel.alpha = 0.85; versionLabel.mouseEnabled = false;
       menuRef.bg.addChild(versionLabel);

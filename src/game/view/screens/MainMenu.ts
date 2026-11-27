@@ -9,6 +9,9 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
 import { DailyBonusView } from '@/game/view/screens/DailyBonusView';
+import { Roguelite } from '@/game/roguelite/Roguelite';
+import { ModButton } from '@/game/view/screens/roguelite/ModButton';
+import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
 import type { MouseEvent } from '@/flash/as3';
 
 export class MainMenu extends Screen {
@@ -43,6 +46,15 @@ export class MainMenu extends Screen {
     this.bg.container.new_game.title.title.text = app.locale.get('new_game');
     this.bg.container.continue_game.title.title.text = app.locale.get('continue');
     Buttons.setButtons(this.bg.container, ['new_game', 'sound'], true);
+    this.initializeMod();
+    this.refreshContinue();
+    this.onNewGame = new Signal();
+    this.onContinueGame = new Signal();
+    app.soundManager.updateSoundButton(this.bg.container.getChildByName('sound'));
+    app.soundManager.playMusic(GameSounds.INTRO_MUSIC);
+  }
+  /** "continue" works when the current save (normal, or the roguelite run) has a game */
+  refreshContinue() {
     if (app.saveSystem.hasPlayed()) {
       this.bg.container['continue_game'].gotoAndStop('idle');
       Buttons.setButtons(this.bg.container, ['continue_game'], true);
@@ -50,10 +62,22 @@ export class MainMenu extends Screen {
       this.bg.container['continue_game'].gotoAndStop('locked');
       Buttons.setButtons(this.bg.container, ['continue_game'], false);
     }
-    this.onNewGame = new Signal();
-    this.onContinueGame = new Signal();
-    app.soundManager.updateSoundButton(this.bg.container.getChildByName('sound'));
-    app.soundManager.playMusic(GameSounds.INTRO_MUSIC);
+  }
+  /** the roguelite switch (top left); a run left in the middle of a fight is lost */
+  initializeMod() {
+    const button = new ModButton(() => {
+      app.saveSystem.switched();
+      this.refreshContinue();
+    });
+    button.x = 10;
+    button.y = 8;
+    this.bg.addChild(button);
+    if (Roguelite.enabled && Roguelite.leftDuringFight) {
+      const result = Roguelite.endRun();
+      app.saveSystem.switched();
+      const window = new RunOverWindow(result, () => this.bg.removeChild(window), true);
+      this.bg.addChild(window);
+    }
   }
   initializeDailyBonus() {
     let text = null;

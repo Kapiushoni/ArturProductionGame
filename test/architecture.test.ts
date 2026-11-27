@@ -5,7 +5,7 @@ import { join, relative } from 'node:path';
 // The game logic must not depend on the application (main), the screens (view) or the tutorial:
 // it gets what it needs through services.ts or as constructor / method arguments.
 const SRC = join(__dirname, '..', 'src', 'game');
-const LOGIC = ['main_game', 'bonus', 'persistence'];
+const LOGIC = ['main_game', 'bonus', 'persistence', 'roguelite'];
 const FORBIDDEN = [/from '@\/game\/main'/, /from '@\/game\/view\//, /from '@\/game\/tutorial\//];
 
 function files(dir: string): string[] {

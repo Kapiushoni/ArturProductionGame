@@ -87,10 +87,12 @@ export class GameView extends Screen {
     const dungeonState = new DungeonState('dungeon', this);
     dungeonState.onToDungeon.add(this.toLevel);
     dungeonState.onToMap.add(this.showMap);
+    dungeonState.onToMainMenu.add(this.toMainMenu);
     const bossDungeonState = new BossDungeonState('boss', this);
     bossDungeonState.setNextDungeon(app.game.map.getLevel(BossDungeon.idBossLevel));
     bossDungeonState.onToDungeon.add(this.toLevel);
     bossDungeonState.onToMap.add(this.showMap);
+    bossDungeonState.onToMainMenu.add(this.toMainMenu);
     bossDungeonState.onToOutro.add(this.toOutro);
     this.fsm = new FSM(basicPausableState);
     this.fsm.addState(mapState);
@@ -109,6 +111,7 @@ export class GameView extends Screen {
     this.fsm.addTransition('map', 'boss', 'enterBoss');
     this.fsm.addTransition('map', 'exit', 'leave');
     this.fsm.addTransition('boss', 'exit', 'leave');
+    this.fsm.addTransition('dungeon', 'exit', 'leave');
   }
   get recipesButton() {
     return this.bg.inventory.recipes.book;
