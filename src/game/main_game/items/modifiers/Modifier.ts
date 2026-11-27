@@ -1,5 +1,4 @@
 import { bindMethods, int } from '@/flash/as3';
-import { services } from '@/game/services';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
 

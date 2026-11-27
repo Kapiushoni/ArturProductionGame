@@ -14,7 +14,6 @@ export class SoundLoader {
   /** Dictionary: name -> cbSound */
   data: any;
   private textLoader: TextLoader = null;
-  totalBytesLoaded = 0;
   private textToLoad: string;
   private resource: any = null;
   private mediaUrl: string;
@@ -94,9 +93,6 @@ export class SoundLoader {
     if (this.bulk == this.total) {
       this.loaded.emit(this);
     }
-  }
-  loadOne(path: string, volume: number, startMs: number, endMs: number) {
-    this.loadSound(path, [0, Number(volume), Number(startMs), Number(endMs)]);
   }
 }
 bindMethods(SoundLoader);

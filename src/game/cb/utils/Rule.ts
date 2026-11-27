@@ -1,4 +1,4 @@
-import { Dictionary, as3keys, as3values, bindMethods } from '@/flash/as3';
+import { Dictionary, as3values, bindMethods } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
 
 /** A set of named conditions: `completed` is emitted when all of them have been checked. */
@@ -27,21 +27,6 @@ export class Rule {
   }
   set(name: string, checked = false) {
     this.rules.set(name, checked);
-  }
-  /** for debugging: the conditions still missing */
-  reason(): string[] {
-    const list = [];
-    let empty = true;
-    for (const name of as3keys(this.rules)) {
-      empty = false;
-      if (this.rules.get(name) !== true) {
-        list.push(name + ' is ' + this.rules.get(name));
-      }
-    }
-    if (empty) {
-      list.push('empty!');
-    }
-    return list;
   }
 }
 bindMethods(Rule);

@@ -31,10 +31,6 @@ describe('HealthStat', () => {
     expect(h.getValue()).toBe(75);
   });
 
-  it('percentage is rounded up', () => {
-    expect(health(1, 3).getpercentage()).toBe(34);
-  });
-
   it('raising the max refills to the new max', () => {
     const h = health(10, 100);
     h.modifyUpperBound(20);

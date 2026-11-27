@@ -1,4 +1,4 @@
-import { Dictionary, MovieClip, Timer, TimerEvent, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
+import { Dictionary, MovieClip, Timer, TimerEvent, as3as, as3values, bindMethods, uint } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { Lambda } from '@/game/actions/Lambda';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -185,7 +185,6 @@ export class MapView extends Screen {
   }
   refreshArrows(num: number) {
     num = uint(num);
-    var clip = null;
     if (num + 1 <= this.pageOfLevel(this.map.getMap().biggestUnlockedLevel())) {
       this.nextArrow.show();
     }

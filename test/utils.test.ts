@@ -50,7 +50,7 @@ describe('Rule', () => {
     r.completed.add(done);
     r.check('a');
     expect(done).not.toHaveBeenCalled();
-    expect(r.reason()).toEqual(['b is false']);
+    expect(r.isCompleted()).toBe(false);
     r.check('b');
     expect(done).toHaveBeenCalledTimes(1);
     expect(r.isCompleted()).toBe(true);
@@ -141,7 +141,6 @@ describe('cbArray', () => {
 
   it('helpers', () => {
     const a = GM.cbArray.createFromArray([{ id: 1 }, { id: 2 }, { id: 3 }]);
-    expect(a.findFirstOfField(2, 'id')).toEqual({ id: 2 });
     a.remove(2, 'id');
     expect(a.map((x: any) => x.id)).toEqual([1, 3]);
     const b = GM.cbArray.createFromArray([1, 2, 2, 3]);

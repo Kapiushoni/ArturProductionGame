@@ -8,7 +8,6 @@ export class HurtAnimation extends FighterAnimation {
   static readonly DIE = 'die';
   static readonly HURT = 'hurt';
   static readonly EVADE = 'evade';
-  private damage: Damage;
   private element: Element;
 
   constructor(damage: Damage, element: Element) {
@@ -21,7 +20,6 @@ export class HurtAnimation extends FighterAnimation {
       label = HurtAnimation.EVADE;
     }
     super(label);
-    this.damage = damage;
     this.element = element;
   }
   make(fighterView: any) {

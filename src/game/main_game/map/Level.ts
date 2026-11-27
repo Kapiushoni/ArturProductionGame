@@ -72,8 +72,5 @@ export class Level {
   get id(): string {
     return this.dungeonId;
   }
-  get stateUint(): number {
-    return this.state;
-  }
 }
 bindMethods(Level);

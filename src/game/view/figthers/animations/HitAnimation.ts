@@ -19,7 +19,6 @@ import type { Element } from '@/game/main_game/element/Element';
 export class HitAnimation extends FighterAnimation {
   private receiver: any;
   private damage: Damage;
-  private die = false;
   private rule: Rule;
   /** the attacker's element (enemy's, or the jinn's weapon's) */
   private element: Element = null;
@@ -79,9 +78,6 @@ export class HitAnimation extends FighterAnimation {
   finishMe(_clip: any) {
     this.rule.check('made_hit');
     this.finish(null);
-  }
-  finishOther(_animation: any) {
-    this.rule.check('took_hit');
   }
   forceKill(): boolean {
     return true;

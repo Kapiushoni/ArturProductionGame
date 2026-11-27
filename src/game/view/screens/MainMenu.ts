@@ -1,4 +1,4 @@
-import { Dictionary, TextFormat, bindMethods, int } from '@/flash/as3';
+import { Dictionary, TextFormat, bindMethods } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { DailyBonus } from '@/game/bonus/DailyBonus';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';

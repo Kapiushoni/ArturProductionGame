@@ -12,7 +12,6 @@ export class cbSound {
   startMilliseconds: any = 0;
   endMilliseconds: any = 0;
   private endTimer: any = null;
-  qSound: any = null;
   isPlaying = false;
   paused = false;
   /** callbacks(name) for the end of the current play */
@@ -78,9 +77,6 @@ export class cbSound {
       this.atFinish = [];
     }
     this.currentSndTr = null;
-  }
-  isPaused(): boolean {
-    return this.paused;
   }
   pause(positionToResume: number) {
     this.isPlaying = false;

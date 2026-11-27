@@ -41,10 +41,6 @@ export class SmartMC {
   equals(clip: any): boolean {
     return this.mc == clip;
   }
-  /** plays the clip backwards to frame 1 */
-  rewind() {
-    this.mc.parent.addEventListener(Event.ENTER_FRAME, this.rewindFrame);
-  }
   stopRewind() {
     this.mc.parent.removeEventListener(Event.ENTER_FRAME, this.rewindFrame);
   }

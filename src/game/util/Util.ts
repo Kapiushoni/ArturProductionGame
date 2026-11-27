@@ -1,4 +1,4 @@
-import { MouseEvent, MovieClip, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
+import { MouseEvent, MovieClip, as3as, as3values, bindMethods, int } from '@/flash/as3';
 
 export class Util {
   /** callback with extra arguments appended: l(f, a)(x) == f(x, a) */
@@ -36,19 +36,8 @@ export class Util {
     }
     return true;
   }
-  /** 0 = Sunday ... 6 = Saturday */
-  static toStringDay(day: number): string {
-    const name = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][uint(day)];
-    if (name == null) {
-      throw new Error('The week has only 7 days!');
-    }
-    return name;
-  }
   static recursiveStop(clip: any) {
     Util.recursiveApply(clip, (c: any) => c.stop());
-  }
-  static recursivePlay(clip: any) {
-    Util.recursiveApply(clip, (c: any) => c.play());
   }
   /** callback on the clip and all the movie clips inside it (children first) */
   static recursiveApply(clip: any, callback: (clip: any) => void) {
@@ -59,16 +48,6 @@ export class Util {
       }
     }
     callback(clip);
-  }
-  /** same UTC day, and date's time is not later than date2's */
-  static sameDate(date: Date, date2: Date): boolean {
-    return (
-      date.getUTCFullYear() == date2.getUTCFullYear() &&
-      date.getUTCMonth() == date2.getUTCMonth() &&
-      date.getUTCDate() == date2.getUTCDate() &&
-      (date.getUTCHours() < date2.getUTCHours() ||
-        (date.getUTCHours() == date2.getUTCHours() && date.getUTCMinutes() <= date2.getUTCMinutes()))
-    );
   }
   /** child at a path: getSprite(c, "a.b") == c.a.b */
   static getSprite(sprite: any, path: string): any {

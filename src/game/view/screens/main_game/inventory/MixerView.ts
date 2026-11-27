@@ -1,4 +1,4 @@
-import { MovieClip, as3as, as3values, bindMethods, int } from '@/flash/as3';
+import { MovieClip, as3as, as3values, bindMethods } from '@/flash/as3';
 import { RemoveFromParent } from '@/game/cb/actions/RemoveFromParent';
 import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
 import { SmartMC } from '@/game/cb/display/SmartMC';

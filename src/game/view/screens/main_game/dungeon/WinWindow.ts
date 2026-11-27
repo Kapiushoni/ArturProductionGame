@@ -187,7 +187,6 @@ export class WinWindow extends AnimatedScreen {
     Buttons.setButtons(this.bg, ['loot'], !this.loot.isEmpty());
   }
   replay(event: any) {
-    var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {
@@ -199,7 +198,6 @@ export class WinWindow extends AnimatedScreen {
     });
   }
   toMap(event: any) {
-    var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {
@@ -211,7 +209,6 @@ export class WinWindow extends AnimatedScreen {
     });
   }
   next(event: any) {
-    var me = event;
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {

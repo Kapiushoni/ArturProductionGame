@@ -56,14 +56,6 @@ export class ButtonGroup {
     const onOut = this.createFunc(out, null, this.mouseOutFuncs);
     return new ButtonInfo(onClick, onOver, onOut, playLabels, hitBox);
   }
-  addMouseOver(handler: Function): ButtonGroup {
-    this.mouseOverFuncs.push(handler);
-    return this;
-  }
-  addMouseOut(handler: Function): ButtonGroup {
-    this.mouseOutFuncs.push(handler);
-    return this;
-  }
   addClick(handler: Function): ButtonGroup {
     this.clickFuncs.push(handler);
     return this;

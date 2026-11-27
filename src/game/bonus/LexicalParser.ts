@@ -22,7 +22,6 @@ export class LexicalParser extends EventDispatcher {
   static readonly INTEGER = 0;
   static readonly FLOAT = 1;
   static readonly STRING = 2;
-  static readonly BOOLEAN = 3;
   static readonly CLASS = 4;
   static readonly ARRAY = 5;
   static readonly CLASSARRAY = 6;

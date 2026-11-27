@@ -1,4 +1,4 @@
-import { Timer, TimerEvent, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
+import { Timer, TimerEvent, as3as, as3values, bindMethods, int } from '@/flash/as3';
 import { main } from '@/game/main';
 import { SmokeEffect } from '@/game/view/effect/SmokeEffect';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';

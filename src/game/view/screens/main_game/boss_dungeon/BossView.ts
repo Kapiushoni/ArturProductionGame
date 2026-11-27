@@ -1,7 +1,6 @@
-import { as3as, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { EnemyView } from '@/game/view/figthers/EnemyView';
 import { main } from '@/game/main';
-import { Boss } from '@/game/main_game/boss_dungeon/Boss';
 import { BossSoundManager } from '@/game/sound/BossSoundManager';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
@@ -16,7 +15,7 @@ export class BossView extends EnemyView {
     return new cls();
   }
   setSoundManager() {
-    this.soundManager = new BossSoundManager(as3as(this.fighter, Boss));
+    this.soundManager = new BossSoundManager();
   }
 }
 bindMethods(BossView);

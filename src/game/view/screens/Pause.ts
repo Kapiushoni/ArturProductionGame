@@ -89,7 +89,6 @@ export class Pause extends AnimatedScreen {
   }
   help(event: any = null) {}
   cancel(event: any = null) {
-    var ev = event;
     this.leave(() => {
       this.onCancel.emit();
       this.pop();

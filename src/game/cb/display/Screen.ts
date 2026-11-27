@@ -70,15 +70,6 @@ export class Screen extends Sprite {
     }
     return clip;
   }
-  addButton(path: string, info: ButtonInfo) {
-    this.btnInfo.set(path, info);
-    this.configureButton(this.getFather(), path, info);
-  }
-  removeButton(path: string) {
-    if (this.btnInfo.get(path)) {
-      this.removeEvent(this.getFather(), path);
-    }
-  }
   removeEvent(father: any, path: string) {
     const info = this.btnInfo.get(path);
     const hitBox = this.getHitBox(this.getMc(father, path), info);
@@ -95,24 +86,11 @@ export class Screen extends Sprite {
     this.removeChild(this.bg);
     this.bg = null;
   }
-  /** a new copy of the clip (in front of displayObject if given) with the buttons */
-  restore(displayObject: any = null) {
-    this.bg = new this.bgClass();
-    this.added(null);
-    if (displayObject) {
-      this.addChildAt(this.bg, this.getChildIndex(displayObject));
-    } else {
-      this.addChild(this.bg);
-    }
-  }
   removeEvents() {
     const father = this.container ? this.bg[this.container] : this.bg;
     for (const path of as3keys(this.btnInfo)) {
       this.removeEvent(father, path);
     }
-  }
-  restoreEvents() {
-    this.added(null);
   }
   /** removes the screen from its parent and clears it */
   pop() {

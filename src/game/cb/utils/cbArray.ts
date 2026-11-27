@@ -24,15 +24,6 @@ export class cbArray extends Array<any> {
     }
     return result;
   }
-  /** a shuffled copy */
-  shuffle(): cbArray {
-    const rest = this.clone();
-    const result = new cbArray();
-    while (rest.length > 0) {
-      result.push(rest.splice(Math.round(Math.random() * (rest.length - 1)), 1)[0]);
-    }
-    return result;
-  }
   pushIfNotPresent(value: any) {
     if (this.indexOf(value) < 0) {
       this.push(value);
@@ -53,30 +44,6 @@ export class cbArray extends Array<any> {
       }
     }
     return -1;
-  }
-  indexOfMethodValue(value: any, method: string): number {
-    for (let i = 0; i < this.length; i++) {
-      if (value === this[i][method]()) {
-        return i;
-      }
-    }
-    return -1;
-  }
-  findFirstOfField(value: any, field: string): any {
-    for (let i = 0; i < this.length; i++) {
-      if (value === this[i][field]) {
-        return this[i];
-      }
-    }
-    return null;
-  }
-  findFirstFromMethodValue(value: any, method: string): any {
-    for (let i = 0; i < this.length; i++) {
-      if (value === this[i][method]()) {
-        return this[i];
-      }
-    }
-    return null;
   }
   clone(): cbArray {
     const copy = new cbArray();

@@ -1,4 +1,4 @@
-import { MovieClip, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
+import { MovieClip, as3as, as3values, bindMethods, uint } from '@/flash/as3';
 import { Tween } from '@/game/cb/utils/Tween';
 import { main } from '@/game/main';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';

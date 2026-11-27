@@ -1,4 +1,4 @@
-import { MovieClip, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
+import { MovieClip, as3as, as3values, bindMethods } from '@/flash/as3';
 import { main } from '@/game/main';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
 import { RecipeView } from '@/game/view/screens/main_game/cookBook/RecipeView';

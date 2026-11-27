@@ -24,8 +24,5 @@ export class HealthStat extends Stat {
   getUpperBound(): Stat {
     return this.maxHealth;
   }
-  getpercentage(): number {
-    return Math.ceil((this.getValue() * 100) / this.getUpperBound().getValue());
-  }
 }
 bindMethods(HealthStat);

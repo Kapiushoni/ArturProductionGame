@@ -160,7 +160,6 @@ describe('Map', () => {
     expect(map.getLevel('6').isLocked()).toBe(true);
     expect(map.biggestUnlockedLevel().getDungeonId()).toBe('5');
     expect(map.getNextLevel(map.getLevel('1')).getDungeonId()).toBe('2');
-    expect(map.getPreviousLevel('5').getDungeonId()).toBe('4');
   });
 
   it('map pages', () => {

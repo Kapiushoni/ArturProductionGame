@@ -1,4 +1,4 @@
-import { Sprite, bindMethods, int } from '@/flash/as3';
+import { Sprite, bindMethods } from '@/flash/as3';
 import { Functor } from '@/game/cb/actions/Functor';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';

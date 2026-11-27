@@ -5,14 +5,12 @@ import { FighterAnimation } from '@/game/view/figthers/animations/FighterAnimati
 export class RunAnimation extends FighterAnimation {
   private fighter: any = null;
   private steps: number;
-  private withStart: boolean;
   private withFinish: boolean;
 
   constructor(steps: number, withStart: boolean = true, withFinish: boolean = true) {
     super(withStart ? 'idle2run' : 'run');
     this.steps = uint(steps);
     this.withFinish = withFinish;
-    this.withStart = withStart;
   }
   make(fighterView: any) {
     this.fighter = fighterView;

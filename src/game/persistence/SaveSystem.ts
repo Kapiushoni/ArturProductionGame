@@ -40,9 +40,6 @@ export class SaveSystem {
   static getSaveIdForMix(slot: number): string {
     return 'm' + uint(slot);
   }
-  static getSaveIdForlevel(level: string): string {
-    return 'd' + level;
-  }
   hasPlayed(): boolean {
     return Boolean(SharedUtils.load(SaveSystem.SAVE_FILE, SaveSystem.PLAYED));
   }

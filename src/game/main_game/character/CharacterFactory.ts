@@ -24,9 +24,6 @@ export class CharacterFactory {
   static setConfig(dict: any) {
     CharacterFactory.config = dict;
   }
-  getInitialHealth(): number {
-    return uint(CharacterFactory.config.get('Jinn')['BaseHP']);
-  }
   getBoss(level: number): Boss {
     const name = 'boss_normal';
     return new Boss(name, this.getConfig(name), uint(level));

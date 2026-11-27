@@ -27,18 +27,6 @@ export class Map {
     const next = level.getCorrelative();
     return next.length > 0 ? next[0] : null;
   }
-  /** a level that leads to `id` */
-  getPreviousLevel(id: string): Level | null {
-    if (!this.levels.get(id)) {
-      return null;
-    }
-    for (const level of as3values(this.levels)) {
-      if (level.getCorrelative().indexOf(this.levels.get(id)) >= 0) {
-        return level;
-      }
-    }
-    return null;
-  }
   /** the furthest unlocked level of the main path */
   biggestUnlockedLevel(): Level | null {
     let level = null;
