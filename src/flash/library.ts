@@ -68,6 +68,26 @@ class AlphaMap implements AlphaRef {
     const ix = Math.min(this.w - 1, (x / k) | 0), iy = Math.min(this.h - 1, (y / k) | 0);
     return this.data[(iy * this.w + ix) * 4 + 3] > 24;
   }
+  private empties = new Map<string, boolean>();
+  /** no visible pixel in the frame (x, y, w, h): an invisible shape, e.g. a button hit area (cached) */
+  isEmpty(x: number, y: number, w: number, h: number) {
+    const key = x + ',' + y + ',' + w + ',' + h;
+    let e = this.empties.get(key);
+    if (e === undefined) {
+      const k = AlphaMap.K;
+      // the map is downsampled: the cells on the border also cover the neighbours in the atlas, skip them
+      const m = 2 * k;
+      if (w > 2 * m && h > 2 * m) { x += m; y += m; w -= 2 * m; h -= 2 * m; }
+      e = true;
+      for (let iy = (y / k) | 0; e && iy <= Math.min(this.h - 1, ((y + h) / k) | 0); iy++) {
+        for (let ix = (x / k) | 0; ix <= Math.min(this.w - 1, ((x + w) / k) | 0); ix++) {
+          if (this.data[(iy * this.w + ix) * 4 + 3] > 24) { e = false; break; }
+        }
+      }
+      this.empties.set(key, e);
+    }
+    return e;
+  }
 }
 
 export class LibModule {

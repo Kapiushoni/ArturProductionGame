@@ -1,6 +1,6 @@
 // End-to-end test: plays the game in headless Chrome like a player.
 //   1. a new game: intro, the whole tutorial (sword, stats, fight, potion, loot, mixer);
-//   2. after a reload: continue, cook book, map pages, a dungeon with the pause menu, the end of the fight,
+//   2. after a reload: continue, cook book, map pages, a tip of the princess, a dungeon with the pause menu, the end of the fight,
 //      back to the map and to the main menu.
 // Fails on any page error or when an expected screen does not show up.
 // usage: npm run e2e   (starts its own Vite dev server: the scenario uses the dev helpers G / GM / dbg)
@@ -144,6 +144,13 @@ const SCREENS = [
     await G.tap(40, 128);
     await E.sleep(2500);
     E.check(G.find('MapView'), 'still on the map');
+  }],
+  ['the princess gives a tip when clicked', async () => {
+    const princess = G.find('GameView').princess;
+    E.check(!GM.app.game.getShmabledum().getLocker().isLocked, 'the princess is not locked');
+    await E.tapClip(princess.bg.hitbox);
+    await E.until(() => princess.tips.length > 0, 'a tip', 5000);
+    await E.sleep(3000); // the tip hides itself
   }],
   ['dungeon 2 with the pause menu', async () => {
     await E.tapUntil(/^dungeon_2$/, () => !G.find('MapView') || G.find('TransitionWindow'), 'leaving the map');

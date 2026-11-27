@@ -216,13 +216,20 @@ export class Shape extends DisplayObject {
       if (px < 0 || py < 0 || px >= t.frame.width || py >= t.frame.height) return false;
       const a = this._alphaMap;
       if (!a) return true;
+      // Flash hit-tests the geometry, so a fully transparent fill (a button's hit area) still catches the mouse:
+      // an invisible shape counts as its rectangle, a visible one by its pixels
+      if (a.isEmpty?.(t.frame.x, t.frame.y, t.frame.width, t.frame.height)) return true;
       return a.test(t.frame.x + px, t.frame.y + py);
     }
     return this.graphics._hit(x, y);
   }
 }
 
-export interface AlphaRef { test(x: number, y: number): boolean }
+export interface AlphaRef {
+  test(x: number, y: number): boolean;
+  /** no visible pixel in this frame of the atlas */
+  isEmpty?(x: number, y: number, w: number, h: number): boolean;
+}
 
 /** DefineMorphShape: start/end paths interpolated by the timeline "ratio" (0..65535) */
 export class MorphShape extends DisplayObject {

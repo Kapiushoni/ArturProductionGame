@@ -89,7 +89,7 @@ export class ShmabledumView {
   clear() {
     app.game.getShmabledum().onInteraction.remove(this.interact);
     app.game.getShmabledum().getLocker().onLock.remove(this.changeInLock);
-    Util.removeMouseEvents(this.bg, this.click);
+    Util.removeMouseEvents(this.hitbox, this.click);
     this.bg.stop();
     this.bg = null;
     this.popUp.clear();
