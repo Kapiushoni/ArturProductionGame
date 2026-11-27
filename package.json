@@ -13,7 +13,8 @@
     "format": "prettier --write src/game test",
     "format:check": "prettier --check src/game test",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "e2e": "node tools/e2e.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
