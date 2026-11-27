@@ -1,6 +1,6 @@
 import { MouseEvent, bindMethods, int } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
 
 /**
@@ -37,13 +37,13 @@ export class DragListener {
     return this.dragState == int(state);
   }
   addEvents() {
-    main.drag.beginDrag.add(this.beginDrag);
-    main.drag.stopDrag.add(this.stopDrag);
+    app.drag.beginDrag.add(this.beginDrag);
+    app.drag.stopDrag.add(this.stopDrag);
     this.mc.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDown);
   }
   removeEvents() {
-    main.drag.beginDrag.remove(this.beginDrag);
-    main.drag.stopDrag.remove(this.stopDrag);
+    app.drag.beginDrag.remove(this.beginDrag);
+    app.drag.stopDrag.remove(this.stopDrag);
     this.mc.removeEventListener(MouseEvent.MOUSE_DOWN, this.mouseDown);
   }
   addDragEvents() {
@@ -53,21 +53,21 @@ export class DragListener {
     this.mc.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUp);
   }
   mouseOver(_event: any) {
-    main.drag.onMouseOver(this.container, this.mc);
+    app.drag.onMouseOver(this.container, this.mc);
   }
   mouseOut(_event: any) {
-    main.drag.onMouseOut(this.container, this.mc);
+    app.drag.onMouseOut(this.container, this.mc);
   }
   mouseDown(_event: any) {
     const item = this.container.getContainToDrag();
     if (item != null) {
       this.dragState = DragListener.DRAGGER;
-      main.drag.beginDrag.emit(this.container, item);
+      app.drag.beginDrag.emit(this.container, item);
     }
   }
   mouseUp(_event: any) {
     this.dragState = DragListener.RECEIVER;
-    main.drag.stopDrag.emit(this.container);
+    app.drag.stopDrag.emit(this.container);
   }
   /** a drag started somewhere: what is this container's role? */
   beginDrag(from: IDragContainer, item: any) {

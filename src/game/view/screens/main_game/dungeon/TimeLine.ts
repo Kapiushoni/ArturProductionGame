@@ -1,6 +1,6 @@
 import { MovieClip, as3as, as3values, bindMethods, uint } from '@/flash/as3';
 import { Tween } from '@/game/cb/utils/Tween';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { LegendaryLevel } from '@/game/main_game/map/LegendaryLevel';
 import { Util } from '@/game/util/Util';
@@ -24,14 +24,14 @@ export class TimeLine extends MovieClip {
     this.dungeonView = dungeonView;
     this.fight = 0;
     this.distance = 0;
-    this.jinn = as3as(main.swfLoader.getObject('assets.TimeLineJinn'), MovieClip);
+    this.jinn = as3as(app.swfLoader.getObject('assets.TimeLineJinn'), MovieClip);
     this.initialize();
   }
   static get positionX() {
-    return Number(main.config.get('TimelineConfig')['x']);
+    return Number(app.config.get('TimelineConfig')['x']);
   }
   static get positionY() {
-    return Number(main.config.get('TimelineConfig')['y']);
+    return Number(app.config.get('TimelineConfig')['y']);
   }
   initialize() {
     let step = null;
@@ -39,7 +39,7 @@ export class TimeLine extends MovieClip {
     dungeon.onFight.add(this.nextFight);
     const enemyList = dungeon.enemies;
     this.y = TimeLine.positionY;
-    const clip = as3as(main.swfLoader.getObject('assets.TimeLine'), MovieClip);
+    const clip = as3as(app.swfLoader.getObject('assets.TimeLine'), MovieClip);
     this.setLevel(clip, dungeon.getLevel());
     this.x = TimeLine.positionX - clip.width / 2;
     clip.x = clip.width / 2;
@@ -105,11 +105,11 @@ export class TimeLine extends MovieClip {
     let cls = null;
     const element = enemy.getElement();
     if (element.isOfFire) {
-      cls = main.swfLoader.getClass('assets.MapSkullFire');
+      cls = app.swfLoader.getClass('assets.MapSkullFire');
     } else if (element.isOfIce) {
-      cls = main.swfLoader.getClass('assets.MapSkullIce');
+      cls = app.swfLoader.getClass('assets.MapSkullIce');
     } else {
-      cls = main.swfLoader.getClass('assets.MapSkullNormal');
+      cls = app.swfLoader.getClass('assets.MapSkullNormal');
     }
     return new cls();
   }

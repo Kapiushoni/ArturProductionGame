@@ -1,7 +1,7 @@
 import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Sepializer } from '@/game/util/Sepializer';
 import { Util } from '@/game/util/Util';
@@ -12,7 +12,7 @@ export class ConfirmationPopUp extends AnimatedScreen {
   onCancel: any = null;
   constructor(background: any, onAccept: Function, onCancel: Function, text: string) {
     super();
-    this.initAnimatedScreen(main.swfLoader.getClass('assets.NewGamePopup'), this.getButtonInfo());
+    this.initAnimatedScreen(app.swfLoader.getClass('assets.NewGamePopup'), this.getButtonInfo());
     this.onAccept = onAccept;
     this.onCancel = onCancel;
     this.background = background;

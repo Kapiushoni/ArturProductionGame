@@ -1,6 +1,6 @@
 import { bindMethods, uint } from '@/flash/as3';
 import { BasicState } from '@/game/aplication/BasicState';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { TutorialView } from '@/game/tutorial/view/TutorialView';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
 
@@ -27,11 +27,11 @@ export class TutorialStep extends BasicState {
     super.enter();
   }
   createView(viewClass: string): TutorialView {
-    return new TutorialView(main.swfLoader.getClass(viewClass));
+    return new TutorialView(app.swfLoader.getClass(viewClass));
   }
   showView() {
-    main.game.getShmabledum().getLocker().lock();
-    main.tutorialHolder.addChild(this.theView);
+    app.game.getShmabledum().getLocker().lock();
+    app.tutorialHolder.addChild(this.theView);
     this.theView.enter();
     this.setText(this.theView.bg);
   }
@@ -41,8 +41,8 @@ export class TutorialStep extends BasicState {
     this.tut.next();
   }
   leave() {
-    main.game.getShmabledum().getLocker().unlock();
-    main.saveSystem.onTutorialComplete(this.step);
+    app.game.getShmabledum().getLocker().unlock();
+    app.saveSystem.onTutorialComplete(this.step);
   }
   clear() {
     super.clear();

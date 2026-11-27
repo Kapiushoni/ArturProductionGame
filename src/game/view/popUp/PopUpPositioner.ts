@@ -1,5 +1,5 @@
 import { Point, bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 
 export class PopUpPositioner {
   src: any = null;
@@ -7,7 +7,7 @@ export class PopUpPositioner {
   constructor(src: any, dst: any = null) {
     this.src = src;
     if (dst == null) {
-      dst = main.popUpHolder;
+      dst = app.popUpHolder;
     }
     this.dst = dst;
   }

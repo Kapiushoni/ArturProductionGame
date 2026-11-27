@@ -6,7 +6,7 @@ import { SmartMC } from '@/game/cb/display/SmartMC';
 import { Signal } from '@/game/cb/signals/Signal';
 import { cbArray } from '@/game/cb/utils/cbArray';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { LegendaryLevel } from '@/game/main_game/map/LegendaryLevel';
@@ -32,8 +32,8 @@ export class MapView extends Screen {
     super();
     this.map = map;
     this.lastPlayedTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.refreshLastLevel);
-    this.initScreen(main.swfLoader.getClass('assets.Map'), this.getButtonInfo());
-    this.actual_page = uint(this.pageOfLevel(this.map.map.getLevel(main.saveSystem.getLastPlayed())));
+    this.initScreen(app.swfLoader.getClass('assets.Map'), this.getButtonInfo());
+    this.actual_page = uint(this.pageOfLevel(this.map.map.getLevel(app.saveSystem.getLastPlayed())));
     this.initialize();
     this.bg.pages.gotoAndStop('page_' + this.actual_page);
     this.nextArrow = new ArrowView(Util.getSprite(this.bg, MapView.NEXT_BUTTON), this.nextPage);
@@ -76,7 +76,7 @@ export class MapView extends Screen {
     let date = null;
     this.onToMainMenu = new Signal();
     this.onToDungeon = new Signal();
-    main.soundManager.updateSoundButton(this.bg.sound);
+    app.soundManager.updateSoundButton(this.bg.sound);
     Buttons.setButtons(this.bg, this.buttonsNames, true);
     for (const level of as3values(this.map.map.levels)) {
       buttonName = this.getButtonName(level);
@@ -86,10 +86,10 @@ export class MapView extends Screen {
           button.icon.gotoAndStop('locked');
         } else {
           Sepializer.getInstance().sepializeDark(button);
-          eventBadge = as3as(main.swfLoader.getObject('assets.BonusMap'), MovieClip);
+          eventBadge = as3as(app.swfLoader.getObject('assets.BonusMap'), MovieClip);
           button.addChild(eventBadge);
           date = as3as(level, LegendaryLevel).getDate();
-          eventBadge.title.title.text = main.locale.get('legendaryDate', [
+          eventBadge.title.title.text = app.locale.get('legendaryDate', [
             date.getFullYear(),
             date.getMonth() + 1,
             date.getDate(),
@@ -131,16 +131,16 @@ export class MapView extends Screen {
       elements.pushIfNotPresent(enemyElement);
     }
     if (elements.length == 1) {
-      skulls = as3as(main.swfLoader.getObject('assets.SkullsX3'), MovieClip);
+      skulls = as3as(app.swfLoader.getObject('assets.SkullsX3'), MovieClip);
       skulls.skull2.visible = false;
       skulls.skull3.visible = false;
     } else if (elements.length == 2) {
-      skulls = as3as(main.swfLoader.getObject('assets.SkullsX2'), MovieClip);
+      skulls = as3as(app.swfLoader.getObject('assets.SkullsX2'), MovieClip);
     } else {
       if (elements.length != 3) {
         throw new Error('WTF?!');
       }
-      skulls = as3as(main.swfLoader.getObject('assets.SkullsX3'), MovieClip);
+      skulls = as3as(app.swfLoader.getObject('assets.SkullsX3'), MovieClip);
     }
     let n = 1;
     for (const element of as3values(elements)) {
@@ -236,7 +236,7 @@ export class MapView extends Screen {
   }
   refreshLastLevel(event: any) {
     const clip = as3as(
-      Util.getSprite(this.bg, this.getButtonName(this.map.map.getLevel(main.saveSystem.getLastPlayed()))),
+      Util.getSprite(this.bg, this.getButtonName(this.map.map.getLevel(app.saveSystem.getLastPlayed()))),
       MovieClip,
     );
     if (clip.lastLevel) {

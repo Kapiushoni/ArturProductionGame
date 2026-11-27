@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { TutorialViewWithOk } from '@/game/tutorial/view/TutorialViewWithOk';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
 
@@ -10,18 +10,18 @@ export class StatTutorialStep extends TutorialStep {
     super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
   }
   createView(viewClass: string): TutorialViewWithOk {
-    return new TutorialViewWithOk(main.swfLoader.getClass(viewClass));
+    return new TutorialViewWithOk(app.swfLoader.getClass(viewClass));
   }
   setText(clip: any) {
-    clip.title.title.text = main.locale.get('tutorialStats');
-    clip.text1.text.text = main.locale.get('tutorialStatsHealth');
-    clip.text2.text.text = main.locale.get('tutorialStatsAttack');
-    clip.text3.text.text = main.locale.get('tutorialStatsDefense');
-    clip.text4.text.text = main.locale.get('tutorialStatsLuck');
+    clip.title.title.text = app.locale.get('tutorialStats');
+    clip.text1.text.text = app.locale.get('tutorialStatsHealth');
+    clip.text2.text.text = app.locale.get('tutorialStatsAttack');
+    clip.text3.text.text = app.locale.get('tutorialStatsDefense');
+    clip.text4.text.text = app.locale.get('tutorialStatsLuck');
   }
   leave() {
     super.leave();
-    main.game.getShmabledum().selfAdvertise();
+    app.game.getShmabledum().selfAdvertise();
   }
 }
 bindMethods(StatTutorialStep);

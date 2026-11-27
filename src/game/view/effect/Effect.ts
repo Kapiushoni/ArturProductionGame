@@ -2,7 +2,7 @@ import { Point, bindMethods } from '@/flash/as3';
 import { RemoveFromParent } from '@/game/cb/actions/RemoveFromParent';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 
 export class Effect {
   effect: any = null;
@@ -15,7 +15,7 @@ export class Effect {
     let point2 = null;
     if (displayObjectContainer2 == null) {
       point = displayObjectContainer.localToGlobal(new Point(0, 0));
-      popUpHolder = main.popUpHolder;
+      popUpHolder = app.popUpHolder;
       point2 = popUpHolder.globalToLocal(point);
       this.effect.x = point2.x;
       this.effect.y = point2.y;

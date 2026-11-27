@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
 
@@ -10,7 +10,7 @@ export class FirstTutorialStep extends TutorialStep {
     super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
   }
   enter() {
-    main.game.getJinn().gear.weapon.onChange.add(this.weaponChange);
+    app.game.getJinn().gear.weapon.onChange.add(this.weaponChange);
     super.enter();
   }
   weaponChange(change: SlotChange) {
@@ -19,16 +19,16 @@ export class FirstTutorialStep extends TutorialStep {
     }
   }
   setText(clip: any) {
-    clip.title.title.text = main.locale.get('tutorialSwordTitle');
-    clip.text.text.text = main.locale.get('tutorialSword');
+    clip.title.title.text = app.locale.get('tutorialSwordTitle');
+    clip.text.text.text = app.locale.get('tutorialSword');
   }
   leave() {
-    main.game.getJinn().gear.weapon.onChange.remove(this.weaponChange);
+    app.game.getJinn().gear.weapon.onChange.remove(this.weaponChange);
     super.leave();
   }
   clear() {
     super.clear();
-    main.game.getJinn().gear.weapon.onChange.remove(this.weaponChange);
+    app.game.getJinn().gear.weapon.onChange.remove(this.weaponChange);
   }
 }
 bindMethods(FirstTutorialStep);

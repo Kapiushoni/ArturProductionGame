@@ -4,7 +4,7 @@ import { DailyBonus } from '@/game/bonus/DailyBonus';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Rule } from '@/game/cb/utils/Rule';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
@@ -20,7 +20,7 @@ export class MainMenu extends Screen {
   nextBonus: any = null;
   constructor() {
     super();
-    this.initScreen(main.swfLoader.getClass('assets.MainMenu'), this.getButtonInfo());
+    this.initScreen(app.swfLoader.getClass('assets.MainMenu'), this.getButtonInfo());
     this.container = 'container';
     this.initialize();
     this.initializeDailyBonus();
@@ -39,10 +39,10 @@ export class MainMenu extends Screen {
     textFormat.size = 43;
     this.bg.container.new_game.title.title.defaultTextFormat = textFormat;
     this.bg.container.continue_game.title.title.defaultTextFormat = textFormat;
-    this.bg.container.new_game.title.title.text = main.locale.get('new_game');
-    this.bg.container.continue_game.title.title.text = main.locale.get('continue');
+    this.bg.container.new_game.title.title.text = app.locale.get('new_game');
+    this.bg.container.continue_game.title.title.text = app.locale.get('continue');
     Buttons.setButtons(this.bg.container, ['new_game', 'sound'], true);
-    if (main.saveSystem.hasPlayed()) {
+    if (app.saveSystem.hasPlayed()) {
       this.bg.container['continue_game'].gotoAndStop('idle');
       Buttons.setButtons(this.bg.container, ['continue_game'], true);
     } else {
@@ -51,13 +51,13 @@ export class MainMenu extends Screen {
     }
     this.onNewGame = new Signal();
     this.onContinueGame = new Signal();
-    main.soundManager.updateSoundButton(this.bg.container.getChildByName('sound'));
-    main.soundManager.playMusic(GameSounds.INTRO_MUSIC);
+    app.soundManager.updateSoundButton(this.bg.container.getChildByName('sound'));
+    app.soundManager.playMusic(GameSounds.INTRO_MUSIC);
   }
   initializeDailyBonus() {
     let text = null;
-    if (main.activeBonus) {
-      this.currentBonus = new DailyBonusView(main.activeBonus, main.locale.get(MainMenu.ActiveMessage));
+    if (app.activeBonus) {
+      this.currentBonus = new DailyBonusView(app.activeBonus, app.locale.get(MainMenu.ActiveMessage));
       this.bg.container.hoder_1.addChild(this.currentBonus);
     }
     let date = new Date();
@@ -78,7 +78,7 @@ export class MainMenu extends Screen {
       }
     }
     if (bonusOfDate) {
-      text = main.locale.get(MainMenu.NextMessage, [date.getFullYear(), date.getMonth() + 1, date.getDate()]);
+      text = app.locale.get(MainMenu.NextMessage, [date.getFullYear(), date.getMonth() + 1, date.getDate()]);
       this.nextBonus = new DailyBonusView(bonusOfDate, text);
       this.bg.container.hoder_2.addChild(this.nextBonus);
     }
@@ -112,14 +112,14 @@ export class MainMenu extends Screen {
   }
   newGame(event: any) {
     Buttons.setButtons(this.bg.container, MainMenu.BUTTONS, false);
-    if (main.saveSystem.hasPlayed()) {
+    if (app.saveSystem.hasPlayed()) {
       this.showConfirmationPopUp();
     } else {
       this.onNewGame.emit();
     }
   }
   showConfirmationPopUp() {
-    const text = main.locale.get('new_gameConfirmation');
+    const text = app.locale.get('new_gameConfirmation');
     const confirmationPopUp = new ConfirmationPopUp(this.bg.container, this.onNewGame.emit, this.cancelPopUp, text);
     this.bg.addChild(confirmationPopUp);
     confirmationPopUp.enter();

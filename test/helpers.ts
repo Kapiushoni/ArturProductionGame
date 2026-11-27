@@ -1,6 +1,5 @@
 // Shared setup for game logic tests.
-// Game modules are always imported through '@/game/index' so they load in the same order as in the game
-// (importing a single module directly can hit an import cycle before a base class is defined).
+// Game modules are imported through the public index (any order works: there are no import cycles)
 import { vi } from 'vitest';
 import { Dictionary, SharedObject } from '@/flash/as3';
 import * as GM from '@/game/index';

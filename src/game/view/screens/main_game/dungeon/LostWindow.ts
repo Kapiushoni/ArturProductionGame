@@ -3,7 +3,7 @@ import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Tween } from '@/game/cb/utils/Tween';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { LevelUp } from '@/game/view/popUp/LevelUp';
@@ -16,7 +16,7 @@ export class LostWindow extends AnimatedScreen {
   stats: any = null;
   constructor(stats: DungeonStats) {
     super();
-    this.initAnimatedScreen(main.swfLoader.getClass('assets.LevelLose'), this.getButtonInfo());
+    this.initAnimatedScreen(app.swfLoader.getClass('assets.LevelLose'), this.getButtonInfo());
     this.stats = stats;
     this.onReplay = new Signal();
     this.onBackToMap = new Signal();
@@ -29,7 +29,7 @@ export class LostWindow extends AnimatedScreen {
   resume() {}
   initialize() {
     this.bg.total.total_xp.numbers.gotoAndStop(1);
-    this.bg.total.total.title.text = main.locale.get('lose_combat', [this.stats.level.getName()]);
+    this.bg.total.total.title.text = app.locale.get('lose_combat', [this.stats.level.getName()]);
     this.xp = 0;
   }
   get xp() {
@@ -38,7 +38,7 @@ export class LostWindow extends AnimatedScreen {
   set xp(value: number) {
     value = int(value);
     this.experience = int(value);
-    this.bg.total.total_xp.numbers.title.text = main.locale.get('lose_xp_amount', [this.experience]);
+    this.bg.total.total_xp.numbers.title.text = app.locale.get('lose_xp_amount', [this.experience]);
   }
   enter(callback: Function = null) {
     super.enter(Util.l(this.showStats, callback));
@@ -55,7 +55,7 @@ export class LostWindow extends AnimatedScreen {
     });
   }
   giveXp() {
-    const stats = main.game.getJinn().stats;
+    const stats = app.game.getJinn().stats;
     const level = uint(stats.getLevel());
     stats.addXP(this.stats.getCombatExperience());
     if (level < stats.getLevel()) {

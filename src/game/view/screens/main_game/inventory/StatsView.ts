@@ -1,7 +1,7 @@
 import { MovieClip, as3as, bindMethods, int, uint } from '@/flash/as3';
 import { Tween } from '@/game/cb/utils/Tween';
 import { DragListener } from '@/game/drag_and_drop/DragListener';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Experience } from '@/game/main_game/character/stats/Experience';
 import { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import { PersistentExperience } from '@/game/main_game/character/stats/PersistentExperience';
@@ -26,23 +26,23 @@ export class StatsView {
   }
   initialize(bg: any) {
     this.bg = bg;
-    this.drag_listener = new DragListener(bg, main.game.getJinn().liver);
-    const stats = main.game.getJinn().stats;
+    this.drag_listener = new DragListener(bg, app.game.getJinn().liver);
+    const stats = app.game.getJinn().stats;
     const experience = as3as(stats.getStat(StatType.EXPERIENCE), Experience);
     this.experience = new BarView(
       as3as(this.bg.xp, MovieClip),
-      main.locale,
+      app.locale,
       'experience_status',
       experience.getValue(),
       experience.getUpperBound(),
     );
     this.initializeStats();
     this.initializeSlots();
-    this.liver.initialize(main.game.getJinn().liver, this.bg.potion);
+    this.liver.initialize(app.game.getJinn().liver, this.bg.potion);
   }
   initializeStats() {
-    main.game.getJinn().stats.onChange.add(this.refresh);
-    const stats = main.game.getJinn().stats;
+    app.game.getJinn().stats.onChange.add(this.refresh);
+    const stats = app.game.getJinn().stats;
     this.bg.health.title.title.text = as3as(stats.getStat(StatType.HEALTH), HealthStat).getUpperBound().getValue();
     this.bg.defence.title.title.text = stats.getDefense();
     this.bg.weapon.title.title.text = stats.getAttack();
@@ -51,7 +51,7 @@ export class StatsView {
     this.refresh();
   }
   refresh() {
-    const stats = main.game.getJinn().stats;
+    const stats = app.game.getJinn().stats;
     this.updateLevelAndXp(stats.getLevel(), as3as(stats.getStat(StatType.EXPERIENCE), PersistentExperience));
     this.updateHealth(as3as(stats.getStat(StatType.HEALTH), HealthStat).getUpperBound().getValue());
     this.updateDefense(stats.getDefense());
@@ -59,7 +59,7 @@ export class StatsView {
     this.updateLuck(stats.getLuck());
   }
   initializeSlots() {
-    const gear = main.game.getJinn().gear;
+    const gear = app.game.getJinn().gear;
     this.weapon_slot = new LeftSlotView(gear.weapon);
     this.shield_slot = new LeftSlotView(gear.shield);
     this.equip_slot_1 = new LeftSlotView(gear.equipment_1);
@@ -71,7 +71,7 @@ export class StatsView {
   }
   updateLevelAndXp(lastLevel: number, persistentExperience: PersistentExperience) {
     lastLevel = uint(lastLevel);
-    this.bg['level'].title_1.text = main.locale.get('level', [lastLevel]);
+    this.bg['level'].title_1.text = app.locale.get('level', [lastLevel]);
     if (lastLevel != this.lastLevel) {
       this.experience.current = 0;
       this.experience.total = persistentExperience.getUpperBound();

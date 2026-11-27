@@ -63,7 +63,7 @@ const HELPERS = () => {
         .filter((n) => G.find(n))
         .join('+') + ' [' + G.state() + ']',
     tutorialStep: () => GM.services.saveSystem.tutorialStepCompleted(),
-    hp: () => GM.main.game.getJinn().stats.getStat(GM.StatType.HEALTH).getValue(),
+    hp: () => GM.app.game.getJinn().stats.getStat(GM.StatType.HEALTH).getValue(),
   };
 };
 
@@ -86,7 +86,7 @@ const NEW_GAME = [
   ['tutorial 1: equip the sword (drag and drop)', async () => {
     await E.until(() => G.find('TutorialView'), 'sword tutorial');
     await G.drag(269, 339, 173, 389);
-    await E.until(() => !GM.main.game.getJinn().gear.weapon.isEmpty(), 'sword in the weapon slot', 5000);
+    await E.until(() => !GM.app.game.getJinn().gear.weapon.isEmpty(), 'sword in the weapon slot', 5000);
   }],
   ['tutorial 2: stats (OK)', async () => {
     await E.until(() => G.find('TutorialViewWithOk'), 'stats tutorial');
@@ -96,7 +96,7 @@ const NEW_GAME = [
     await E.tap(/^dungeon_1$/);
     await E.until(() => G.find('TutorialView') && E.hp() < 50, 'potion tutorial', 90000);
     const before = E.hp();
-    const g = GM.main.game;
+    const g = GM.app.game;
     let slot = null;
     for (let i = 0; i < 12 && !slot; i++) if (g.inv.itemOfSlot(i)?.getCategory().type === 'C') slot = g.inv.getSlot(i);
     E.check(slot, 'a potion in the inventory');
@@ -110,7 +110,7 @@ const NEW_GAME = [
   }],
   ['tutorials 5-6: the mixer', async () => {
     await E.tapUntil(/^ok$/, () => E.tutorialStep() === 5 && GM.services.tutorial.isMixKnown(), 'mixer enabled');
-    const g = GM.main.game;
+    const g = GM.app.game;
     const m = g.getMixer();
     const full = [];
     for (let i = 0; i < 12 && full.length < 2; i++) if (g.inv.itemOfSlot(i)) full.push(i);
@@ -188,7 +188,7 @@ async function open(reload) {
   else await page.goto(url, { waitUntil: 'load' });
   const t0 = Date.now();
   while (Date.now() - t0 < 180000) {
-    const ready = await page.evaluate(() => typeof G !== 'undefined' && !!window.game && !!GM.main.swfLoader).catch(() => false);
+    const ready = await page.evaluate(() => typeof G !== 'undefined' && !!window.game && !!GM.app.swfLoader).catch(() => false);
     if (ready) return page.evaluate(HELPERS);
     await new Promise((r) => setTimeout(r, 500));
   }

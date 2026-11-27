@@ -1,6 +1,6 @@
 import { MovieClip, Timer, TimerEvent, as3as, bindMethods } from '@/flash/as3';
 import { ModifierIcons } from '@/game/view/items/ModifierIcons';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
 import type { Item } from '@/game/main_game/items/Item';
@@ -22,7 +22,7 @@ export class PotionEffect {
     if (modifier.getCategory() == StatType.NULL) {
       return null;
     }
-    const feedback = as3as(main.swfLoader.getObject('assets.potionFeedback'), MovieClip);
+    const feedback = as3as(app.swfLoader.getObject('assets.potionFeedback'), MovieClip);
     feedback.x += dx;
     feedback.y += dy;
     feedback.mouseEnabled = false;

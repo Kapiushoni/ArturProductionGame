@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Inventory } from '@/game/main_game/inventory/Inventory';
 import { TutorialViewWithOk } from '@/game/tutorial/view/TutorialViewWithOk';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
@@ -11,14 +11,14 @@ export class MixInformationStep extends TutorialStep {
     super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
   }
   createView(viewClass: string): TutorialViewWithOk {
-    return new TutorialViewWithOk(main.swfLoader.getClass(viewClass));
+    return new TutorialViewWithOk(app.swfLoader.getClass(viewClass));
   }
   setText(clip: any) {
-    clip.title.title.text = main.locale.get('tutorialMixTitle');
-    clip.text.text.text = main.locale.get('tutorialMix2');
+    clip.title.title.text = app.locale.get('tutorialMixTitle');
+    clip.text.text.text = app.locale.get('tutorialMix2');
   }
   get inventory(): Inventory {
-    return main.game.getInventory();
+    return app.game.getInventory();
   }
   enter() {
     for (let i = 0; i < Inventory.SLOTS; i++) {

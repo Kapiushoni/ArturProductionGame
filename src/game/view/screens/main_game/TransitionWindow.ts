@@ -1,6 +1,6 @@
 import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Util } from '@/game/util/Util';
 
@@ -19,30 +19,30 @@ export class TransitionWindow extends AnimatedScreen {
     this.onStart = onStart;
   }
   get assetClass() {
-    return main.swfLoader.getClass('assets.loading');
+    return app.swfLoader.getClass('assets.loading');
   }
   start(sprite: any) {
     sprite.addChild(this);
     this.enter(this.startWaiting);
-    main.soundManager.playFx(GameSounds.TRANSITION_IN);
+    app.soundManager.playFx(GameSounds.TRANSITION_IN);
   }
   startWaiting() {
     this.onStart();
     this.bg.gotoAndPlay('idle');
-    main.theLoader.onLoad.add(this.waitingForResources);
+    app.theLoader.onLoad.add(this.waitingForResources);
     this.waitingForResources();
   }
   waitingForResources() {
-    if (!Util.areLoaded(this.resources, main.theLoader)) {
+    if (!Util.areLoaded(this.resources, app.theLoader)) {
       return;
     }
-    main.theLoader.onLoad.remove(this.waitingForResources);
+    app.theLoader.onLoad.remove(this.waitingForResources);
     this.onFinish();
     this.leave();
   }
   leave(callback: Function = null) {
     const end = callback;
-    main.soundManager.playFx(GameSounds.TRANSITION_OUT);
+    app.soundManager.playFx(GameSounds.TRANSITION_OUT);
     super.leave(() => {
       if (end != null) {
         end();

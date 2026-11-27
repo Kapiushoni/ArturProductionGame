@@ -5,6 +5,7 @@ import { Category } from '@/game/main_game/items/Category';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { NullModifier } from '@/game/main_game/items/modifiers/NullModifier';
 import { MixData } from '@/game/main_game/mixer/MixData';
+import { removeMix } from '@/game/main_game/mixer/mixId';
 import { MixResult } from '@/game/main_game/mixer/MixResult';
 import type { Item } from '@/game/main_game/items/Item';
 import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
@@ -49,10 +50,7 @@ export class MixStrategy {
   }
   /** "Mix_sword" -> "sword" */
   static removeMix(id: string): string {
-    if (id.search('Mix_') == 0) {
-      return id.substring(4);
-    }
-    return id;
+    return removeMix(id);
   }
 
   getMix(item: Item, item2: Item): MixResult {

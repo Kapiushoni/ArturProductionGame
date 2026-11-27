@@ -1,5 +1,5 @@
 import { as3values, bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 
 export class BackgroundSet {
@@ -12,7 +12,7 @@ export class BackgroundSet {
   }
   getBackground() {
     const element = this.types.getElement();
-    const cls = main.swfLoader.getClass('assets.' + element);
+    const cls = app.swfLoader.getClass('assets.' + element);
     return new cls();
   }
 }

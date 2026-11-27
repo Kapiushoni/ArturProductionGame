@@ -1,5 +1,5 @@
 import { bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 
 export class EmptyInnerView {
   _soundTrack: any = null;
@@ -10,10 +10,10 @@ export class EmptyInnerView {
   pause() {}
   clear() {}
   playMusic() {
-    main.soundManager.playMusic(this._soundTrack);
+    app.soundManager.playMusic(this._soundTrack);
   }
   stopMusic() {
-    main.soundManager.stopMusic(this._soundTrack);
+    app.soundManager.stopMusic(this._soundTrack);
   }
 }
 bindMethods(EmptyInnerView);

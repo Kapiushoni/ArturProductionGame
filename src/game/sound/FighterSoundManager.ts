@@ -1,5 +1,5 @@
 import { bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 
 /** The sounds of a fighter (names of sounds, '' for none). */
 export class FighterSoundManager {
@@ -18,24 +18,24 @@ export class FighterSoundManager {
     this.block = block;
   }
   playHurt() {
-    main.soundManager.playFx(this.hurt);
+    app.soundManager.playFx(this.hurt);
   }
   playBlock() {
-    main.soundManager.playFx(this.block);
+    app.soundManager.playFx(this.block);
   }
   playDie() {
-    main.soundManager.playFx(this.die);
+    app.soundManager.playFx(this.die);
   }
   playAttack() {
-    main.soundManager.playFx(this.attack);
+    app.soundManager.playFx(this.attack);
   }
   playCritical() {
-    main.soundManager.playFx(this.critical);
+    app.soundManager.playFx(this.critical);
   }
   pause() {
     if (this.lastSound != null) {
-      if (main.soundManager.isPlaying(this.lastSound)) {
-        main.soundManager.pauseSound(this.lastSound);
+      if (app.soundManager.isPlaying(this.lastSound)) {
+        app.soundManager.pauseSound(this.lastSound);
       } else {
         this.lastSound = null;
       }
@@ -43,7 +43,7 @@ export class FighterSoundManager {
   }
   resume() {
     if (this.lastSound != null) {
-      main.soundManager.resumeSound(this.lastSound);
+      app.soundManager.resumeSound(this.lastSound);
     }
   }
 }

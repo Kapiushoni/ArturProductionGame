@@ -1,5 +1,5 @@
 import { bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import type { Item } from '@/game/main_game/items/Item';
 import type { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 
@@ -12,7 +12,7 @@ export class ItemView {
   getMC() {
     let cls = null;
     if (this.mc == null) {
-      cls = main.swfLoader.getClass('assets.' + this.item.getMcName());
+      cls = app.swfLoader.getClass('assets.' + this.item.getMcName());
       this.mc = new cls();
     }
     return this.mc;

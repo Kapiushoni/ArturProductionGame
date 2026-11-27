@@ -1,7 +1,7 @@
 import { MovieClip, as3as, bindMethods } from '@/flash/as3';
 import { FighterView } from '@/game/view/figthers/FighterView';
 import { DragListener } from '@/game/drag_and_drop/DragListener';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Jinn } from '@/game/main_game/character/Jinn';
 import { ItemViews } from '@/game/view/items/ItemViews';
 import { JinnSoundManager } from '@/game/sound/JinnSoundManager';
@@ -32,7 +32,7 @@ export class JinnView extends FighterView {
     if (this.jinn.gear.weapon.isEmpty()) {
       text = 'Hand';
     }
-    this.mc = as3as(main.swfLoader.getObject('assets.Jinn' + text), MovieClip);
+    this.mc = as3as(app.swfLoader.getObject('assets.Jinn' + text), MovieClip);
     this.setSword(this.mc.sword);
     this.setShield(this.mc.shield);
   }

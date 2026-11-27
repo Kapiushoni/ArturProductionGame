@@ -2,13 +2,13 @@ import { Mouse, MouseCursor, MouseEvent, Point, bindMethods, int } from '@/flash
 import { assert } from '@/game/assert';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Tween } from '@/game/cb/utils/Tween';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { ItemViews } from '@/game/view/items/ItemViews';
 import { GameSounds } from '@/game/sound/GameSounds';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
 
 /**
- * Drag and drop of items (main.drag). beginDrag(from, item): a copy of the item's view follows the mouse;
+ * Drag and drop of items (app.drag). beginDrag(from, item): a copy of the item's view follows the mouse;
  * stopDrag(target): moves the item if target accepts it, otherwise the copy slides back.
  * Over a container that accepts the item, the copy snaps onto it.
  */
@@ -53,7 +53,7 @@ export class DragDispatcher {
     this.stage.addEventListener(MouseEvent.MOUSE_UP, this.mouseUpStage, false, 0, true);
     Mouse.hide();
     this.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.move, false, 0, false);
-    main.soundManager.playFx(GameSounds.ITEM_CLICK);
+    app.soundManager.playFx(GameSounds.ITEM_CLICK);
   }
   move(_event: any) {
     assert(this.dragging, 'No se está dragueando'); // "not dragging"
@@ -75,7 +75,7 @@ export class DragDispatcher {
     if (target != null && target.canMoveFrom(this.content, this.firstContainer)) {
       this.removeTempView();
       target.moveFrom(this.content, this.firstContainer);
-      main.soundManager.playFx(GameSounds.ITEM_DROP_OK);
+      app.soundManager.playFx(GameSounds.ITEM_DROP_OK);
     } else {
       const distance = Math.abs(this.stage.mouseX - this.initial_x) + Math.abs(this.stage.mouseY - this.initial_y);
       Tween.to(
@@ -84,7 +84,7 @@ export class DragDispatcher {
         { x: this.initial_x, y: this.initial_y },
         this.removeTempView,
       );
-      main.soundManager.playFx(GameSounds.ITEM_DROP_FAIL);
+      app.soundManager.playFx(GameSounds.ITEM_DROP_FAIL);
     }
     Mouse.cursor = MouseCursor.AUTO;
     Mouse.show();

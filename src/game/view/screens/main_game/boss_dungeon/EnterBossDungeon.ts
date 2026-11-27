@@ -1,6 +1,6 @@
 import { bindMethods, int } from '@/flash/as3';
 import { GameLoop } from '@/game/cb/gameloop/GameLoop';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
@@ -63,10 +63,10 @@ export class EnterBossDungeon {
     this.atEnd();
   }
   playMusic() {
-    main.soundManager.playMusic(GameSounds.BOSS_MUSIC);
+    app.soundManager.playMusic(GameSounds.BOSS_MUSIC);
   }
   stopMusic() {
-    main.soundManager.stopMusic(GameSounds.BOSS_MUSIC);
+    app.soundManager.stopMusic(GameSounds.BOSS_MUSIC);
   }
   clear() {
     this.gameLoop.updated.clear();

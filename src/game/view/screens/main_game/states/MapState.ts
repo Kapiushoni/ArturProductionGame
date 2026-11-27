@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPausableState';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { MapView } from '@/game/view/screens/main_game/map/MapView';
 
@@ -16,16 +16,16 @@ export class MapState extends BasicPausableState {
     this.principal = principal;
   }
   enter() {
-    this.map = main.game.map;
+    this.map = app.game.map;
     this.mapView = new MapView(this);
     this.mapView.onToMainMenu.add(this.toMainMenu);
     this.mapView.onToDungeon.add(this.toLevel);
     this.principal.gameHolder['map'] = this.mapView;
     this.principal.gameHolder.addChild(this.mapView);
     this.mapView.refreshUnlocked(this.map.unlockUnlocked());
-    main.game.getJinn().stats.refillHealth();
+    app.game.getJinn().stats.refillHealth();
     super.enter();
-    main.soundManager.playMusic(GameSounds.MAP_MUSIC);
+    app.soundManager.playMusic(GameSounds.MAP_MUSIC);
   }
   leave() {
     this.mapView.close();

@@ -1,6 +1,6 @@
 import { as3as, bindMethods } from '@/flash/as3';
 import { Tween } from '@/game/cb/utils/Tween';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { BarView } from '@/game/view/screens/main_game/BarView';
@@ -33,7 +33,7 @@ export class HudView {
     this.mc.x = 0;
     this.mc.y = 0;
     displayObjectContainer.addChild(this.mc);
-    this.bar = new BarView(this.mc.bar, main.locale, 'health_status');
+    this.bar = new BarView(this.mc.bar, app.locale, 'health_status');
     this.refresh();
   }
   refresh() {

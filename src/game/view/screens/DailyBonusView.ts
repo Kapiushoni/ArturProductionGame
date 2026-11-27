@@ -1,6 +1,6 @@
 import { Dictionary, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import type { BonusIcon } from '@/game/bonus/filter/BonusIcon';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
@@ -8,7 +8,7 @@ export class DailyBonusView extends AnimatedScreen {
   message: any = null;
   constructor(dailyBonus: IDailyBonus, message: string) {
     super();
-    this.initAnimatedScreen(main.swfLoader.getClass('assets.Bonus'), new Dictionary());
+    this.initAnimatedScreen(app.swfLoader.getClass('assets.Bonus'), new Dictionary());
     this.container = 'bonus';
     this.message = message;
     this.initialize(dailyBonus);
@@ -16,7 +16,7 @@ export class DailyBonusView extends AnimatedScreen {
   }
   /** adds the icon's clip ("assets.<prefix><type>" on frame label) to the holder */
   addIcon(icon: BonusIcon, holder: any, prefix = '') {
-    const cls = main.swfLoader.getClass('assets.' + prefix + icon.type);
+    const cls = app.swfLoader.getClass('assets.' + prefix + icon.type);
     const clip = new cls();
     if (icon.title != null) {
       clip.title.title.text = icon.title;

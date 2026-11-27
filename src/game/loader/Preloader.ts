@@ -9,7 +9,7 @@ import { SwfLibrary } from '@/game/cb/display/SwfLibrary';
 import { SoundLoader } from '@/game/cb/media/SoundLoader';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Rule } from '@/game/cb/utils/Rule';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Experience } from '@/game/main_game/character/stats/Experience';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
@@ -114,7 +114,7 @@ export class Preloader {
   }
   bonusComplete(bonus: DiFile) {
     Preloader.log.log('bonus Loaded');
-    main.setDailyBonus(bonus);
+    app.setDailyBonus(bonus);
     this.rule.check('bonus');
   }
   dungeonsComplete(rows: any) {

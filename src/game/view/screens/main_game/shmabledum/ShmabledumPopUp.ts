@@ -5,7 +5,7 @@ import { Screen } from '@/game/cb/display/Screen';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { Signal } from '@/game/cb/signals/Signal';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
@@ -19,7 +19,7 @@ export class ShmabledumPopUp {
   secondarySlot: any = null;
   onCancelSignal: any = null;
   constructor() {
-    this.screen = new Screen(main.swfLoader.getClass('assets.PrincessPopUp'), this.getButtonInfo());
+    this.screen = new Screen(app.swfLoader.getClass('assets.PrincessPopUp'), this.getButtonInfo());
     this.showing = false;
     this.onCancelSignal = new Signal();
     this.mc.gotoAndStop('in');
@@ -68,7 +68,7 @@ export class ShmabledumPopUp {
         new SmartMC(this.mc).trigger(new EndCurrentLabel(this.mc), Functor.wrap(callback));
       }
       this.showing = true;
-      main.soundManager.playFx(GameSounds.POP_UP);
+      app.soundManager.playFx(GameSounds.POP_UP);
     } else if (callback != null) {
       callback();
     }

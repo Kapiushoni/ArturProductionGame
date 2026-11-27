@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { EnemyView } from '@/game/view/figthers/EnemyView';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { BossSoundManager } from '@/game/sound/BossSoundManager';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
@@ -11,7 +11,7 @@ export class BossView extends EnemyView {
   }
   getNewMc(fighterAnimation: IFighterAnimation) {
     const text = 'assets.' + 'boss_normal' + '.' + fighterAnimation.getName();
-    const cls = main.swfLoader.getClass(text);
+    const cls = app.swfLoader.getClass(text);
     return new cls();
   }
   setSoundManager() {

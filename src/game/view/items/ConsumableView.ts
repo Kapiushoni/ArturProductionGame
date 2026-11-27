@@ -1,7 +1,8 @@
 import { bindMethods } from '@/flash/as3';
 import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { ItemView } from '@/game/view/items/ItemView';
-import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import { SlotStates } from '@/game/view/screens/main_game/slot/SlotStates';
+import type { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import type { Item } from '@/game/main_game/items/Item';
 
 export class ConsumableView extends ItemView {
@@ -19,7 +20,7 @@ export class ConsumableView extends ItemView {
     return mc;
   }
   getStateForSlot(slotView: SlotView) {
-    return SlotView.CONSUMABLE;
+    return SlotStates.CONSUMABLE;
   }
 }
 bindMethods(ConsumableView);

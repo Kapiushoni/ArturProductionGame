@@ -46,4 +46,41 @@ describe('architecture', () => {
     }
     expect(offenders).toEqual([]);
   });
+
+  it('only main imports main: the other modules use app.ts / services.ts', () => {
+    const offenders = files(SRC)
+      .filter((f) => !/[\\/](main|index)\.ts$/.test(f))
+      .filter((f) => /^import \{[^}]*\} from '@\/game\/main';/m.test(readFileSync(f, 'utf8')))
+      .map((f) => relative(SRC, f));
+    expect(offenders).toEqual([]);
+  });
+
+  it('there are no import cycles (so the modules load in any order)', () => {
+    // module -> the modules it imports values from ("import type" is erased, so it does not count)
+    const graph = new Map<string, string[]>();
+    const name = (f: string) => relative(SRC, f).split('\\').join('/').replace(/\.ts$/, '');
+    for (const file of files(SRC)) {
+      if (name(file) === 'index') continue;
+      const deps: string[] = [];
+      for (const m of readFileSync(file, 'utf8').matchAll(/^import \{([^}]*)\} from '@\/game\/([^']+)';/gm)) {
+        const values = m[1].split(',').filter((s) => s.trim() && !/^\s*type\s/.test(s));
+        if (values.length) deps.push(m[2]);
+      }
+      graph.set(name(file), deps);
+    }
+    const cycles: string[] = [];
+    const state = new Map<string, 'visiting' | 'done'>();
+    const visit = (m: string, path: string[]) => {
+      if (state.get(m) === 'done') return;
+      if (state.get(m) === 'visiting') {
+        cycles.push([...path.slice(path.indexOf(m)), m].join(' -> '));
+        return;
+      }
+      state.set(m, 'visiting');
+      for (const d of graph.get(m) ?? []) visit(d, [...path, m]);
+      state.set(m, 'done');
+    };
+    for (const m of graph.keys()) visit(m, []);
+    expect(cycles).toEqual([]);
+  });
 });

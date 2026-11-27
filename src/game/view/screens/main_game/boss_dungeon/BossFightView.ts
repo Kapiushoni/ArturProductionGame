@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { BasicFightView } from '@/game/view/screens/main_game/dungeon/fight/BasicFightView';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Util } from '@/game/util/Util';
@@ -14,7 +14,7 @@ export class BossFightView extends BasicFightView {
     super();
     this.bossDungeonView = bossDungeonView;
     this.initFightView(bossFight, bossDungeonView.background);
-    main.soundManager.playMusic(GameSounds.BOSS_MUSIC);
+    app.soundManager.playMusic(GameSounds.BOSS_MUSIC);
   }
   get bossView() {
     return this.bossDungeonView.bossView;
@@ -53,10 +53,10 @@ export class BossFightView extends BasicFightView {
     this.bossDungeonView.dungeon.getDungeon().lostFight();
   }
   playMusic() {
-    main.soundManager.playMusic(GameSounds.BOSS_MUSIC);
+    app.soundManager.playMusic(GameSounds.BOSS_MUSIC);
   }
   stopMusic() {
-    main.soundManager.stopMusic(GameSounds.BOSS_MUSIC);
+    app.soundManager.stopMusic(GameSounds.BOSS_MUSIC);
   }
 }
 bindMethods(BossFightView);

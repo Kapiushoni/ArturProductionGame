@@ -1,6 +1,6 @@
 import { Timer, TimerEvent, as3as, bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 import { GameView } from '@/game/view/screens/main_game/GameView';
@@ -19,11 +19,11 @@ export class ConsumePotionStep extends TutorialStep {
     super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
   }
   private get health(): number {
-    return Number(main.game.getJinn().stats.getStat(StatType.HEALTH).getValue());
+    return Number(app.game.getJinn().stats.getStat(StatType.HEALTH).getValue());
   }
   /** waits for the first hit (the window is shown later, by triggerTutorial) */
   enter() {
-    main.game.getJinn().stats.onChange.add(this.statsChange);
+    app.game.getJinn().stats.onChange.add(this.statsChange);
     this.initialHealth = this.health;
   }
   statsChange() {
@@ -54,12 +54,12 @@ export class ConsumePotionStep extends TutorialStep {
     this.timer = null;
   }
   setText(clip: any) {
-    clip.title.title.text = main.locale.get('tutorialConsumablesTitle');
-    clip.text.text.text = main.locale.get('tutorialConsumables');
+    clip.title.title.text = app.locale.get('tutorialConsumablesTitle');
+    clip.text.text.text = app.locale.get('tutorialConsumables');
   }
   /** the fight scene clip of the dungeon view */
   get arena(): any {
-    return as3as(as3as(main.gameHolder.gameView, GameView).up_holder.game.dungeonView, DungeonView).background.arena;
+    return as3as(as3as(app.gameHolder.gameView, GameView).up_holder.game.dungeonView, DungeonView).background.arena;
   }
   stopFight() {
     this.arena.jinn.stop();
@@ -70,7 +70,7 @@ export class ConsumePotionStep extends TutorialStep {
     this.arena.enemy.enemy.play();
   }
   leave() {
-    main.game.getJinn().stats.onChange.remove(this.statsChange);
+    app.game.getJinn().stats.onChange.remove(this.statsChange);
     this.resumeFight();
     this.removeTimer();
     super.leave();
@@ -78,7 +78,7 @@ export class ConsumePotionStep extends TutorialStep {
   clear() {
     super.clear();
     this.removeTimer();
-    main.game.getJinn().stats.onChange.remove(this.statsChange);
+    app.game.getJinn().stats.onChange.remove(this.statsChange);
   }
 }
 bindMethods(ConsumePotionStep);

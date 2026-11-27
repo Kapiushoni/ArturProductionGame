@@ -2,7 +2,7 @@ import { Dictionary, MovieClip, Timer, TimerEvent, as3as, as3values, bindMethods
 import { Functor } from '@/game/cb/actions/Functor';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Util } from '@/game/util/Util';
 import { FighterView } from '@/game/view/figthers/FighterView';
 import { DamageFeedback } from '@/game/view/screens/main_game/dungeon/fight/DamageFeedback';
@@ -32,7 +32,7 @@ export class BasicFightView {
     this.initialize();
   }
   getFightConfig() {
-    return main.config.get('FightConfig');
+    return app.config.get('FightConfig');
   }
   initializeViews(list: any[]) {
     throw new Error('Must implement');
@@ -87,7 +87,7 @@ export class BasicFightView {
     const hitter = fighter;
     const reciver = fighter2;
     const damage = damage2;
-    const number = as3as(main.swfLoader.getObject('assets.numberHealth2'), MovieClip);
+    const number = as3as(app.swfLoader.getObject('assets.numberHealth2'), MovieClip);
     number.container.title.title.text = damage.stringValue();
     const hitterView = as3as(this.views.get(reciver), FighterView);
     number.x = hitterView.x;

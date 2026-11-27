@@ -1,7 +1,7 @@
 import { Dictionary, as3as, bindMethods } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { JinnView } from '@/game/view/figthers/JinnView';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { GameSounds } from '@/game/sound/GameSounds';
@@ -34,8 +34,8 @@ export class DungeonView extends Screen {
     dungeon.getDungeon().onFight.add(this.onFight);
     this.innerView = new EmptyInnerView(this.soundTrack);
     this.initScreen(BackgroundView, this.getButtonInfo());
-    main.game.getJinn().onPotionConsumition.add(this.potionConsumition);
-    this.background.jinnHud.changeFighter(main.game.getJinn());
+    app.game.getJinn().onPotionConsumition.add(this.potionConsumition);
+    this.background.jinnHud.changeFighter(app.game.getJinn());
     this.initialize();
     this.timeLine = new TimeLine(this);
     this.addChild(this.timeLine);
@@ -52,20 +52,20 @@ export class DungeonView extends Screen {
     Buttons.setButtons(this.background.information, ['pause'], true);
     this.background.init(DungeonFactory.getConfigFor(this.dungeon.getDungeon().getId()));
     this.playMusic();
-    this.jinnView = new JinnView(main.game.getJinn());
+    this.jinnView = new JinnView(app.game.getJinn());
     this.dungeon.getDungeon().onLose.add(this.dungeonLost);
     this.dungeon.getDungeon().onWin.add(this.dungeonWon);
     this.start();
   }
   playMusic() {
-    main.soundManager.playMusic(this.soundTrack);
+    app.soundManager.playMusic(this.soundTrack);
   }
   start() {
     this.innerView.clear();
     this.innerView = new EnterDungeonView(this.jinnView, this.background, this.dungeon.getDungeon().startFight);
   }
   potionConsumition(item: Item) {
-    if (main.game.getJinn().stats.isDead()) {
+    if (app.game.getJinn().stats.isDead()) {
       this.suddenDeath();
     }
   }
@@ -88,7 +88,7 @@ export class DungeonView extends Screen {
     this.innerView.resume();
   }
   pause(event: any) {
-    if (main.game.getJinn().stats.isDead()) {
+    if (app.game.getJinn().stats.isDead()) {
       return;
     }
     this.innerView.pause();
@@ -100,7 +100,7 @@ export class DungeonView extends Screen {
     pause.enter();
   }
   getDungeonLevel() {
-    return main.game.map.getLevel(this.dungeon.getDungeon().getId());
+    return app.game.map.getLevel(this.dungeon.getDungeon().getId());
   }
   resume() {
     this.playMusic();
@@ -113,7 +113,7 @@ export class DungeonView extends Screen {
     this.gotoDungeonId(this.dungeon.getDungeon().getId());
   }
   gotoDungeonId(text: string) {
-    const level = main.game.map.getLevel(text);
+    const level = app.game.map.getLevel(text);
     this.dungeon.onToDungeon.emit(level);
   }
   onFight(fight: IFight) {
@@ -133,7 +133,7 @@ export class DungeonView extends Screen {
     return GameSounds.COMBAT_MUSIC2;
   }
   stopMusic() {
-    main.soundManager.stopMusic(this.soundTrack);
+    app.soundManager.stopMusic(this.soundTrack);
   }
   dungeonLost() {
     this.stopMusic();
@@ -153,7 +153,7 @@ export class DungeonView extends Screen {
   }
   makeWinWindow() {
     let callback = null;
-    const nextLevel = main.game.map.getNextLevel(this.dungeon.getDungeon().getLevel());
+    const nextLevel = app.game.map.getNextLevel(this.dungeon.getDungeon().getLevel());
     if (nextLevel != null && nextLevel.getArea() == this.dungeon.getDungeon().getLevel().getArea()) {
       callback = Util.l(this.dungeon.onToDungeon.emit, nextLevel);
     }
@@ -176,7 +176,7 @@ export class DungeonView extends Screen {
     this.background.pauseScroll();
   }
   close() {
-    main.game.getJinn().onPotionConsumition.remove(this.potionConsumition);
+    app.game.getJinn().onPotionConsumition.remove(this.potionConsumition);
     this.innerView.clear();
     this.background.clear();
     this.pop();

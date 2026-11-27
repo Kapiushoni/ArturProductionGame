@@ -1,6 +1,6 @@
 import { as3as, bindMethods } from '@/flash/as3';
 import { BasicFightView } from '@/game/view/screens/main_game/dungeon/fight/BasicFightView';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { EnemyView } from '@/game/view/figthers/EnemyView';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { IdleAnimation } from '@/game/view/figthers/animations/IdleAnimation';
@@ -17,11 +17,11 @@ export class FightView extends BasicFightView {
   }
   initializeViews(list: any[]) {
     const jinnView = list[0];
-    this.views.set(main.game.getJinn(), jinnView);
+    this.views.set(app.game.getJinn(), jinnView);
     this.views.set(this.fight.getEnemy(), new EnemyView(this.fight.getEnemy()));
   }
   get jinnView() {
-    return as3as(this.views.get(main.game.getJinn()), JinnView);
+    return as3as(this.views.get(app.game.getJinn()), JinnView);
   }
   initialize() {
     this.enemy = this.fight.getEnemy();
@@ -39,10 +39,10 @@ export class FightView extends BasicFightView {
     super.initialize();
   }
   won() {
-    main.game.getDungeon().wonFight();
+    app.game.getDungeon().wonFight();
   }
   lose() {
-    main.game.getDungeon().lostFight();
+    app.game.getDungeon().lostFight();
   }
   moveEnemy(num: number) {
     num = Number(num);

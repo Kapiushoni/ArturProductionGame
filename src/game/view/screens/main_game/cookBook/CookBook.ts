@@ -4,7 +4,7 @@ import { Functor } from '@/game/cb/actions/Functor';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { CookBookPage } from '@/game/view/screens/main_game/cookBook/CookBookPage';
@@ -20,14 +20,14 @@ export class CookBook extends AnimatedScreen {
   actualIndex = 0;
   constructor(callback: Function) {
     super();
-    this.initAnimatedScreen(main.swfLoader.getClass('assets.Recipes'), this.getButtonInfo(callback));
+    this.initAnimatedScreen(app.swfLoader.getClass('assets.Recipes'), this.getButtonInfo(callback));
     this.container = 'container';
     this.initialize();
     this.initializeArrows();
     this.refreshArrows();
   }
   get recipes() {
-    return main.saveSystem.recipes;
+    return app.saveSystem.recipes;
   }
   get initPageContainer() {
     return this.pagesContainer.recipesInit;

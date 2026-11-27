@@ -4,10 +4,10 @@ import { Boss } from '@/game/main_game/boss_dungeon/Boss';
 import { BossFight } from '@/game/main_game/boss_dungeon/BossFight';
 import { BossView } from '@/game/view/screens/main_game/boss_dungeon/BossView';
 import { GameSounds } from '@/game/sound/GameSounds';
-import { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonState';
 import { BossFightView } from '@/game/view/screens/main_game/boss_dungeon/BossFightView';
 import { EnterBossDungeon } from '@/game/view/screens/main_game/boss_dungeon/EnterBossDungeon';
 import { WinBossDungeonWindow } from '@/game/view/screens/main_game/boss_dungeon/WinBossDungeonWindow';
+import type { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonState';
 import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 
@@ -42,7 +42,7 @@ export class BossDungeonView extends DungeonView {
     );
   }
   onToOutro() {
-    as3as(this.dungeon, BossDungeonState).onToOutro.emit();
+    (this.dungeon as BossDungeonState).onToOutro.emit();
   }
   onFight(fight: IFight) {
     this.innerView.clear();

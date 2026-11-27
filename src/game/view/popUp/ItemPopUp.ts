@@ -1,7 +1,7 @@
 import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { ModifierIcons } from '@/game/view/items/ModifierIcons';
 import { PopUp } from '@/game/view/popUp/PopUp';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
 import type { Item } from '@/game/main_game/items/Item';
 
@@ -10,7 +10,7 @@ export class ItemPopUp extends PopUp {
   static RIGHT = 'Right';
   declare item: any;
   constructor(text: string = 'Left') {
-    const clip = as3as(main.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
+    const clip = as3as(app.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
     super(clip);
     this.item = null;
   }

@@ -3,7 +3,7 @@ import { RemoveFromParent } from '@/game/cb/actions/RemoveFromParent';
 import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { MixerClockView } from '@/game/view/screens/main_game/inventory/MixerClockView';
 import { AutoSelectSlotView } from '@/game/view/screens/main_game/slot/AutoSelectSlotView';
@@ -21,8 +21,8 @@ export class MixerView {
     let autoSelectSlotView = null;
     this.bg = bg;
     this.bg.mouseEnabled = false;
-    this.bg.mix_button.title.title.text = main.locale.get('mix');
-    const mixer = main.game.getMixer();
+    this.bg.mix_button.title.title.text = app.locale.get('mix');
+    const mixer = app.game.getMixer();
     this.refreshButton();
     let i = 1;
     while (i <= 3) {
@@ -36,7 +36,7 @@ export class MixerView {
   }
   disable() {
     if (this.top == null) {
-      this.top = as3as(main.swfLoader.getObject('assets.MixTop'), MovieClip);
+      this.top = as3as(app.swfLoader.getObject('assets.MixTop'), MovieClip);
       this.top.gotoAndStop('idle');
       this.bg.parent.addChild(this.top);
     }
@@ -52,14 +52,14 @@ export class MixerView {
     this.refreshButton();
   }
   mix(event: any) {
-    const mixer = main.game.getMixer();
+    const mixer = app.game.getMixer();
     mixer.startMix();
     this.clock_view = new MixerClockView(mixer.clock);
     this.bg['mix_slot_3'].addChild(this.clock_view);
     this.refreshButton();
   }
   refreshButton() {
-    const mixer = main.game.getMixer();
+    const mixer = app.game.getMixer();
     Buttons.setButtons(this.bg, ['mix_button'], mixer.canMix());
     if (mixer.canMix()) {
       this.bg['mix_button'].gotoAndStop('idle');
@@ -68,7 +68,7 @@ export class MixerView {
     }
   }
   mixButtonOut(event: any) {
-    if (!main.game.getMixer().canMix()) {
+    if (!app.game.getMixer().canMix()) {
       event.stopPropagation();
       this.bg['mix_button'].gotoAndStop('locked');
     } else {

@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { TutorialViewWithOk } from '@/game/tutorial/view/TutorialViewWithOk';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
 
@@ -10,23 +10,23 @@ export class MixTutorialStep extends TutorialStep {
     super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
   }
   createView(viewClass: string): TutorialViewWithOk {
-    return new TutorialViewWithOk(main.swfLoader.getClass(viewClass));
+    return new TutorialViewWithOk(app.swfLoader.getClass(viewClass));
   }
   setText(clip: any) {
-    clip.title.title.text = main.locale.get('tutorialMixTitle');
-    clip.text.text.text = main.locale.get('tutorialMix');
+    clip.title.title.text = app.locale.get('tutorialMixTitle');
+    clip.text.text.text = app.locale.get('tutorialMix');
   }
   enter() {
     super.enter();
     this.theView.bg.removeChild(this.theView.bg.glow);
-    main.game.getMixer().onMixStart.add(this.theView.leave);
+    app.game.getMixer().onMixStart.add(this.theView.leave);
   }
   leave() {
-    main.game.getMixer().onMixStart.remove(this.theView.leave);
+    app.game.getMixer().onMixStart.remove(this.theView.leave);
     super.leave();
   }
   clear() {
-    main.game.getMixer().onMixStart.remove(this.theView.leave);
+    app.game.getMixer().onMixStart.remove(this.theView.leave);
   }
 }
 bindMethods(MixTutorialStep);

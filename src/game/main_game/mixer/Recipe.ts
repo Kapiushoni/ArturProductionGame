@@ -1,5 +1,5 @@
 import { bindMethods, int } from '@/flash/as3';
-import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
+import { removeMix } from '@/game/main_game/mixer/mixId';
 import type { Item } from '@/game/main_game/items/Item';
 
 /** A special mix (mix.csv): ingredients i1 + i2 give the item `res`. */
@@ -26,8 +26,8 @@ export class Recipe {
   }
   /** are these the ingredients (in any order, unless strictOrder)? "Mix_" prefixes are ignored */
   areIngredients(item: Item, item2: Item, strictOrder = false): boolean {
-    const a = MixStrategy.removeMix(item.id);
-    const b = MixStrategy.removeMix(item2.id);
+    const a = removeMix(item.id);
+    const b = removeMix(item2.id);
     return (a == this.i1 && b == this.i2) || (!strictOrder && b == this.i1 && a == this.i2);
   }
   isResult(item: Item): boolean {

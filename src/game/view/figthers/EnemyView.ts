@@ -1,6 +1,6 @@
 import { MovieClip, as3as, bindMethods } from '@/flash/as3';
 import { FighterView } from '@/game/view/figthers/FighterView';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Enemy } from '@/game/main_game/character/Enemy';
 import { EnemySoundManager } from '@/game/sound/EnemySoundManager';
 import { Util } from '@/game/util/Util';
@@ -30,7 +30,7 @@ export class EnemyView extends FighterView {
   }
   getNewMc(fighterAnimation: IFighterAnimation) {
     const text = 'assets.' + this.fighter.getName() + '.' + fighterAnimation.getName();
-    const cls = main.swfLoader.getClass(text);
+    const cls = app.swfLoader.getClass(text);
     return new cls();
   }
   putIn(displayObjectContainer: any) {

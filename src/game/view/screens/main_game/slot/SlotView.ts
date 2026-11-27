@@ -1,13 +1,14 @@
 import { bindMethods } from '@/flash/as3';
 import { BasicSlotView } from '@/game/view/screens/main_game/slot/BasicSlotView';
+import { SlotStates } from '@/game/view/screens/main_game/slot/SlotStates';
 import type { ISlot } from '@/game/main_game/item_containers/ISlot';
 import type { ItemView } from '@/game/view/items/ItemView';
 
 export class SlotView extends BasicSlotView {
-  static EMPTY = 'empty';
-  static EQUIPMENT = 'equipment';
-  static WEAPONS = 'weapons';
-  static CONSUMABLE = 'consumables';
+  static EMPTY = SlotStates.EMPTY;
+  static EQUIPMENT = SlotStates.EQUIPMENT;
+  static WEAPONS = SlotStates.WEAPONS;
+  static CONSUMABLE = SlotStates.CONSUMABLE;
   constructor(slot: ISlot) {
     super(slot);
   }

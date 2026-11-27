@@ -1,5 +1,5 @@
 import { MovieClip, as3as, as3values, bindMethods } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
 import { RecipeView } from '@/game/view/screens/main_game/cookBook/RecipeView';
 
@@ -8,7 +8,7 @@ export class CookBookPage {
   bg: any = null;
   recipes: any = null;
   constructor(list: any[]) {
-    this.bg = as3as(main.swfLoader.getObject('assets.RecipesContainer'), MovieClip);
+    this.bg = as3as(app.swfLoader.getObject('assets.RecipesContainer'), MovieClip);
     this.initializeRecipes(list);
   }
   initializeRecipes(list: any[]) {

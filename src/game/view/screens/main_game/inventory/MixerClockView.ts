@@ -1,13 +1,13 @@
 import { Dictionary, bindMethods, uint } from '@/flash/as3';
 import { Screen } from '@/game/cb/display/Screen';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Effect } from '@/game/view/effect/Effect';
 import type { MixerClock } from '@/game/main_game/mixer/MixerClock';
 
 export class MixerClockView extends Screen {
   constructor(mixerClock: MixerClock) {
     super();
-    this.initScreen(main.swfLoader.getClass('assets.Time'), new Dictionary());
+    this.initScreen(app.swfLoader.getClass('assets.Time'), new Dictionary());
     mixerClock.onTic.add(this.refresh);
     mixerClock.atEndMix.add(this.removeClock);
     this.bg.gotoAndStop(0);
@@ -17,7 +17,7 @@ export class MixerClockView extends Screen {
     this.bg.gotoAndStop(num);
   }
   removeClock() {
-    const cls = main.swfLoader.getClass('assets.Stars');
+    const cls = app.swfLoader.getClass('assets.Stars');
     const effect = new Effect(new cls());
     effect.playOn(this.bg.parent);
     this.pop();

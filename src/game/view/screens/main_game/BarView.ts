@@ -1,5 +1,5 @@
 import { bindMethods, uint } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import type { Locale } from '@/game/cb/data/Locale';
 
 export class BarView {
@@ -30,7 +30,7 @@ export class BarView {
     value = Number(value);
     this.currentVal = Math.round(value);
     if (this.locale != null && this.localeText != '') {
-      this.mc.title.title.text = main.locale.get(this.localeText, [this.current.toString(), this.total.toString()]);
+      this.mc.title.title.text = app.locale.get(this.localeText, [this.current.toString(), this.total.toString()]);
     }
     let num = uint(Math.ceil((this.current * 100) / this.total));
     if (this.current != this.total) {
@@ -42,7 +42,7 @@ export class BarView {
     value = Number(value);
     this.totalVal = Math.ceil(value);
     if (this.locale != null && this.localeText != '') {
-      this.mc.title.text = main.locale.get(this.localeText, [this.current.toString(), this.total.toString()]);
+      this.mc.title.text = app.locale.get(this.localeText, [this.current.toString(), this.total.toString()]);
     }
     this.mc.gotoAndStop(Math.ceil((this.current * 100) / this.total));
   }

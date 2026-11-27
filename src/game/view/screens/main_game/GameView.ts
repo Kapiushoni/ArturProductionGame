@@ -3,7 +3,7 @@ import { Screen } from '@/game/cb/display/Screen';
 import { FSM } from '@/game/aplication/FSM';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
@@ -33,7 +33,7 @@ export class GameView extends Screen {
   onEnd: any = null;
   constructor() {
     super();
-    this.initScreen(main.swfLoader.getClass('assets.Inventory'), this.getButtonInfo());
+    this.initScreen(app.swfLoader.getClass('assets.Inventory'), this.getButtonInfo());
     this.up_holder = new MovieClip();
     this.addChildAt(this.up_holder, 0);
     this.up_holder.game = new MovieClip();
@@ -66,7 +66,7 @@ export class GameView extends Screen {
     this.stats.initialize(this.bg.stats);
     this.princess.initialize(this.bg.mix.pb);
     Buttons.setButtons(this.bg.inventory, ['recipes'], true);
-    main.game.onPause.add(this.updatePauseState);
+    app.game.onPause.add(this.updatePauseState);
   }
   updatePauseState(flag: boolean) {
     if (flag) {
@@ -87,7 +87,7 @@ export class GameView extends Screen {
     dungeonState.onToDungeon.add(this.toLevel);
     dungeonState.onToMap.add(this.showMap);
     const bossDungeonState = new BossDungeonState('boss', this);
-    bossDungeonState.setNextDungeon(main.game.map.getLevel(BossDungeon.idBossLevel));
+    bossDungeonState.setNextDungeon(app.game.map.getLevel(BossDungeon.idBossLevel));
     bossDungeonState.onToDungeon.add(this.toLevel);
     bossDungeonState.onToMap.add(this.showMap);
     bossDungeonState.onToOutro.add(this.toOutro);
@@ -150,7 +150,7 @@ export class GameView extends Screen {
     this.fsm.takeTransition('enterMap');
   }
   toLevel(level: Level) {
-    if (!Util.areLoaded(this.resourcesForLevel(level), main.theLoader)) {
+    if (!Util.areLoaded(this.resourcesForLevel(level), app.theLoader)) {
       this.toLevelWaiting(level);
     } else {
       this.toLevelWithoutWait(level);
@@ -166,7 +166,7 @@ export class GameView extends Screen {
     return GameSounds.combatSounds;
   }
   toLevelWaiting(level: Level) {
-    main.waitForResources(this.resourcesForLevel(level), Util.l(this.toLevelWithoutWait, level));
+    app.waitForResources(this.resourcesForLevel(level), Util.l(this.toLevelWithoutWait, level));
   }
   toLevelWithoutWait(level: Level) {
     if (level.dungeonId == BossDungeon.idBossLevel) {

@@ -5,7 +5,7 @@ import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { Signal } from '@/game/cb/signals/Signal';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
@@ -25,7 +25,7 @@ export class ComicWindow extends AnimatedScreen {
     this.onBack = new Signal();
     this.initializeText();
     this.nextArrow = new ArrowView(Util.getSprite(this.bg, 'arrow_right'), this.nextPage);
-    main.soundManager.updateSoundButton(this.bg.sound);
+    app.soundManager.updateSoundButton(this.bg.sound);
     this.actualPage = 1;
     this.bg.gotoAndStop(1);
   }
@@ -38,7 +38,7 @@ export class ComicWindow extends AnimatedScreen {
   enter(callback: Function = null) {
     super.enter(callback);
     this.nextArrow.show();
-    main.soundManager.playMusic(this.music);
+    app.soundManager.playMusic(this.music);
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], true);
   }
   getButtonInfo() {

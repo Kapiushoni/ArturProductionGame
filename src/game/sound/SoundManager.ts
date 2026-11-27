@@ -2,12 +2,12 @@ import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { cbSoundMixer } from '@/game/cb/media/cbSoundMixer';
 import { cbArray } from '@/game/cb/utils/cbArray';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { MusicRequest } from '@/game/sound/MusicRequest';
 
 /**
- * The game's sound (main.soundManager): effects, and a stack of musics (the last requested plays;
+ * The game's sound (app.soundManager): effects, and a stack of musics (the last requested plays;
  * stopping it brings back the previous one). Also the sounds of the button groups and the mute button.
  */
 export class SoundManager {
@@ -42,7 +42,7 @@ export class SoundManager {
       .setClickSound(GameSounds.BUTTON_CLICK)
       .setOverSound(GameSounds.MOUSE_OVER)
       .addClick(this.onSoundClick);
-    if (main.saveSystem.isSoundMuted()) {
+    if (app.saveSystem.isSoundMuted()) {
       this.soundMixer.mute();
     }
   }
@@ -57,7 +57,7 @@ export class SoundManager {
     } else {
       this.soundMixer.mute();
     }
-    main.saveSystem.saveMuteState(this.soundMixer.isMuted());
+    app.saveSystem.saveMuteState(this.soundMixer.isMuted());
     this.updateSoundButton(as3as(event.currentTarget, MovieClip));
   }
   updateSoundButton(button: any) {

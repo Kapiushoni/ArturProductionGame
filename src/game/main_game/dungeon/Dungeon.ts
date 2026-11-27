@@ -5,7 +5,6 @@ import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
 import { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 import { Fight } from '@/game/main_game/dungeon/Fight';
 import { Loot } from '@/game/main_game/dungeon/Loot';
-import { XpCalculator } from '@/game/main_game/dungeon/XpCalculator';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
 import type { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
@@ -18,7 +17,6 @@ import type { Game } from '@/game/main_game/Game';
 export class Dungeon {
   /** the boss dungeon (see BossDungeon) */
   static readonly BOSS_LEVEL_ID = '25';
-  static theXpCalulator: IXpCalculator = null;
   onFight: Signal;
   onLose: Signal;
   onWin: Signal;
@@ -48,14 +46,12 @@ export class Dungeon {
   static get DungeonConfig(): any {
     return services.config.get('DungeonConfig');
   }
+  /** see DungeonStats.xpCalculator */
   static get xpCalulator(): IXpCalculator {
-    if (Dungeon.theXpCalulator == null) {
-      Dungeon.theXpCalulator = new XpCalculator();
-    }
-    return Dungeon.theXpCalulator;
+    return DungeonStats.xpCalculator;
   }
   static set xpCalulator(value: IXpCalculator) {
-    Dungeon.theXpCalulator = value;
+    DungeonStats.xpCalculator = value;
   }
   enter() {
     services.saveSystem.savePendingItems();

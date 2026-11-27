@@ -3,7 +3,7 @@ import { Functor } from '@/game/cb/actions/Functor';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { Random } from '@/game/cb/utils/Random';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Util } from '@/game/util/Util';
 import { ShmabledumPopUp } from '@/game/view/screens/main_game/shmabledum/ShmabledumPopUp';
 import type { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
@@ -17,8 +17,8 @@ export class ShmabledumView {
   timer: any = null;
   tips: any = null;
   constructor() {
-    main.game.getShmabledum().onInteraction.add(this.interact);
-    main.game.getShmabledum().getLocker().onLock.add(this.changeInLock);
+    app.game.getShmabledum().onInteraction.add(this.interact);
+    app.game.getShmabledum().getLocker().onLock.add(this.changeInLock);
     this.popUp = new ShmabledumPopUp();
     this.popUp.onCancel.add(this.hideTip);
     this.tips = new Array();
@@ -27,10 +27,10 @@ export class ShmabledumView {
   }
   initialize(bg: any) {
     this.bg = bg;
-    this.popUp.addIn(main.tutorialHolder);
+    this.popUp.addIn(app.tutorialHolder);
     bg.gotoAndPlay('idleFront');
     Util.addMouseEvents(this.hitbox, this.click);
-    this.changeInLock(main.game.getShmabledum().getLocker());
+    this.changeInLock(app.game.getShmabledum().getLocker());
   }
   get hitbox() {
     return this.bg.hitbox;
@@ -50,7 +50,7 @@ export class ShmabledumView {
       this.hideTip();
     }
     if (this.tips.length == 0) {
-      main.game.getShmabledum().giveSomeTip();
+      app.game.getShmabledum().giveSomeTip();
     }
   }
   interact(shmabledumInteraction: ShmabledumInteraction) {
@@ -85,8 +85,8 @@ export class ShmabledumView {
     this.popUp.hide(this.showTipNow);
   }
   clear() {
-    main.game.getShmabledum().onInteraction.remove(this.interact);
-    main.game.getShmabledum().getLocker().onLock.remove(this.changeInLock);
+    app.game.getShmabledum().onInteraction.remove(this.interact);
+    app.game.getShmabledum().getLocker().onLock.remove(this.changeInLock);
     Util.removeMouseEvents(this.bg, this.click);
     this.bg.stop();
     this.bg = null;

@@ -1,7 +1,7 @@
 import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { GameLoop } from '@/game/cb/gameloop/GameLoop';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
 import { AnimatedHudView } from '@/game/view/figthers/AnimatedHudView';
 import { HudSetter } from '@/game/view/figthers/HudSetter';
@@ -33,8 +33,8 @@ export class BackgroundView extends MovieClip {
   constructor() {
     super();
     this.onMove = new Signal();
-    this.enemyHudView = new AnimatedHudView(main.swfLoader.getClass('assets.EnemyBar'), new HudSetterWithStats());
-    this.jinnHudView = new HudView(main.swfLoader.getClass('assets.JinnBar'), new HudSetter());
+    this.enemyHudView = new AnimatedHudView(app.swfLoader.getClass('assets.EnemyBar'), new HudSetterWithStats());
+    this.jinnHudView = new HudView(app.swfLoader.getClass('assets.JinnBar'), new HudSetter());
     this.setLayers();
     this.setPauseButton();
     this.paused = false;
@@ -74,7 +74,7 @@ export class BackgroundView extends MovieClip {
     let clip = new MovieClip();
     this.addChild(clip);
     this.layer3 = clip;
-    const cls = main.swfLoader.getClass('assets.Mist');
+    const cls = app.swfLoader.getClass('assets.Mist');
     this.mist1 = new cls();
     this.mist2 = new cls();
     this.addChild(this.mist1);
@@ -108,7 +108,7 @@ export class BackgroundView extends MovieClip {
     this.gameLoop.start();
   }
   setPauseButton() {
-    const clip = as3as(main.swfLoader.getObject('assets.ButtonPause'), MovieClip);
+    const clip = as3as(app.swfLoader.getObject('assets.ButtonPause'), MovieClip);
     this.information.addChild(clip);
     this.information.pause = clip;
     clip.x = Dungeon.DungeonConfig['pause_btn_x'];

@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import type { Jinn } from '@/game/main_game/character/Jinn';
 
@@ -43,7 +43,7 @@ export class JinnSoundManager extends FighterSoundManager {
     super.playHurt();
   }
   playDie() {
-    main.soundManager.stopMusic();
+    app.soundManager.stopMusic();
     super.playDie();
   }
 }

@@ -3,7 +3,7 @@ import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Tween } from '@/game/cb/utils/Tween';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
@@ -30,7 +30,7 @@ export class WinWindow extends AnimatedScreen {
   stats: any = null;
   constructor(loot: Loot, stats: DungeonStats, onNext: Function = null) {
     super();
-    this.initAnimatedScreen(main.swfLoader.getClass('assets.LevelWin'), this.getButtonInfo());
+    this.initAnimatedScreen(app.swfLoader.getClass('assets.LevelWin'), this.getButtonInfo());
     this.stats = stats;
     this.loot = new LootView(loot, this.bg);
     this.onReplay = new Signal();
@@ -64,15 +64,15 @@ export class WinWindow extends AnimatedScreen {
     this.criticalXp = 0;
     this.mixXp = 0;
     this.totalXp = 0;
-    this.infoMc[WinWindow.COMBAT_BONUS].title.text = main.locale.get('win_combat');
-    this.infoMc[WinWindow.CRITICAL_BONUS].title.text = main.locale.get('win_critical_bonus');
-    this.infoMc[WinWindow.MIX_BONUS].title.text = main.locale.get('win_mix_bonus');
-    this.infoMc[WinWindow.TOTAL_BONUS].title.text = main.locale.get('win_total', [this.stats.level.getName()]);
+    this.infoMc[WinWindow.COMBAT_BONUS].title.text = app.locale.get('win_combat');
+    this.infoMc[WinWindow.CRITICAL_BONUS].title.text = app.locale.get('win_critical_bonus');
+    this.infoMc[WinWindow.MIX_BONUS].title.text = app.locale.get('win_mix_bonus');
+    this.infoMc[WinWindow.TOTAL_BONUS].title.text = app.locale.get('win_total', [this.stats.level.getName()]);
   }
   set combatXp(value: number) {
     value = int(value);
     this.values[WinWindow.COMBAT] = value;
-    this.infoMc[WinWindow.COMBAT_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
+    this.infoMc[WinWindow.COMBAT_BONUS + '_xp'].numbers.title.text = app.locale.get('win_xp_amount', [value]);
   }
   get combatXp() {
     return int(this.values[WinWindow.COMBAT]);
@@ -80,7 +80,7 @@ export class WinWindow extends AnimatedScreen {
   set criticalXp(value: number) {
     value = int(value);
     this.values[WinWindow.CRITICAL] = value;
-    this.infoMc[WinWindow.CRITICAL_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
+    this.infoMc[WinWindow.CRITICAL_BONUS + '_xp'].numbers.title.text = app.locale.get('win_xp_amount', [value]);
   }
   get criticalXp() {
     return int(this.values[WinWindow.CRITICAL]);
@@ -88,7 +88,7 @@ export class WinWindow extends AnimatedScreen {
   set mixXp(value: number) {
     value = int(value);
     this.values[WinWindow.MIX] = value;
-    this.infoMc[WinWindow.MIX_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [value]);
+    this.infoMc[WinWindow.MIX_BONUS + '_xp'].numbers.title.text = app.locale.get('win_xp_amount', [value]);
   }
   get mixXp() {
     return int(this.values[WinWindow.MIX]);
@@ -96,7 +96,7 @@ export class WinWindow extends AnimatedScreen {
   set totalXp(value: number) {
     value = int(value);
     this.values[WinWindow.TOTAL] = value;
-    this.infoMc[WinWindow.TOTAL_BONUS + '_xp'].numbers.title.text = main.locale.get('win_xp_amount', [
+    this.infoMc[WinWindow.TOTAL_BONUS + '_xp'].numbers.title.text = app.locale.get('win_xp_amount', [
       this.values[WinWindow.TOTAL],
     ]);
   }
@@ -109,12 +109,12 @@ export class WinWindow extends AnimatedScreen {
     if (this.onNext == null) {
       this.bg.removeChild(this.bg['next']);
     }
-    main.soundManager.playMusic(GameSounds.WIN_MUSIC);
+    app.soundManager.playMusic(GameSounds.WIN_MUSIC);
   }
   leave(callback: Function = null) {
     this.loot.pause();
-    main.soundManager.stopFx(GameSounds.DUNGEON_COMPLETED);
-    main.soundManager.stopMusic(GameSounds.WIN_MUSIC);
+    app.soundManager.stopFx(GameSounds.DUNGEON_COMPLETED);
+    app.soundManager.stopMusic(GameSounds.WIN_MUSIC);
     super.leave(Util.concatenate(this.loot.clear, callback));
   }
   showStats(callback: Function = null) {
@@ -145,7 +145,7 @@ export class WinWindow extends AnimatedScreen {
     }
   }
   giveXp() {
-    const stats = main.game.getJinn().stats;
+    const stats = app.game.getJinn().stats;
     const level = uint(stats.getLevel());
     stats.addXP(this.stats.getDungeonExperience());
     if (level < stats.getLevel()) {

@@ -1,5 +1,5 @@
 import { Timer, TimerEvent, as3as, as3values, bindMethods, int } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { SmokeEffect } from '@/game/view/effect/SmokeEffect';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import type { Loot } from '@/game/main_game/dungeon/Loot';
@@ -76,7 +76,7 @@ export class LootView {
     } else {
       for (bootyItem of as3values(this.loot.getBooty())) {
         if (!bootyItem.isEmpty()) {
-          emptySlot = main.game.getInventory().getEmptySlot();
+          emptySlot = app.game.getInventory().getEmptySlot();
           if (emptySlot == null) {
             return;
           }

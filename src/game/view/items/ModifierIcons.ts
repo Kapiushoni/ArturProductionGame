@@ -1,5 +1,5 @@
 import { bindMethods, int } from '@/flash/as3';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { HealthModifier } from '@/game/main_game/items/modifiers/HealthModifier';
 import { MaxHealthModifier } from '@/game/main_game/items/modifiers/MaxHealthModifier';
@@ -58,7 +58,7 @@ export class ModifierIcons {
       textField.text = '';
       return;
     }
-    textField.text = main.locale.get('popUpValue', [modifier.getValue().toString(), int(max).toString()]);
+    textField.text = app.locale.get('popUpValue', [modifier.getValue().toString(), int(max).toString()]);
   }
 }
 bindMethods(ModifierIcons);

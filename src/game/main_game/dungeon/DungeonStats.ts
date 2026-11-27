@@ -1,10 +1,13 @@
 import { bindMethods, int } from '@/flash/as3';
-import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
+import { XpCalculator } from '@/game/main_game/dungeon/XpCalculator';
+import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Game } from '@/game/main_game/Game';
 
 /** Counts mixes and critical hits during a dungeon run, and gives the experience earned at the end. */
 export class DungeonStats {
+  /** how experience is computed (XpCalculator, or the XpBonus of the day) */
+  static xpCalculator: IXpCalculator = new XpCalculator();
   /** enemies beaten (set at the end) */
   private defeated: any[] = null;
   private mixesDone = 0;
@@ -38,13 +41,13 @@ export class DungeonStats {
     this.deactivate();
   }
   getCombatExperience(): number {
-    return Number(Dungeon.xpCalulator.getXp(this.defeated));
+    return Number(DungeonStats.xpCalculator.getXp(this.defeated));
   }
   getMixExperience(): number {
-    return Number(Dungeon.xpCalulator.getMixXp(this.mixesDone, this.game.getJinn()));
+    return Number(DungeonStats.xpCalculator.getMixXp(this.mixesDone, this.game.getJinn()));
   }
   getCriticalExperience(): number {
-    return Number(Dungeon.xpCalulator.getCriticalXp(this.criticalHits, this.game.getJinn()));
+    return Number(DungeonStats.xpCalculator.getCriticalXp(this.criticalHits, this.game.getJinn()));
   }
   getDungeonExperience(): number {
     return Number(this.getCombatExperience() + this.getCriticalExperience() + this.getMixExperience());

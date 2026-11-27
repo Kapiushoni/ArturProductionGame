@@ -1,6 +1,6 @@
 import { MouseEvent, as3as, bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { GameView } from '@/game/view/screens/main_game/GameView';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
@@ -16,7 +16,7 @@ export class TakeAllStep extends TutorialStep {
     WinWindow.onShow = this.wonDungeon;
   }
   get winWindow(): any {
-    return as3as(main.gameHolder.gameView, GameView).pauseHolder['window'];
+    return as3as(app.gameHolder.gameView, GameView).pauseHolder['window'];
   }
   wonDungeon() {
     this.winWindow.lootMcButton.addEventListener(MouseEvent.CLICK, this.loot);
@@ -33,7 +33,7 @@ export class TakeAllStep extends TutorialStep {
     super.leave();
   }
   setText(clip: any) {
-    clip.text.text.text = main.locale.get('tutorialTakeAll');
+    clip.text.text.text = app.locale.get('tutorialTakeAll');
   }
   stopListening() {
     if (this.listeningClick) {

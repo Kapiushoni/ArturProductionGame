@@ -2,7 +2,7 @@ import { MouseEvent, bindMethods } from '@/flash/as3';
 import { Functor } from '@/game/cb/actions/Functor';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 
 export class ArrowView {
@@ -28,19 +28,19 @@ export class ArrowView {
     clip.hitbox.addEventListener(MouseEvent.ROLL_OUT, this.out, false, 0, true);
   }
   onClick(event: any) {
-    main.soundManager.playFx(GameSounds.BUTTON_CLICK);
+    app.soundManager.playFx(GameSounds.BUTTON_CLICK);
     this.click();
   }
   over(event: any) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOver');
-      main.soundManager.playFx(GameSounds.MOUSE_OVER);
+      app.soundManager.playFx(GameSounds.MOUSE_OVER);
     }
   }
   out(event: any) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOut');
-      main.soundManager.playFx(GameSounds.MOUSE_OVER);
+      app.soundManager.playFx(GameSounds.MOUSE_OVER);
     }
   }
   hide() {

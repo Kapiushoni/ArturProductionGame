@@ -1,7 +1,7 @@
 import { bindMethods, int } from '@/flash/as3';
 import { BasicState } from '@/game/aplication/BasicState';
 import { FSM } from '@/game/aplication/FSM';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { ConsumePotionStep } from '@/game/tutorial/steps/ConsumePotionStep';
 import { FirstTutorialStep } from '@/game/tutorial/steps/FirstTutorialStep';
 import { MixInformationStep } from '@/game/tutorial/steps/MixInformationStep';
@@ -10,7 +10,7 @@ import { StatTutorialStep } from '@/game/tutorial/steps/StatTutorialStep';
 import { TakeAllStep } from '@/game/tutorial/steps/TakeAllStep';
 
 /**
- * The tutorial (main.theTutorial): steps 1-6 in order, then "7" = done. It resumes after the last completed
+ * The tutorial (app.theTutorial): steps 1-6 in order, then "7" = done. It resumes after the last completed
  * step (saved). Until the right step: potions locked (< 3), mixer disabled (< 5), trash locked (< 6).
  */
 export class Tutorial {
@@ -20,7 +20,7 @@ export class Tutorial {
 
   constructor() {
     this.initializeFSM();
-    this.fsm.addTransition('init', (main.saveSystem.tutorialStepCompleted() + 1).toString(), Tutorial.NEXT);
+    this.fsm.addTransition('init', (app.saveSystem.tutorialStepCompleted() + 1).toString(), Tutorial.NEXT);
     this.fsm.start();
   }
   initializeFSM() {
@@ -39,7 +39,7 @@ export class Tutorial {
   /** leaving "init": locks what the player has not learned yet */
   startTutorial() {
     this.mixKnown = false;
-    const completed = int(main.saveSystem.tutorialStepCompleted());
+    const completed = int(app.saveSystem.tutorialStepCompleted());
     if (completed < 3) {
       this.lockPotions();
     }
@@ -54,13 +54,13 @@ export class Tutorial {
     return this.mixKnown;
   }
   lockTrash() {
-    main.game.getInventory().getTrash().lock();
+    app.game.getInventory().getTrash().lock();
   }
   unlockTrash() {
-    main.game.getInventory().getTrash().unlock();
+    app.game.getInventory().getTrash().unlock();
   }
   get mixerView(): any {
-    return main.gameHolder.gameView.mixing;
+    return app.gameHolder.gameView.mixing;
   }
   enableMix() {
     this.mixKnown = true;
@@ -71,17 +71,17 @@ export class Tutorial {
   }
   /** keeps the potion slot locked even when a dungeon unlocks it */
   lockPotions() {
-    main.game.getJinn().liver.onLock.add(this.lockLiver);
+    app.game.getJinn().liver.onLock.add(this.lockLiver);
     this.lockLiver();
   }
   lockLiver(locked = false) {
     if (!locked) {
-      main.game.getJinn().liver.lock();
+      app.game.getJinn().liver.lock();
     }
   }
   unlockPotions() {
-    main.game.getJinn().liver.onLock.remove(this.lockLiver);
-    main.game.getJinn().liver.unlock();
+    app.game.getJinn().liver.onLock.remove(this.lockLiver);
+    app.game.getJinn().liver.unlock();
   }
   next() {
     this.fsm.takeTransition(Tutorial.NEXT);
@@ -89,7 +89,7 @@ export class Tutorial {
   endTutorial() {
     this.unlockTrash();
     this.enableMix();
-    main.game.getShmabledum().getLocker().unlock();
+    app.game.getShmabledum().getLocker().unlock();
   }
   clear() {
     this.fsm.clear();

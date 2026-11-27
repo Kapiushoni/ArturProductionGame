@@ -1,6 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { FighterAnimation } from '@/game/view/figthers/animations/FighterAnimation';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 
 /** Celebrating a cleared dungeon. */
@@ -9,7 +9,7 @@ export class JoyAnimation extends FighterAnimation {
     super('win');
   }
   make(fighterView: any) {
-    main.soundManager.playFx(GameSounds.DUNGEON_COMPLETED);
+    app.soundManager.playFx(GameSounds.DUNGEON_COMPLETED);
     super.make(fighterView);
   }
 }

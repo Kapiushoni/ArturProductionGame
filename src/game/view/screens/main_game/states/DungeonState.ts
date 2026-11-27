@@ -1,7 +1,7 @@
 import { bindMethods } from '@/flash/as3';
 import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPausableState';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
@@ -33,8 +33,8 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
     return this.mainView.pauseHolder;
   }
   enter() {
-    main.game.goToDungeon(this.next_dungeon);
-    this.dungeon = main.game.getDungeon();
+    app.game.goToDungeon(this.next_dungeon);
+    this.dungeon = app.game.getDungeon();
     this.dungeon_view =
       this.dungeon.getId() == BossDungeon.idBossLevel ? new BossDungeonView(this) : new DungeonView(this);
     this.mainView.gameHolder['dungeonView'] = this.dungeon_view;
@@ -53,8 +53,8 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   /** leaving: the jinn heals and the dungeon is closed */
   leave() {
     this.dungeon_view.close();
-    main.game.getJinn().stats.refillHealth();
-    main.game.exitDungeon();
+    app.game.getJinn().stats.refillHealth();
+    app.game.exitDungeon();
     super.leave();
     this.dungeon = null;
   }

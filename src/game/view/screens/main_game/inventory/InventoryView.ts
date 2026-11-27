@@ -2,7 +2,7 @@ import { as3values, bindMethods, uint } from '@/flash/as3';
 import { Lambda } from '@/game/actions/Lambda';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
-import { main } from '@/game/main';
+import { app } from '@/game/app';
 import { Inventory } from '@/game/main_game/inventory/Inventory';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import { TrashView } from '@/game/view/screens/main_game/slot/TrashView';
@@ -22,7 +22,7 @@ export class InventoryView {
   initialize(bg: any) {
     this.bg = bg;
     this.trash.initialize(bg.trash);
-    const inventory = main.game.getInventory();
+    const inventory = app.game.getInventory();
     let i = 1;
     while (i <= Inventory.SLOTS) {
       this.slots[i - 1] = new SlotView(inventory.getSlot(i - 1));
