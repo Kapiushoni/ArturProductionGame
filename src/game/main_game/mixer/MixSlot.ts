@@ -1,19 +1,17 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { Slot } from '@/game/main_game/item_containers/Slot';
+import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
 
+/** A mixer slot: filled by the mixer itself, never by dragging. */
 export class MixSlot extends Slot {
-  constructor() {super(__DEFER); 
-          this.__init_Slot();
-      }
-  canMoveFrom(item, dragContainer) {
-         return false;
-      }
-  canSwap(dragContainer) {
-         return false;
-      }
-  itsCompatible(item, dragContainer) {
-         return false;
-      }
+  canMoveFrom(_item: any, _from: IDragContainer): boolean {
+    return false;
+  }
+  canSwap(_other: IDragContainer): boolean {
+    return false;
+  }
+  itsCompatible(_item: any, _from: IDragContainer): boolean {
+    return false;
+  }
 }
 bindMethods(MixSlot);

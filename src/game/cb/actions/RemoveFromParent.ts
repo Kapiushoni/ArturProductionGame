@@ -1,12 +1,10 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import type { Action } from '@/game/cb/actions/Action';
 
-export class RemoveFromParent {
-  constructor() {
-         
-      }
-  execute(clip) {
-         clip.parent.removeChild(clip);
-      }
+/** Removes the clip from its parent. */
+export class RemoveFromParent implements Action {
+  execute(clip: any) {
+    clip.parent.removeChild(clip);
+  }
 }
 bindMethods(RemoveFromParent);

@@ -2,6 +2,8 @@
 // ORDER MATTERS: a module must come after the classes it extends or uses in static initializers
 // (ES modules evaluate in import order; an import cycle can otherwise hit a class before it is defined).
 
+export { services } from '@/game/services';
+export type { Config, Texts, SoundEffects, Achievements, TutorialProgress, Assets } from '@/game/services';
 export { AchievementDispatcher } from '@/game/AchievementDispatcher';
 export { Lambda } from '@/game/actions/Lambda';
 export { Log } from '@/game/cb/logger/Log';
@@ -234,6 +236,7 @@ export { ShieldModifier } from '@/game/view/items/modifiers/ShieldModifier';
 export { SwordModifier } from '@/game/view/items/modifiers/SwordModifier';
 export { ShieldView } from '@/game/view/items/ShieldView';
 export { WeaponView } from '@/game/view/items/WeaponView';
+export { ItemViews } from '@/game/view/items/ItemViews';
 export { PopUp } from '@/game/view/popUp/PopUp';
 export { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
 export { LevelUp } from '@/game/view/popUp/LevelUp';
@@ -248,6 +251,7 @@ export { DungeonState } from '@/game/view/screens/main_game/states/DungeonState'
 export { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonState';
 export { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 export { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
+export { DamageFeedback } from '@/game/view/screens/main_game/dungeon/fight/DamageFeedback';
 export { BasicFightView } from '@/game/view/screens/main_game/dungeon/fight/BasicFightView';
 export { BossFightView } from '@/game/view/screens/main_game/boss_dungeon/BossFightView';
 export { BossView } from '@/game/view/screens/main_game/boss_dungeon/BossView';

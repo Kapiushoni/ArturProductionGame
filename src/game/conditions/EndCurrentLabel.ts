@@ -1,23 +1,17 @@
-// @ts-nocheck
 import { as3values, bindMethods, int } from '@/flash/as3';
 import { AnimationFrameAt } from '@/game/cb/conditions/AnimationFrameAt';
 
+/** The animation is at the last frame of the current label (the frame before the next label, or the last frame). */
 export class EndCurrentLabel extends AnimationFrameAt {
-  constructor(clip) {
-         var currentLabel = null;
-         var frame = int(0);
-         var text = clip.currentLabel;
-         var num = int(clip.currentFrame);
-         var num2 = int(clip.totalFrames + 1);
-         for (currentLabel of as3values(clip.currentLabels))
-         {
-            frame = int(currentLabel.frame);
-            if(frame < num2 && frame > clip.currentFrame)
-            {
-               num2 = int(frame);
-            }
-         }
-          super(num2 - 1);
+  constructor(clip: any) {
+    let nextLabelFrame = int(clip.totalFrames + 1);
+    for (const label of as3values(clip.currentLabels)) {
+      const frame = int(label.frame);
+      if (frame < nextLabelFrame && frame > clip.currentFrame) {
+        nextLabelFrame = frame;
       }
+    }
+    super(nextLabelFrame - 1);
+  }
 }
 bindMethods(EndCurrentLabel);

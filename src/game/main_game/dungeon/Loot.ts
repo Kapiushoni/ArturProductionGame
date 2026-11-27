@@ -1,61 +1,46 @@
-// @ts-nocheck
-import { as3values, bindMethods, int, uint } from '@/flash/as3';
+import { as3values, bindMethods, int } from '@/flash/as3';
 import { OneTimeSlot } from '@/game/main_game/item_containers/OneTimeSlot';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 
+/**
+ * The 3 loot slots of a dungeon: first from `extraLoot` (first-time loot), the rest drawn
+ * from the dungeon's lootData ([item id, weight] pairs).
+ */
 export class Loot {
-  declare slots: any;
-  constructor(dungeonConfigData, probabilisticSet) {
-         var lootDataItem = null;
-         var i = uint(0);
-         var slot = null;
-         var text = null;
-         
-         this.slots = [];
-         var probabilisticSet2 = new ProbabilisticSet();
-         for (lootDataItem of as3values(dungeonConfigData.lootData))
-         {
-            probabilisticSet2.add(lootDataItem[0],lootDataItem[1]);
-         }
-         i = uint(0);
-         while(i < 3 && probabilisticSet.length > 0)
-         {
-            slot = this.makeSlot(probabilisticSet.pop());
-            this.slots.push(slot);
-            i++;
-         }
-         var j = int(int(i));
-         while(j < 3)
-         {
-            text = probabilisticSet2.pop();
-            slot = this.makeSlot(text);
-            this.slots.push(slot);
-            j++;
-         }
-      }
-  makeSlot(text = null) {
-         var item = null;
-         if(text != null)
-         {
-            item = ItemFactory.getInstance().getItem(text);
-         }
-         return new OneTimeSlot(item);
-      }
-  getSlot(num) { num = int(num);
-         return this.slots[num];
-      }
-  getBooty() {
-         return this.slots;
-      }
+  private slots: OneTimeSlot[];
+
+  constructor(config: any, extraLoot: ProbabilisticSet) {
+    this.slots = [];
+    const dungeonLoot = new ProbabilisticSet();
+    for (const entry of as3values(config.lootData)) {
+      dungeonLoot.add(entry[0], entry[1]);
+    }
+    let i = 0;
+    while (i < 3 && extraLoot.length > 0) {
+      this.slots.push(this.makeSlot(extraLoot.pop()));
+      i++;
+    }
+    for (let j = int(i); j < 3; j++) {
+      this.slots.push(this.makeSlot(dungeonLoot.pop()));
+    }
+  }
+  /** a slot with the item, or an empty one for null */
+  makeSlot(itemId: string = null): OneTimeSlot {
+    const item = itemId != null ? ItemFactory.getInstance().getItem(itemId) : null;
+    return new OneTimeSlot(item);
+  }
+  getSlot(index: number): OneTimeSlot {
+    return this.slots[int(index)];
+  }
+  getBooty(): OneTimeSlot[] {
+    return this.slots;
+  }
   clear() {
-         var slot = null;
-         for (slot of as3values(this.slots))
-         {
-            slot.clear();
-         }
-         this.slots = null;
-      }
+    for (const slot of as3values(this.slots)) {
+      slot.clear();
+    }
+    this.slots = null;
+  }
 }
-Loot.prototype.slots = null;
 bindMethods(Loot);

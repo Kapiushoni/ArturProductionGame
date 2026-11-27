@@ -1,85 +1,79 @@
-// @ts-nocheck
 import { bindMethods, int, uint } from '@/flash/as3';
-import { main } from '@/game/main';
+import { services } from '@/game/services';
 
+/** A dungeon on the map: locked -> unlocked -> cleared. `correlative`: the levels it opens when cleared. */
 export class Level {
-  declare dungeonId: any;
-  declare state: any;
-  declare correlative: any;
-  constructor(dungeonId, state = 1) { state = uint(state);
-         
-         this.dungeonId = dungeonId;
-         this.state = uint(state);
-         this.correlative = [];
-      }
-  static get LOCKED() {
-         return uint(1);
-      }
-  static get UNLOCKED() {
-         return uint(2);
-      }
-  static get CLEARED() {
-         return uint(3);
-      }
-  getArea() {
-         var num = int(int(this.dungeonId));
-         if(num <= 8)
-         {
-            return uint(1);
-         }
-         if(num <= 16)
-         {
-            return uint(2);
-         }
-         return uint(3);
-      }
-  isLegendary() {
-         return false;
-      }
-  isSpecial() {
-         return false;
-      }
-  getDungeonId() {
-         return this.dungeonId;
-      }
-  addCorrelative(level) {
-         this.correlative.push(level);
-      }
-  getCorrelative() {
-         return this.correlative;
-      }
-  isLocked() {
-         return this.state == Level.LOCKED;
-      }
-  isCleared() {
-         return this.state == Level.CLEARED;
-      }
-  isUnlocked() {
-         return this.state >= Level.UNLOCKED;
-      }
-  getName() {
-         return main.locale.get("dungeonName",[this.id]);
-      }
+  private dungeonId: string;
+  private state: number;
+  private correlative: Level[];
+
+  constructor(dungeonId: string, state = 1) {
+    this.dungeonId = dungeonId;
+    this.state = uint(state);
+    this.correlative = [];
+  }
+  static get LOCKED(): number {
+    return 1;
+  }
+  static get UNLOCKED(): number {
+    return 2;
+  }
+  static get CLEARED(): number {
+    return 3;
+  }
+  /** map page: dungeons 1-8, 9-16, 17+ */
+  getArea(): number {
+    const id = int(this.dungeonId);
+    if (id <= 8) {
+      return 1;
+    }
+    if (id <= 16) {
+      return 2;
+    }
+    return 3;
+  }
+  isLegendary(): boolean {
+    return false;
+  }
+  isSpecial(): boolean {
+    return false;
+  }
+  getDungeonId(): string {
+    return this.dungeonId;
+  }
+  addCorrelative(level: Level) {
+    this.correlative.push(level);
+  }
+  getCorrelative(): Level[] {
+    return this.correlative;
+  }
+  isLocked(): boolean {
+    return this.state == Level.LOCKED;
+  }
+  isCleared(): boolean {
+    return this.state == Level.CLEARED;
+  }
+  isUnlocked(): boolean {
+    return this.state >= Level.UNLOCKED;
+  }
+  getName(): string {
+    return services.texts.get('dungeonName', [this.id]);
+  }
   unlock() {
-         if(this.isLocked())
-         {
-            this.state = uint(Level.UNLOCKED);
-         }
-      }
+    if (this.isLocked()) {
+      this.state = Level.UNLOCKED;
+    }
+  }
   clear() {
-         if(!this.isCleared())
-         {
-            this.state = uint(Level.CLEARED);
-         }
-      }
-  get id() {
-         return this.dungeonId;
-      }
-  get stateUint() {
-         return uint(this.state);
-      }
+    if (!this.isCleared()) {
+      this.state = Level.CLEARED;
+    }
+  }
+  get id(): string {
+    return this.dungeonId;
+  }
+  get stateUint(): number {
+    return this.state;
+  }
 }
-Level.prototype.dungeonId = null;
-Level.prototype.state = 0;
-Level.prototype.correlative = null;
 bindMethods(Level);

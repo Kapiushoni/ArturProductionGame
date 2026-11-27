@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+/** A condition on a clip's animation (see SmartMC). */
 export interface Condition {
-  complete(param1): any;
+  complete(clip: any): boolean;
 }

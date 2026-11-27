@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { MovieClip, as3as, bindMethods, int } from '@/flash/as3';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
 import { cbSoundMixer } from '@/game/cb/media/cbSoundMixer';
@@ -7,145 +6,131 @@ import { main } from '@/game/main';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { MusicRequest } from '@/game/sound/MusicRequest';
 
+/**
+ * The game's sound (main.soundManager): effects, and a stack of musics (the last requested plays;
+ * stopping it brings back the previous one). Also the sounds of the button groups and the mute button.
+ */
 export class SoundManager {
-  declare soundMixer: any;
-  declare musicList: any;
+  private soundMixer: cbSoundMixer = null;
+  private musicList: cbArray;
+
   constructor() {
-         
-         this.musicList = new cbArray();
-      }
-  addSound(soundLoader) {
-         this.soundMixer.addSoundLoader(soundLoader);
-      }
-  start(soundLoader) {
-         this.soundMixer = new cbSoundMixer(soundLoader);
-         this.initializeSound();
-      }
-  ready() {
-         return this.soundMixer != null;
-      }
+    this.musicList = new cbArray();
+  }
+  addSound(soundLoader: any) {
+    this.soundMixer.addSoundLoader(soundLoader);
+  }
+  /** with the first loaded sounds */
+  start(soundLoader: any) {
+    this.soundMixer = new cbSoundMixer(soundLoader);
+    this.initializeSound();
+  }
+  ready(): boolean {
+    return this.soundMixer != null;
+  }
   initializeSound() {
-         ButtonGroup.get("gui").setSoundMixer(this.soundMixer).setClickSound(GameSounds.BUTTON_CLICK).setOverSound(GameSounds.MOUSE_OVER);
-         ButtonGroup.get("gui_mix").setSoundMixer(this.soundMixer).setClickSound(GameSounds.MIX_CLICK).setOverSound(GameSounds.MOUSE_OVER);
-         ButtonGroup.get("sound_gui").setSoundMixer(this.soundMixer).setClickSound(GameSounds.BUTTON_CLICK).setOverSound(GameSounds.MOUSE_OVER).addClick(this.onSoundClick);
-         if(main.saveSystem.isSoundMuted())
-         {
-            this.soundMixer.mute();
-         }
+    ButtonGroup.get('gui')
+      .setSoundMixer(this.soundMixer)
+      .setClickSound(GameSounds.BUTTON_CLICK)
+      .setOverSound(GameSounds.MOUSE_OVER);
+    ButtonGroup.get('gui_mix')
+      .setSoundMixer(this.soundMixer)
+      .setClickSound(GameSounds.MIX_CLICK)
+      .setOverSound(GameSounds.MOUSE_OVER);
+    ButtonGroup.get('sound_gui')
+      .setSoundMixer(this.soundMixer)
+      .setClickSound(GameSounds.BUTTON_CLICK)
+      .setOverSound(GameSounds.MOUSE_OVER)
+      .addClick(this.onSoundClick);
+    if (main.saveSystem.isSoundMuted()) {
+      this.soundMixer.mute();
+    }
+  }
+  /** the mute button: toggles, saves, and restarts the music when unmuting */
+  onSoundClick(event: any) {
+    if (this.soundMixer.isMuted()) {
+      this.soundMixer.unmute();
+      const music = this.actualMusic;
+      if (music != null) {
+        this.playRequest(music);
       }
-  onSoundClick(event) {
-         var actualMusic = null;
-         if(this.soundMixer.isMuted())
-         {
-            this.soundMixer.unmute();
-            actualMusic = this.actualMusic;
-            if(actualMusic != null)
-            {
-               this.playRequest(actualMusic);
-            }
-         }
-         else
-         {
-            this.soundMixer.mute();
-         }
-         main.saveSystem.saveMuteState(this.soundMixer.isMuted());
-         this.updateSoundButton(as3as(event.currentTarget, MovieClip));
+    } else {
+      this.soundMixer.mute();
+    }
+    main.saveSystem.saveMuteState(this.soundMixer.isMuted());
+    this.updateSoundButton(as3as(event.currentTarget, MovieClip));
+  }
+  updateSoundButton(button: any) {
+    const icon = as3as(button.getChildByName('icon'), MovieClip);
+    const frame = as3as(button.getChildByName('frame'), MovieClip);
+    if (!icon) {
+      return;
+    }
+    const label = this.soundMixer.isMuted() ? 'off' : 'on';
+    icon.gotoAndStop(label);
+    frame.gotoAndStop(label);
+  }
+  /** plays a music on top of the stack (nothing if it is already the current one) */
+  playMusic(name: string, start = 0, volume = -1): any {
+    const request = new MusicRequest(name, Number(start), Number(volume));
+    if (this.musicList.length != 0) {
+      const current = this.actualMusic;
+      if (current.equal(request)) {
+        return null;
       }
-  updateSoundButton(clip) {
-         var clip2 = as3as(clip.getChildByName("icon"), MovieClip);
-         var clip3 = as3as(clip.getChildByName("frame"), MovieClip);
-         if(!clip2)
-         {
-            return;
-         }
-         if(this.soundMixer.isMuted())
-         {
-            clip2.gotoAndStop("off");
-            clip3.gotoAndStop("off");
-         }
-         else
-         {
-            clip2.gotoAndStop("on");
-            clip3.gotoAndStop("on");
-         }
+      this.stopMusic(current.getName());
+    }
+    this.musicList.push(request);
+    return this.playRequest(request);
+  }
+  /** removes a music from the stack (default: the current one); stopping the current one resumes the previous */
+  stopMusic(name = '') {
+    if (name == '' && this.actualMusic != null) {
+      name = this.actualMusic.getName();
+    }
+    if (this.musicList.length == 0) {
+      return;
+    }
+    if (this.actualMusic.getName() != name) {
+      for (let i = int(this.musicList.length - 2); i >= 0; i--) {
+        const music = this.musicList[i];
+        if (music.getName() == name) {
+          this.musicList.remove(music);
+          break;
+        }
       }
-  playMusic(text, num = 0, num2 = -1) { num = Number(num); num2 = Number(num2);
-         var actualMusic = null;
-         var musicRequest = new MusicRequest(text,num,num2);
-         if(this.musicList.length != 0)
-         {
-            actualMusic = this.actualMusic;
-            if(actualMusic.equal(musicRequest))
-            {
-               return null;
-            }
-            this.stopMusic(actualMusic.getName());
-         }
-         this.musicList.push(musicRequest);
-         return this.playRequest(musicRequest);
+    } else {
+      this.musicList.pop();
+      this.soundMixer.stop(name);
+      const previous = this.actualMusic;
+      if (previous != null) {
+        this.playRequest(previous);
       }
-  stopMusic(text = "") {
-         var value = 0;
-         if(text == "" && this.actualMusic != null)
-         {
-            text = this.actualMusic.getName();
-         }
-         if(this.musicList.length == 0)
-         {
-            return;
-         }
-         var actualMusic = this.actualMusic;
-         if(actualMusic.getName() != text)
-         {
-            value = int(this.musicList.length - 2);
-            while(value >= 0)
-            {
-               actualMusic = this.musicList[value];
-               if(actualMusic.getName() == text)
-               {
-                  this.musicList.remove(actualMusic);
-                  break;
-               }
-               value--;
-            }
-         }
-         else
-         {
-            this.musicList.pop();
-            this.soundMixer.stop(text);
-            actualMusic = this.actualMusic;
-            if(actualMusic != null)
-            {
-               this.playRequest(actualMusic);
-            }
-         }
-      }
-  get actualMusic() {
-         if(this.musicList.length == 0)
-         {
-            return null;
-         }
-         return this.musicList[this.musicList.length - 1];
-      }
-  playFx(text, num = 0, num2 = -1) { num = Number(num); num2 = Number(num2);
-         return this.soundMixer.play(text,num,false,num2);
-      }
-  stopFx(text) {
-         this.soundMixer.stop(text);
-      }
-  playRequest(musicRequest) {
-         return this.soundMixer.play(musicRequest.getName(),musicRequest.getStartTime(),true,musicRequest.getVolume());
-      }
-  resumeSound(text) {
-         this.soundMixer.resumeSound(text);
-      }
-  pauseSound(text) {
-         this.soundMixer.pauseSound(text);
-      }
-  isPlaying(text) {
-         return this.soundMixer.isPlaying(text);
-      }
+    }
+  }
+  get actualMusic(): MusicRequest | null {
+    if (this.musicList.length == 0) {
+      return null;
+    }
+    return this.musicList[this.musicList.length - 1];
+  }
+  playFx(name: string, start = 0, volume = -1): any {
+    return this.soundMixer.play(name, Number(start), false, Number(volume));
+  }
+  stopFx(name: string) {
+    this.soundMixer.stop(name);
+  }
+  playRequest(request: MusicRequest): any {
+    return this.soundMixer.play(request.getName(), request.getStartTime(), true, request.getVolume());
+  }
+  resumeSound(name: string) {
+    this.soundMixer.resumeSound(name);
+  }
+  pauseSound(name: string) {
+    this.soundMixer.pauseSound(name);
+  }
+  isPlaying(name: string): boolean {
+    return this.soundMixer.isPlaying(name);
+  }
 }
-SoundManager.prototype.soundMixer = null;
-SoundManager.prototype.musicList = null;
 bindMethods(SoundManager);

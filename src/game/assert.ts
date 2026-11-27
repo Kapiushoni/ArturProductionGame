@@ -1,8 +1,6 @@
-// @ts-nocheck
-
-export function assert(flag, text) {
-      if(!flag)
-      {
-         throw new Error(text);
-      }
-   }
+/** throws when the condition is false */
+export function assert(condition: any, message: string) {
+  if (!condition) {
+    throw new Error(message);
+  }
+}

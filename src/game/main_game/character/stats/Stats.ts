@@ -1,86 +1,83 @@
-// @ts-nocheck
 import { Dictionary, as3values, bindMethods, int, uint } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
 import { Stat } from '@/game/main_game/character/stats/Stat';
 import { StatsEffectGuardian } from '@/game/main_game/character/stats/StatsEffectGuardian';
 import { StatType } from '@/game/main_game/character/stats/StatType';
+import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
+import type { HealthStat } from '@/game/main_game/character/stats/HealthStat';
+import type { LevelingStragegy } from '@/game/main_game/character/stats/LevelingStragegy';
 
+/** All stats of a fighter (StatType -> Stat). Subclasses add health and experience. */
 export class Stats {
-  declare levelingStrat: any;
-  declare stats: any;
-  declare fighter: any;
-  declare guardian: any;
-  declare onChange: any;
-  constructor(characterConfigData, fighter, levelingStrat) {
-         
-         this.onChange = new Signal();
-         this.levelingStrat = levelingStrat;
-         this.fighter = fighter;
-         this.guardian = new StatsEffectGuardian(this);
-         this.stats = new Dictionary();
-         this.parseInitialStats(characterConfigData);
-      }
-  parseInitialStats(characterConfigData) {
-         this.stats.set(StatType.ATTACK, new Stat(StatType.ATTACK,characterConfigData.baseAttack));
-         this.stats.set(StatType.DEFENSE, new Stat(StatType.DEFENSE,characterConfigData.baseDefense));
-         this.stats.set(StatType.LUCK, new Stat(StatType.LUCK,characterConfigData.baseLuck));
-         this.stats.set(StatType.BASE_ATTACK, new Stat(StatType.BASE_ATTACK,characterConfigData.baseAttack));
-         this.stats.set(StatType.BASE_DEFENSE, new Stat(StatType.BASE_DEFENSE,characterConfigData.baseDefense));
-         this.stats.set(StatType.BASE_LUCK, new Stat(StatType.BASE_LUCK,characterConfigData.baseLuck));
-         this.stats.set(StatType.BASE_HEALTH, new Stat(StatType.BASE_HEALTH,characterConfigData.baseHP));
-      }
-  getEffectGuardian() {
-         return this.guardian;
-      }
-  getLevel() {
-         throw new Error("Must implement this method");
-      }
-  getStat(num) { num = int(num);
-         return this.stats.get(num);
-      }
-  downHP(num) { num = uint(num);
-         this.stats.get(StatType.HEALTH).modifyValue(-num);
-         this.onChange.emit();
-      }
-  addXP(num) { num = uint(num);
-         this.stats.get(StatType.EXPERIENCE).modifyValue(num);
-         this.onChange.emit();
-      }
+  protected levelingStrat: LevelingStragegy;
+  protected stats: any; // Dictionary: StatType -> Stat
+  protected fighter: any;
+  protected guardian: StatsEffectGuardian;
+  onChange: Signal;
+
+  constructor(config: CharacterConfigData, fighter: any, levelingStrat: LevelingStragegy) {
+    this.onChange = new Signal();
+    this.levelingStrat = levelingStrat;
+    this.fighter = fighter;
+    this.guardian = new StatsEffectGuardian(this);
+    this.stats = new Dictionary();
+    this.parseInitialStats(config);
+  }
+  parseInitialStats(config: CharacterConfigData) {
+    this.stats.set(StatType.ATTACK, new Stat(StatType.ATTACK, config.baseAttack));
+    this.stats.set(StatType.DEFENSE, new Stat(StatType.DEFENSE, config.baseDefense));
+    this.stats.set(StatType.LUCK, new Stat(StatType.LUCK, config.baseLuck));
+    this.stats.set(StatType.BASE_ATTACK, new Stat(StatType.BASE_ATTACK, config.baseAttack));
+    this.stats.set(StatType.BASE_DEFENSE, new Stat(StatType.BASE_DEFENSE, config.baseDefense));
+    this.stats.set(StatType.BASE_LUCK, new Stat(StatType.BASE_LUCK, config.baseLuck));
+    this.stats.set(StatType.BASE_HEALTH, new Stat(StatType.BASE_HEALTH, config.baseHP));
+  }
+  /** applies / removes the modifiers of equipped and consumed items */
+  getEffectGuardian(): StatsEffectGuardian {
+    return this.guardian;
+  }
+  getLevel(): number {
+    throw new Error('Must implement this method');
+  }
+  getStat(type: number): any {
+    return this.stats.get(int(type));
+  }
+  downHP(amount: number) {
+    this.stats.get(StatType.HEALTH).modifyValue(-uint(amount));
+    this.onChange.emit();
+  }
+  addXP(amount: number) {
+    this.stats.get(StatType.EXPERIENCE).modifyValue(uint(amount));
+    this.onChange.emit();
+  }
   refillHealth() {
-         this.stats.get(StatType.HEALTH).fill(100);
-         this.onChange.emit();
-      }
-  getDefense() {
-         return Number(this.getStat(StatType.DEFENSE).getValue());
-      }
-  getAttack() {
-         return Number(this.getStat(StatType.ATTACK).getValue());
-      }
-  getLuck() {
-         return Number(this.getStat(StatType.LUCK).getValue());
-      }
+    (this.stats.get(StatType.HEALTH) as HealthStat).fill(100);
+    this.onChange.emit();
+  }
+  getDefense(): number {
+    return Number(this.getStat(StatType.DEFENSE).getValue());
+  }
+  getAttack(): number {
+    return Number(this.getStat(StatType.ATTACK).getValue());
+  }
+  getLuck(): number {
+    return Number(this.getStat(StatType.LUCK).getValue());
+  }
   clear() {
-         var stat = null;
-         this.fighter = null;
-         this.guardian.clear();
-         this.onChange.clear();
-         for (stat of as3values(this.stats))
-         {
-            stat.clear();
-         }
-      }
-  isDead() {
-         return this.getStat(StatType.HEALTH).getValue() == 0;
-      }
-  leveling(num) { num = uint(num);
-         this.levelingStrat.level(num,this);
-      }
-  loadData() {
-      }
+    this.fighter = null;
+    this.guardian.clear();
+    this.onChange.clear();
+    for (const stat of as3values(this.stats)) {
+      stat.clear();
+    }
+  }
+  isDead(): boolean {
+    return this.getStat(StatType.HEALTH).getValue() == 0;
+  }
+  leveling(level: number) {
+    this.levelingStrat.level(uint(level), this);
+  }
+  /** loads saved values (the jinn's experience) */
+  loadData() {}
 }
-Stats.prototype.levelingStrat = null;
-Stats.prototype.stats = null;
-Stats.prototype.fighter = null;
-Stats.prototype.guardian = null;
-Stats.prototype.onChange = null;
 bindMethods(Stats);

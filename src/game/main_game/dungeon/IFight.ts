@@ -1,17 +1,18 @@
-// @ts-nocheck
+import type { Signal } from '@/game/cb/signals/Signal';
 
+/** A fight against one enemy (Fight, BossFight). */
 export interface IFight {
   getEnemy(): any;
-  leave(param1): any;
-  fight(): any;
-  start(): any;
-  suddenDeath(): any;
-  deactivate(): any;
-  clear(): any;
-  isFirst(): any;
-  get onEnter(): any;
-  get onExit(): any;
-  get onHit(): any;
-  get onLose(): any;
-  get onWin(): any;
+  leave(callback: Function): void;
+  fight(): void;
+  start(): void;
+  suddenDeath(): void;
+  deactivate(): void;
+  clear(): void;
+  isFirst(): boolean;
+  get onEnter(): Signal;
+  get onExit(): Signal;
+  get onHit(): Signal;
+  get onLose(): Signal;
+  get onWin(): Signal;
 }

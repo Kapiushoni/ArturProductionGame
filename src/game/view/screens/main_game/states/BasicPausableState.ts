@@ -1,15 +1,13 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { BasicState } from '@/game/aplication/BasicState';
+import type { IPausable } from '@/game/view/screens/main_game/states/IPausable';
 
-export class BasicPausableState extends BasicState {
-  constructor(...__a) { super(__DEFER); if (__a[0] !== __DEFER) this.__init_BasicPausableState(...__a); }
-  __init_BasicPausableState(text, callback = null, callback2 = null) {
-         this.__init_BasicState(text,callback,callback2);
-      }
-  pause() {
-      }
-  resume() {
-      }
+/** A state of the game screen (map / dungeon) that can be paused. */
+export class BasicPausableState extends BasicState implements IPausable {
+  constructor(name: string, onEnter: Function = null, onLeave: Function = null) {
+    super(name, onEnter, onLeave);
+  }
+  pause() {}
+  resume() {}
 }
 bindMethods(BasicPausableState);

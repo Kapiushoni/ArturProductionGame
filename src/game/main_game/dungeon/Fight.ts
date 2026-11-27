@@ -1,135 +1,125 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
 import { DamageCalculator } from '@/game/main_game/dungeon/DamageCalculator';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
+import type { Damage } from '@/game/main_game/dungeon/Damage';
+import type { Jinn } from '@/game/main_game/character/Jinn';
 
-export class Fight {
-  declare jinn: any;
-  declare enemy: any;
-  declare theOnEnter: any;
-  declare theOnExit: any;
-  declare theOnHit: any;
-  declare theOnLose: any;
-  declare theOnWin: any;
-  declare first: any;
-  constructor(enemy, first = false) {
-         
-         this.first = first;
-         this.jinn = main.game.getJinn();
-         this.enemy = enemy;
-         this.theOnHit = new Signal();
-         this.theOnLose = new Signal();
-         this.theOnWin = new Signal();
-         this.theOnEnter = new Signal();
-         this.theOnExit = new Signal();
-      }
-  get onEnter() {
-         return this.theOnEnter;
-      }
-  get onExit() {
-         return this.theOnExit;
-      }
-  get onHit() {
-         return this.theOnHit;
-      }
-  get onLose() {
-         return this.theOnLose;
-      }
-  get onWin() {
-         return this.theOnWin;
-      }
-  getEnemy() {
-         return this.enemy;
-      }
-  enter(callback) {
-         this.onEnter.emit(callback);
-      }
-  leave(callback) {
-         this.onExit.emit(callback);
-      }
+/**
+ * The jinn against one enemy. They hit in turns, the jinn first, until one of them dies:
+ * onHit(attacker, target, damage, done) for every hit, then onWin or onLose.
+ * onEnter / onExit (with a callback) let the view play the entry and exit animations.
+ */
+export class Fight implements IFight {
+  protected jinn: Jinn;
+  protected enemy: any; // Enemy
+  private theOnEnter: Signal;
+  private theOnExit: Signal;
+  private theOnHit: Signal;
+  private theOnLose: Signal;
+  private theOnWin: Signal;
+  private first: boolean;
+
+  /** first: the first fight of the dungeon */
+  constructor(jinn: Jinn, enemy: any, first = false) {
+    this.first = first;
+    this.jinn = jinn;
+    this.enemy = enemy;
+    this.theOnHit = new Signal();
+    this.theOnLose = new Signal();
+    this.theOnWin = new Signal();
+    this.theOnEnter = new Signal();
+    this.theOnExit = new Signal();
+  }
+  get onEnter(): Signal {
+    return this.theOnEnter;
+  }
+  get onExit(): Signal {
+    return this.theOnExit;
+  }
+  get onHit(): Signal {
+    return this.theOnHit;
+  }
+  get onLose(): Signal {
+    return this.theOnLose;
+  }
+  get onWin(): Signal {
+    return this.theOnWin;
+  }
+  getEnemy(): any {
+    return this.enemy;
+  }
+  enter(callback: Function) {
+    this.onEnter.emit(callback);
+  }
+  leave(callback: Function) {
+    this.onExit.emit(callback);
+  }
   fight() {
-         this.jinn.prepareForFight(this);
-         this.enemy.prepareForFight(this);
-         this.jinn.onHit.add(this.atHit);
-         this.enemy.onHit.add(this.atHit);
-         this.enter(this.start);
-      }
-  atHit(... rest) {
-         this.onHit.emit.apply(this.onHit,rest);
-      }
+    this.jinn.prepareForFight(this);
+    this.enemy.prepareForFight(this);
+    this.jinn.onHit.add(this.atHit);
+    this.enemy.onHit.add(this.atHit);
+    this.enter(this.start);
+  }
+  atHit(...args: any[]) {
+    this.onHit.emit.apply(this.onHit, args);
+  }
   start() {
-         this.makeJinnHit();
-      }
+    this.makeJinnHit();
+  }
+  /** the player left the dungeon during the fight */
   suddenDeath() {
-         this.jinn.onHit.remove(this.atHit);
-         this.enemy.onHit.remove(this.atHit);
-         this.onLose.emit();
-      }
-  makeJinnHit() { const __self = this;
-         var damage = null;
-         damage = DamageCalculator.calculateDamage(this.jinn,this.enemy);
-         this.jinn.hit(this.enemy,damage,function()
-         {
-            __self.endJinnHit(damage);
-         });
-      }
-  endJinnHit(damage) {
-         if(!this.enemy.stats.isDead())
-         {
-            this.makeEnemyHit();
-         }
-         else
-         {
-            this.onWin.emit();
-         }
-      }
-  endEnemyHit(damage) {
-         if(!this.jinn.stats.isDead())
-         {
-            this.makeJinnHit();
-         }
-         else
-         {
-            this.onLose.emit();
-         }
-      }
-  makeEnemyHit() { const __self = this;
-         var damage = null;
-         damage = DamageCalculator.calculateDamage(this.enemy,this.jinn);
-         this.enemy.hit(this.jinn,damage,function()
-         {
-            __self.endEnemyHit(damage);
-         });
-      }
+    this.jinn.onHit.remove(this.atHit);
+    this.enemy.onHit.remove(this.atHit);
+    this.onLose.emit();
+  }
+  makeJinnHit() {
+    const damage = DamageCalculator.calculateDamage(this.jinn, this.enemy);
+    this.jinn.hit(this.enemy, damage, () => {
+      this.endJinnHit(damage);
+    });
+  }
+  endJinnHit(_damage: Damage) {
+    if (!this.enemy.stats.isDead()) {
+      this.makeEnemyHit();
+    } else {
+      this.onWin.emit();
+    }
+  }
+  endEnemyHit(_damage: Damage) {
+    if (!this.jinn.stats.isDead()) {
+      this.makeJinnHit();
+    } else {
+      this.onLose.emit();
+    }
+  }
+  makeEnemyHit() {
+    const damage = DamageCalculator.calculateDamage(this.enemy, this.jinn);
+    this.enemy.hit(this.jinn, damage, () => {
+      this.endEnemyHit(damage);
+    });
+  }
   deactivate() {
-         this.onLose.clear();
-         this.onWin.clear();
-         this.onHit.clear();
-         this.onEnter.clear();
-         this.onExit.clear();
-         this.jinn.onHit.remove(this.atHit);
-         this.enemy.onHit.remove(this.atHit);
-      }
+    this.onLose.clear();
+    this.onWin.clear();
+    this.onHit.clear();
+    this.onEnter.clear();
+    this.onExit.clear();
+    this.jinn.onHit.remove(this.atHit);
+    this.enemy.onHit.remove(this.atHit);
+  }
   clear() {
-         this.enemy = null;
-         this.jinn = null;
-         this.theOnLose = null;
-         this.theOnWin = null;
-         this.theOnHit = null;
-         this.theOnEnter = null;
-         this.theOnExit = null;
-      }
-  isFirst() {
-         return this.first;
-      }
+    this.enemy = null;
+    this.jinn = null;
+    this.theOnLose = null;
+    this.theOnWin = null;
+    this.theOnHit = null;
+    this.theOnEnter = null;
+    this.theOnExit = null;
+  }
+  isFirst(): boolean {
+    return this.first;
+  }
 }
-Fight.prototype.jinn = null;
-Fight.prototype.enemy = null;
-Fight.prototype.theOnEnter = null;
-Fight.prototype.theOnExit = null;
-Fight.prototype.theOnHit = null;
-Fight.prototype.theOnLose = null;
-Fight.prototype.theOnWin = null;
-Fight.prototype.first = false;
 bindMethods(Fight);

@@ -1,22 +1,9 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 
+/** Resources embedded as properties: get("data/items.csv") -> this.data_items_csv. */
 export class PackedResources {
-  constructor() {
-         
-      }
-  get(text) {
-         do
-         {
-            text = text.replace("/","_");
-         }
-         while(text.indexOf("/") >= 0);
-         do
-         {
-            text = text.replace(".","_");
-         }
-         while(text.indexOf(".") >= 0);
-         return this[text];
-      }
+  get(path: string): any {
+    return (this as any)[path.replace(/[/.]/g, '_')];
+  }
 }
 bindMethods(PackedResources);

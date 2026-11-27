@@ -1,29 +1,24 @@
-// @ts-nocheck
 import { Point, bindMethods } from '@/flash/as3';
 import { main } from '@/game/main';
 
 export class PopUpPositioner {
-  declare src: any;
-  declare dst: any;
+  src: any = null;
+  dst: any = null;
   constructor(src, dst = null) {
-         
-         this.src = src;
-         if(dst == null)
-         {
-            dst = main.popUpHolder;
-         }
-         this.dst = dst;
-      }
+    this.src = src;
+    if (dst == null) {
+      dst = main.popUpHolder;
+    }
+    this.dst = dst;
+  }
   addMc(sprite) {
-         this.dst.addChild(sprite);
-      }
+    this.dst.addChild(sprite);
+  }
   refreshPos(sprite) {
-         var point = this.src.localToGlobal(new Point(0,0));
-         point = this.dst.globalToLocal(point);
-         sprite.x = point.x;
-         sprite.y = point.y;
-      }
+    var point = this.src.localToGlobal(new Point(0, 0));
+    point = this.dst.globalToLocal(point);
+    sprite.x = point.x;
+    sprite.y = point.y;
+  }
 }
-PopUpPositioner.prototype.src = null;
-PopUpPositioner.prototype.dst = null;
 bindMethods(PopUpPositioner);

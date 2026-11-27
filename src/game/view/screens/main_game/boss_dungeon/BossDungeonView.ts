@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { as3as, bindMethods } from '@/flash/as3';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 import { Boss } from '@/game/main_game/boss_dungeon/Boss';
 import { BossFight } from '@/game/main_game/boss_dungeon/BossFight';
-import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
+import { BossView } from '@/game/view/screens/main_game/boss_dungeon/BossView';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { BossDungeonState } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonState';
 import { BossFightView } from '@/game/view/screens/main_game/boss_dungeon/BossFightView';
@@ -14,59 +13,64 @@ export class BossDungeonView extends DungeonView {
   declare bossView: any;
   won = false;
   constructor(dungeonState) {
-          super(dungeonState);
-         this.timeLine.clear();
-      }
-  initialize() { const __self = this;
-         this.bossView = CharacterFactory.getInstance().getBossView(as3as(__self.dungeon.getDungeon().currentFight.getEnemy(), Boss));
-         super.initialize();
-      }
-  start() { const __self = this;
-         this.innerView.clear();
-         this.innerView = new EnterBossDungeon(this,__self.dungeon.getDungeon().startFight);
-      }
+    super(dungeonState);
+    this.timeLine.clear();
+  }
+  initialize() {
+    this.bossView = new BossView(as3as(this.dungeon.getDungeon().currentFight.getEnemy(), Boss));
+    super.initialize();
+  }
+  start() {
+    this.innerView.clear();
+    this.innerView = new EnterBossDungeon(this, this.dungeon.getDungeon().startFight);
+  }
   getBossView() {
-         return this.bossView;
-      }
+    return this.bossView;
+  }
   getJinnView() {
-         return this.jinnView;
-      }
-  playMusic() { const __self = this;
-         (__self.innerView).playMusic();
-      }
-  stopMusic() { const __self = this;
-         (__self.innerView).stopMusic();
-      }
-  makeWinWindow() { const __self = this;
-         this.won = true;
-         return new WinBossDungeonWindow(__self.getLoot(),__self.getStats(),__self.dungeon.getDungeon().getLevel().isCleared(),this.onToOutro);
-      }
-  onToOutro() { const __self = this;
-         (as3as(__self.dungeon, BossDungeonState)).onToOutro.emit();
-      }
-  onFight(fight) { const __self = this;
-         this.innerView.clear();
-         this.innerView = new BossFightView(this,as3as(__self.dungeon.getDungeon().currentFight, BossFight));
-      }
+    return this.jinnView;
+  }
+  playMusic() {
+    this.innerView.playMusic();
+  }
+  stopMusic() {
+    this.innerView.stopMusic();
+  }
+  makeWinWindow() {
+    this.won = true;
+    return new WinBossDungeonWindow(
+      this.getLoot(),
+      this.getStats(),
+      this.dungeon.getDungeon().getLevel().isCleared(),
+      this.onToOutro,
+    );
+  }
+  onToOutro() {
+    as3as(this.dungeon, BossDungeonState).onToOutro.emit();
+  }
+  onFight(fight) {
+    this.innerView.clear();
+    this.innerView = new BossFightView(this, as3as(this.dungeon.getDungeon().currentFight, BossFight));
+  }
   endEnterFinishWindow() {
-         super.endEnterFinishWindow();
-         if(this.bossView)
-         {
-            this.bossView.clear();
-            this.bossView = null;
-         }
-      }
+    super.endEnterFinishWindow();
+    if (this.bossView) {
+      this.bossView.clear();
+      this.bossView = null;
+    }
+  }
   get soundTrack() {
-         return GameSounds.BOSS_MUSIC;
-      }
+    return GameSounds.BOSS_MUSIC;
+  }
   clear() {
-         super.clear();
-         if(this.bossView)
-         {
-            this.bossView.clear();
-            this.bossView = null;
-         }
-      }
+    super.clear();
+    if (this.bossView) {
+      this.bossView.clear();
+      this.bossView = null;
+    }
+  }
 }
+// Defaults on the prototype, not field initializers: the DungeonView constructor calls initialize(), which sets bossView,
+// and an initializer (run after the base constructor) would overwrite them.
 BossDungeonView.prototype.bossView = null;
 bindMethods(BossDungeonView);

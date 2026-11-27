@@ -1,70 +1,51 @@
-// @ts-nocheck
 import { Dictionary, URLRequest, as3values, bindMethods, int } from '@/flash/as3';
 import { TextLoader } from '@/game/cb/data/TextLoader';
 
+/**
+ * Texts of the game (locale.txt): one "key: text" per line.
+ * get(key, [a, b]) replaces $1, $2 ... with the parameters ($$1 gives a literal "$1").
+ */
 export class Locale extends TextLoader {
-  declare locale: any;
-  constructor(text) {
-          super(text);
+  /** Dictionary: key -> text */
+  private locale: any = null;
+
+  load(packedResources: any = null) {
+    if (packedResources) {
+      const cls = packedResources.get(this.uri);
+      this.removeListeners();
+      this.loader = null;
+      this.createLocale(new cls());
+      this.loaded.emit(this);
+      return;
+    }
+    this.loader.load(new URLRequest(this.uri));
+  }
+  createLocale(text: any) {
+    this.locale = new Dictionary();
+    this.data = String(text).split('\n');
+    for (const line of as3values(this.data)) {
+      const parts = line.split(':');
+      const key = parts.shift();
+      this.locale.set(key, parts.join(':').replace(/^([\s|\t|\n]+)?(.*)([\s|\t|\n]+)?$/gm, '$2'));
+    }
+  }
+  loaderCompleteHandler(_event: any) {
+    this.createLocale(this.loader.data);
+    this.loaded.emit(this);
+  }
+  get(key: string, params: any[] = null): string {
+    if (this.locale.get(key) == undefined) {
+      return 'missing key [' + key + ']';
+    }
+    if (params == null) {
+      return this.locale.get(key);
+    }
+    return this.locale.get(key).replace(/\$+\d+/g, (match: string) => {
+      if (match.substr(0, 2) == '$$') {
+        return match.substr(1);
       }
-  load(packedResources = null) { const __self = this;
-         var cls = null;
-         if(packedResources)
-         {
-            cls = packedResources.get(__self.uri);
-            __self.removeListeners();
-            __self.loader = null;
-            this.createLocale(new cls());
-            __self.loaded.emit(this);
-            return;
-         }
-         var urlRequest = new URLRequest(__self.uri);
-         __self.loader.load(urlRequest);
-      }
-  createLocale(text) { const __self = this;
-         var text2 = null;
-         var dataItem = null;
-         var list = null;
-         this.locale = new Dictionary();
-         __self.data = String(text).split("\n");
-         for (dataItem of as3values(__self.data))
-         {
-            list = dataItem.split(":");
-            text2 = list.shift();
-            this.locale.set(text2, list.join(":"));
-            this.locale.set(text2, this.locale.get(text2).replace(/^([\s|\t|\n]+)?(.*)([\s|\t|\n]+)?$/gm,"$2"));
-         }
-      }
-  loaderCompleteHandler(event) { const __self = this;
-         this.createLocale(__self.loader.data);
-         __self.loaded.emit(this);
-      }
-  get(text, list = null) {
-         var s = null;
-         var re = null;
-         var ix = int(0);
-         var key = text;
-         var params = list;
-         if(this.locale.get(key) == undefined)
-         {
-            return "missing key [" + key + "]";
-         }
-         if(params == null)
-         {
-            return this.locale.get(key);
-         }
-         s = this.locale.get(key);
-         re = /\$+\d+/g;
-         s = s.replace(re,function()
-         {
-            if(arguments[0].substr(0,2) == "$$")
-            {
-               return arguments[0].substr(1);
-            }
-            return params[int(arguments[0].substr(1)) - 1];
-         });
-         return s;
-      }
+      return params[int(match.substr(1)) - 1];
+    });
+  }
 }
-Locale.prototype.locale = null;
 bindMethods(Locale);

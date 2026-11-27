@@ -1,55 +1,46 @@
-// @ts-nocheck
 import { bindMethods, int, uint } from '@/flash/as3';
+import { services } from '@/game/services';
 import { LevelingStragegy } from '@/game/main_game/character/stats/LevelingStragegy';
-import { main } from '@/game/main';
 import { StatType } from '@/game/main_game/character/stats/StatType';
+import type { Stats } from '@/game/main_game/character/stats/Stats';
 
+/** Enemy levelling: like the jinn's, plus XP reward growth and the daily "extra level" bonus. */
 export class LevelingEnemies extends LevelingStragegy {
-  static extraLevel = null;
-  declare xpMod: any;
-  declare extraLevel: any;
-  constructor(singletonLock) {
-         var obj = main.config.get("Leveling_Enemies");
-          super(obj);
-         this.xpMod = Number(obj.xpMod);
-         this.extraLevel = int(0);
-      }
-  static setBonus(extraLevelBonus) {
-         LevelingEnemies.extraLevel = extraLevelBonus;
-      }
-  static getNewInstance(characterConfigData) {
-         var levelingEnemies = new LevelingEnemies(new SingletonLock());
-         if(LevelingEnemies.extraLevel != null)
-         {
-            LevelingEnemies.extraLevel.apply(characterConfigData,levelingEnemies);
-         }
-         return levelingEnemies;
-      }
-  setExtraLevel(extraLevel) { extraLevel = int(extraLevel);
-         this.extraLevel = int(extraLevel);
-      }
-  level(num, stats) { num = uint(num); const __self = this;
-         var num2 = Number(NaN);
-         num = uint(Math.max(num + this.extraLevel,1));
-         var level = uint(stats.getLevel());
-         num = uint(super.level(num,stats));
-         if(num == level)
-         {
-            return uint(num);
-         }
-         var stat = stats.getStat(StatType.EXPERIENCE);
-         var value = Number(stats.getStat(StatType.BASE_XP).getValue());
-         __self.levelUp(stat,value,this.xpMod,level,num);
-         return uint(num);
-      }
+  /** active ExtraLevelBonus (daily bonus), or null */
+  static extraLevel: any = null;
+  private xpMod: number;
+  private extraLevel = 0;
+
+  constructor(_lock: SingletonLock) {
+    const config = services.config.get('Leveling_Enemies');
+    super(config);
+    this.xpMod = Number(config.xpMod);
+  }
+  static setBonus(extraLevelBonus: any) {
+    LevelingEnemies.extraLevel = extraLevelBonus;
+  }
+  static getNewInstance(characterConfig: any): LevelingEnemies {
+    const leveling = new LevelingEnemies(new SingletonLock());
+    if (LevelingEnemies.extraLevel != null) {
+      LevelingEnemies.extraLevel.apply(characterConfig, leveling);
+    }
+    return leveling;
+  }
+  setExtraLevel(extraLevel: number) {
+    this.extraLevel = int(extraLevel);
+  }
+  level(newLevel: number, stats: Stats): number {
+    newLevel = uint(Math.max(uint(newLevel) + this.extraLevel, 1));
+    const current = uint(stats.getLevel());
+    newLevel = uint(super.level(newLevel, stats));
+    if (newLevel == current) {
+      return newLevel;
+    }
+    const baseXP = Number(stats.getStat(StatType.BASE_XP).getValue());
+    this.levelUp(stats.getStat(StatType.EXPERIENCE), baseXP, this.xpMod, current, newLevel);
+    return newLevel;
+  }
 }
-LevelingEnemies.prototype.xpMod = NaN;
-LevelingEnemies.prototype.extraLevel = 0;
 bindMethods(LevelingEnemies);
 
-class SingletonLock {
-  constructor() {
-      
-   }
-}
-bindMethods(SingletonLock);
+class SingletonLock {}

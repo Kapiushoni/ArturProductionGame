@@ -1,9 +1,6 @@
-// @ts-nocheck
-import { bindMethods, int } from '@/flash/as3';
-
+/** Expected a value after "=". */
 export class WaitingForConstantError extends Error {
-  constructor(text, text2, num) {
-          super(text + ":" + num + ": Expected Constant. " + text2 + ".",1); num = int(num);
-      }
+  constructor(fileName: string, message: string, line: number) {
+    super(fileName + ':' + line + ': Expected Constant. ' + message + '.');
+  }
 }
-bindMethods(WaitingForConstantError);

@@ -1,15 +1,15 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import type { Condition } from '@/game/cb/conditions/Condition';
 
-export class AnimationLabelAt {
-  declare condLabel: any;
-  constructor(condLabel) {
-         
-         this.condLabel = condLabel;
-      }
-  complete(clip) {
-         return clip.currentLabel == this.condLabel;
-      }
+/** The animation is at a label. */
+export class AnimationLabelAt implements Condition {
+  private condLabel: string;
+
+  constructor(label: string) {
+    this.condLabel = label;
+  }
+  complete(clip: any): boolean {
+    return clip.currentLabel == this.condLabel;
+  }
 }
-AnimationLabelAt.prototype.condLabel = null;
 bindMethods(AnimationLabelAt);

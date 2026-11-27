@@ -1,35 +1,35 @@
-// @ts-nocheck
 import { as3as, bindMethods } from '@/flash/as3';
+import type { Item } from '@/game/main_game/items/Item';
 
+/** A special mix the player could make now: item1 + item2 -> result (id). */
 export class MixRecipe {
-  declare item1Id: any;
-  declare item2Id: any;
-  declare resultId: any;
-  constructor(item1Id, item2Id, resultId) {
-         
-         this.item1Id = item1Id;
-         this.item2Id = item2Id;
-         this.resultId = resultId;
-      }
-  equals(obj) {
-         var mixRecipe = as3as(obj, MixRecipe);
-         if(mixRecipe == null)
-         {
-            return false;
-         }
-         return this.result == mixRecipe.result && (mixRecipe.item1.getID() == this.item1.getID() && mixRecipe.item2.getID() == this.item2.getID() || mixRecipe.item2.getID() == this.item1.getID() && mixRecipe.item1.getID() == this.item2.getID());
-      }
-  get item1() {
-         return this.item1Id;
-      }
-  get item2() {
-         return this.item2Id;
-      }
-  get result() {
-         return this.resultId;
-      }
+  private item1Id: Item;
+  private item2Id: Item;
+  private resultId: string;
+
+  constructor(item1: Item, item2: Item, result: string) {
+    this.item1Id = item1;
+    this.item2Id = item2;
+    this.resultId = result;
+  }
+  /** same result from the same two kinds of items (in any order) */
+  equals(other: any): boolean {
+    const recipe = as3as(other, MixRecipe) as MixRecipe;
+    if (recipe == null) {
+      return false;
+    }
+    const sameOrder = recipe.item1.getID() == this.item1.getID() && recipe.item2.getID() == this.item2.getID();
+    const swapped = recipe.item2.getID() == this.item1.getID() && recipe.item1.getID() == this.item2.getID();
+    return this.result == recipe.result && (sameOrder || swapped);
+  }
+  get item1(): Item {
+    return this.item1Id;
+  }
+  get item2(): Item {
+    return this.item2Id;
+  }
+  get result(): string {
+    return this.resultId;
+  }
 }
-MixRecipe.prototype.item1Id = null;
-MixRecipe.prototype.item2Id = null;
-MixRecipe.prototype.resultId = null;
 bindMethods(MixRecipe);

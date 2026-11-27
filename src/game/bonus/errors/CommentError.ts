@@ -1,11 +1,9 @@
-// @ts-nocheck
-import { bindMethods, int } from '@/flash/as3';
 import { GenericError } from '@/game/bonus/errors/GenericError';
 import { LexicalParser } from '@/game/bonus/LexicalParser';
 
+/** A "/" that does not start a comment. */
 export class CommentError extends GenericError {
-  constructor(text, num) {
-          super(LexicalParser.fileName,"Expected \'/\' or \'*\' to start comment, but got" + text + ".",num); num = int(num);
-      }
+  constructor(char: string, line: number) {
+    super(LexicalParser.fileName, "Expected '/' or '*' to start comment, but got" + char + '.', line);
+  }
 }
-bindMethods(CommentError);

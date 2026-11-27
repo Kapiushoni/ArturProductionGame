@@ -1,20 +1,15 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
+import type { Element } from '@/game/main_game/element/Element';
+import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 
-export class AllFilter {
-  constructor() {
-         
-      }
-  doesApply(element) {
-         return true;
-      }
-  getIcons() {
-         var _loc1_ = [];
-         _loc1_.push(BonusIcon.getNormal());
-         _loc1_.push(BonusIcon.getFire());
-         _loc1_.push(BonusIcon.getIce());
-         return _loc1_;
-      }
+/** All enemies. */
+export class AllFilter implements IBonusFilter {
+  doesApply(element: Element): boolean {
+    return true;
+  }
+  getIcons(): BonusIcon[] {
+    return [BonusIcon.getNormal(), BonusIcon.getFire(), BonusIcon.getIce()];
+  }
 }
 bindMethods(AllFilter);

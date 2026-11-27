@@ -1,19 +1,16 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { Slot } from '@/game/main_game/item_containers/Slot';
 
+/** The shield slot. */
 export class ShieldSlot extends Slot {
-  constructor() {super(__DEFER); 
-          this.__init_Slot();
-      }
-  canContainConsumable() {
-         return false;
-      }
-  canContainEquipment() {
-         return false;
-      }
-  canContainWeapon() {
-         return false;
-      }
+  canContainConsumable(): boolean {
+    return false;
+  }
+  canContainEquipment(): boolean {
+    return false;
+  }
+  canContainWeapon(): boolean {
+    return false;
+  }
 }
 bindMethods(ShieldSlot);

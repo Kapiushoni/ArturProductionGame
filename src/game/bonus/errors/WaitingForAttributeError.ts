@@ -1,11 +1,9 @@
-// @ts-nocheck
-import { bindMethods, int } from '@/flash/as3';
 import { GenericError } from '@/game/bonus/errors/GenericError';
 import { LexicalParser } from '@/game/bonus/LexicalParser';
 
+/** Expected an attribute (or the end of the block). */
 export class WaitingForAttributeError extends GenericError {
-  constructor(text, num) {
-          super(LexicalParser.fileName,"Expected Attribute at " + text,num); num = int(num);
-      }
+  constructor(char: string, line: number) {
+    super(LexicalParser.fileName, 'Expected Attribute at ' + char, line);
+  }
 }
-bindMethods(WaitingForAttributeError);

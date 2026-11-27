@@ -1,65 +1,70 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPausableState';
 import { Signal } from '@/game/cb/signals/Signal';
 import { main } from '@/game/main';
-import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
+import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
+import { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
+import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
+import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
 
-export class DungeonState extends BasicPausableState {
-  declare dungeon_view: any;
-  declare dungeon: any;
-  declare mainView: any;
-  declare next_dungeon: any;
+/** The game screen inside a dungeon: entering starts the dungeon set with setNextDungeon() and shows its view. */
+export class DungeonState extends BasicPausableState implements IDungeonState {
+  private dungeon_view: any = null;
+  private dungeon: any = null;
+  /** the GameView */
+  private mainView: any;
+  private next_dungeon: any = null;
   theOnToDungeon = new Signal();
   theOnToMap = new Signal();
-  constructor(text, mainView, callback = null, callback2 = null) {super(__DEFER); 
-         this.mainView = mainView;
-          this.__init_BasicPausableState(text,callback,callback2);
-      }
-  get onToDungeon() {
-         return this.theOnToDungeon;
-      }
-  get onToMap() {
-         return this.theOnToMap;
-      }
-  get pauseHolder() {
-         return this.mainView.pauseHolder;
-      }
+
+  constructor(name: string, mainView: any, onEnter: Function = null, onLeave: Function = null) {
+    super(name, onEnter, onLeave);
+    this.mainView = mainView;
+  }
+  /** onToDungeon(level): play another dungeon */
+  get onToDungeon(): Signal {
+    return this.theOnToDungeon;
+  }
+  /** back to the map */
+  get onToMap(): Signal {
+    return this.theOnToMap;
+  }
+  get pauseHolder(): any {
+    return this.mainView.pauseHolder;
+  }
   enter() {
-         main.game.goToDungeon(this.next_dungeon);
-         this.dungeon = main.game.getDungeon();
-         this.dungeon_view = DungeonFactory.getInstance().getViewFor(this);
-         this.mainView.gameHolder["dungeonView"] = this.dungeon_view;
-         this.mainView.gameHolder.addChild(this.dungeon_view);
-         super.enter();
-      }
+    main.game.goToDungeon(this.next_dungeon);
+    this.dungeon = main.game.getDungeon();
+    this.dungeon_view =
+      this.dungeon.getId() == BossDungeon.idBossLevel ? new BossDungeonView(this) : new DungeonView(this);
+    this.mainView.gameHolder['dungeonView'] = this.dungeon_view;
+    this.mainView.gameHolder.addChild(this.dungeon_view);
+    super.enter();
+  }
   pause() {
-         this.dungeon_view.pauseFight();
-      }
+    this.dungeon_view.pauseFight();
+  }
   resume() {
-         this.dungeon_view.resumeFight();
-      }
-  setNextDungeon(next_dungeon) {
-         this.next_dungeon = next_dungeon;
-      }
+    this.dungeon_view.resumeFight();
+  }
+  setNextDungeon(level: any) {
+    this.next_dungeon = level;
+  }
+  /** leaving: the jinn heals and the dungeon is closed */
   leave() {
-         this.dungeon_view.close();
-         main.game.getJinn().stats.refillHealth();
-         main.game.exitDungeon();
-         super.leave();
-         this.dungeon = null;
-      }
-  getDungeon() {
-         return this.dungeon;
-      }
+    this.dungeon_view.close();
+    main.game.getJinn().stats.refillHealth();
+    main.game.exitDungeon();
+    super.leave();
+    this.dungeon = null;
+  }
+  getDungeon(): any {
+    return this.dungeon;
+  }
   clear() {
-         this.onToDungeon.clear();
-         this.onToMap.clear();
-         super.clear();
-      }
+    this.onToDungeon.clear();
+    this.onToMap.clear();
+    super.clear();
+  }
 }
-DungeonState.prototype.dungeon_view = null;
-DungeonState.prototype.dungeon = null;
-DungeonState.prototype.mainView = null;
-DungeonState.prototype.next_dungeon = null;
 bindMethods(DungeonState);

@@ -1,34 +1,39 @@
-// @ts-nocheck
-import { bindMethods, uint } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
+import { services } from '@/game/services';
 import { Level } from '@/game/main_game/map/Level';
-import { main } from '@/game/main';
+import type { Element } from '@/game/main_game/element/Element';
 
+/** The legendary ice (31) and fire (32) dungeons. Originally open only on their event days, now always open. */
 export class LegendaryLevel extends Level {
-  isLocked() { return false; }
-  isUnlocked() { return true; }
-  declare theElement: any;
-  declare date: any;
-  constructor(text, theElement, date, num = 1) {
-          super(text,num); num = uint(num);
-         this.theElement = theElement;
-         this.date = date;
-      }
-  isLegendary() {
-         return true;
-      }
-  getDate() {
-         return this.date;
-      }
-  get element() {
-         return this.theElement;
-      }
-  getName() {
-         return main.locale.get("legendaryDungeonName");
-      }
-  getArea() {
-         return uint(1);
-      }
+  private theElement: Element;
+  /** next event day (still shown on the map) */
+  private date: Date;
+
+  constructor(dungeonId: string, element: Element, date: Date, state = 1) {
+    super(dungeonId, state);
+    this.theElement = element;
+    this.date = date;
+  }
+  isLocked(): boolean {
+    return false;
+  }
+  isUnlocked(): boolean {
+    return true;
+  }
+  isLegendary(): boolean {
+    return true;
+  }
+  getDate(): Date {
+    return this.date;
+  }
+  get element(): Element {
+    return this.theElement;
+  }
+  getName(): string {
+    return services.texts.get('legendaryDungeonName');
+  }
+  getArea(): number {
+    return 1;
+  }
 }
-LegendaryLevel.prototype.theElement = null;
-LegendaryLevel.prototype.date = null;
 bindMethods(LegendaryLevel);

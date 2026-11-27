@@ -1,32 +1,27 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import type { Action } from '@/game/cb/actions/Action';
 
-export class Functor {
-  declare f: any;
-  declare params: any;
-  constructor(f, ... rest) {
-         
-         this.f = f;
-         this.params = rest;
-      }
-  static wrap(callback) {
-         var funcToWrap = callback;
-         return new Functor(function(clip)
-         {
-            funcToWrap();
-         });
-      }
-  execute(clip) {
-         if(this.params.length == 0)
-         {
-            this.f(clip);
-         }
-         else
-         {
-            this.f(clip,this.params);
-         }
-      }
+/** An Action calling f(clip) or f(clip, params). */
+export class Functor implements Action {
+  private f: Function;
+  private params: any[];
+
+  constructor(f: Function, ...params: any[]) {
+    this.f = f;
+    this.params = params;
+  }
+  /** an Action that calls callback() and ignores the clip */
+  static wrap(callback: Function): Functor {
+    return new Functor(function (_clip: any) {
+      callback();
+    });
+  }
+  execute(clip: any) {
+    if (this.params.length == 0) {
+      this.f(clip);
+    } else {
+      this.f(clip, this.params);
+    }
+  }
 }
-Functor.prototype.f = null;
-Functor.prototype.params = null;
 bindMethods(Functor);

@@ -1,211 +1,198 @@
-// @ts-nocheck
 import { as3values, bindMethods, uint } from '@/flash/as3';
+import { services } from '@/game/services';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
-import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
 import { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 import { Fight } from '@/game/main_game/dungeon/Fight';
 import { Loot } from '@/game/main_game/dungeon/Loot';
 import { XpCalculator } from '@/game/main_game/dungeon/XpCalculator';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
+import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
+import type { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
+import type { Game } from '@/game/main_game/Game';
 
+/**
+ * A dungeon run: its fights one after another (startFight, then wonFight / lostFight from the view), the loot,
+ * and the stats for the experience at the end. Gear is locked and potions unlocked while inside.
+ */
 export class Dungeon {
-  static theXpCalulator = null;
-  declare onFight: any;
-  declare loot: any;
-  declare fights: any;
-  declare current: any;
-  declare fighting: any;
-  declare level: any;
-  declare stats: any;
-  declare onLose: any;
-  declare onWin: any;
-  constructor(level, dungeonConfigData, probabilisticSet) {
-         
-         this.level = level;
-         this.fighting = false;
-         this.onLose = new Signal();
-         this.onWin = new Signal();
-         this.onFight = new Signal();
-         this.stats = new DungeonStats(level);
-         this.fights = [];
-         this.initializeFights(dungeonConfigData);
-         this.loot = this.createLoot(dungeonConfigData,probabilisticSet);
-         this.current = uint(0);
-      }
-  static get DungeonConfig() {
-         return main.config.get("DungeonConfig");
-      }
-  static get xpCalulator() {
-         if(Dungeon.theXpCalulator == null)
-         {
-            Dungeon.theXpCalulator = new XpCalculator();
-         }
-         return Dungeon.theXpCalulator;
-      }
-  static set xpCalulator(value) {
-         Dungeon.theXpCalulator = value;
-      }
+  /** the boss dungeon (see BossDungeon) */
+  static readonly BOSS_LEVEL_ID = '25';
+  static theXpCalulator: IXpCalculator = null;
+  onFight: Signal;
+  onLose: Signal;
+  onWin: Signal;
+  private loot: Loot;
+  private fights: IFight[];
+  /** index of the current fight */
+  private current = 0;
+  private fighting = false;
+  private level: any; // map Level
+  private stats: DungeonStats;
+  /** the game it is played in (the jinn, the mixer) */
+  protected game: Game;
+
+  /** config: the dungeon's row (enemiesData, lootData); extraLoot: items that drop first (first-time loot) */
+  constructor(level: any, config: any, extraLoot: ProbabilisticSet, game: Game) {
+    this.game = game;
+    this.level = level;
+    this.onLose = new Signal();
+    this.onWin = new Signal();
+    this.onFight = new Signal();
+    this.stats = new DungeonStats(level, game);
+    this.fights = [];
+    this.initializeFights(config);
+    this.loot = this.createLoot(config, extraLoot);
+    this.current = 0;
+  }
+  static get DungeonConfig(): any {
+    return services.config.get('DungeonConfig');
+  }
+  static get xpCalulator(): IXpCalculator {
+    if (Dungeon.theXpCalulator == null) {
+      Dungeon.theXpCalulator = new XpCalculator();
+    }
+    return Dungeon.theXpCalulator;
+  }
+  static set xpCalulator(value: IXpCalculator) {
+    Dungeon.theXpCalulator = value;
+  }
   enter() {
-         main.saveSystem.savePendingItems();
-         var jinn = main.game.getJinn();
-         jinn.gear.lock();
-         jinn.liver.unlock();
-         this.stats.start();
-      }
-  getId() {
-         return this.level.id;
-      }
-  getStats() {
-         return this.stats;
-      }
+    services.saveSystem.savePendingItems();
+    const jinn = this.game.getJinn();
+    jinn.gear.lock();
+    jinn.liver.unlock();
+    this.stats.start();
+  }
+  getId(): string {
+    return this.level.id;
+  }
+  getStats(): DungeonStats {
+    return this.stats;
+  }
   exit() {
-         main.saveSystem.savePendingItems();
-         main.game.getJinn().gear.unlock();
-         main.game.getJinn().liver.lock();
-         main.game.getJinn().liver.clearBuffs();
-         this.clear();
-      }
-  createLoot(dungeonConfigData, probabilisticSet) {
-         return new Loot(dungeonConfigData,probabilisticSet);
-      }
-  initializeFights(dungeonConfigData) {
-         var enemiesDataItem = null;
-         var flag = true;
-         for (enemiesDataItem of as3values(dungeonConfigData.enemiesData))
-         {
-            this.fights.push(this.createFight(this.createEnemy(enemiesDataItem[0],enemiesDataItem[1]),flag));
-            flag = false;
-         }
-      }
-  createFight(enemy, flag) {
-         return new Fight(enemy,flag);
-      }
-  createEnemy(text, num) { num = uint(num);
-         return CharacterFactory.getInstance().getEnemy(text,num);
-      }
-  get enemies() {
-         var fight = null;
-         var _loc1_ = [];
-         for (fight of as3values(this.fights))
-         {
-            _loc1_.push(fight.getEnemy());
-         }
-         return _loc1_;
-      }
-  getLoot() {
-         return this.loot;
-      }
+    services.saveSystem.savePendingItems();
+    this.releaseJinn();
+    this.clear();
+  }
+  /** unlocks the gear, locks the potions and ends the active potion */
+  private releaseJinn() {
+    this.game.getJinn().gear.unlock();
+    this.game.getJinn().liver.lock();
+    this.game.getJinn().liver.clearBuffs();
+  }
+  createLoot(config: any, extraLoot: ProbabilisticSet): Loot {
+    return new Loot(config, extraLoot);
+  }
+  initializeFights(config: any) {
+    let first = true;
+    for (const enemy of as3values(config.enemiesData)) {
+      // [enemy name, level]
+      this.fights.push(this.createFight(this.createEnemy(enemy[0], enemy[1]), first));
+      first = false;
+    }
+  }
+  createFight(enemy: any, first: boolean): IFight {
+    return new Fight(this.game.getJinn(), enemy, first);
+  }
+  createEnemy(name: string, level: number): any {
+    return CharacterFactory.getInstance().getEnemy(name, uint(level));
+  }
+  get enemies(): any[] {
+    const list = [];
+    for (const fight of as3values(this.fights)) {
+      list.push(fight.getEnemy());
+    }
+    return list;
+  }
+  getLoot(): Loot {
+    return this.loot;
+  }
   startFight() {
-         this.fighting = true;
-         this.onFight.emit(this.currentFight);
-         this.currentFight.fight();
-      }
-  get currentFight() {
-         return this.fights[this.current];
-      }
+    this.fighting = true;
+    this.onFight.emit(this.currentFight);
+    this.currentFight.fight();
+  }
+  get currentFight(): IFight {
+    return this.fights[this.current];
+  }
   wonFight() {
-         this.fighting = false;
-         if(this.current == this.fights.length - 1)
-         {
-            main.game.getJinn().gear.unlock();
-            main.game.getJinn().liver.lock();
-            main.game.getJinn().liver.clearBuffs();
-            this.currentFight.deactivate();
-            ++this.current;
-            this.stats.end(this.getDefeated());
-            this.advertiseAchievements();
-            this.onWin.emit();
-            this.level.clear();
-            main.saveSystem.saveClearedLevel(this.getId());
-         }
-         else
-         {
-            this.currentFight.leave(this.goToNextFight);
-         }
-      }
+    this.fighting = false;
+    if (this.current == this.fights.length - 1) {
+      // the last fight: the dungeon is cleared
+      this.releaseJinn();
+      this.currentFight.deactivate();
+      ++this.current;
+      this.stats.end(this.getDefeated());
+      this.advertiseAchievements();
+      this.onWin.emit();
+      this.level.clear();
+      services.saveSystem.saveClearedLevel(this.getId());
+    } else {
+      this.currentFight.leave(this.goToNextFight);
+    }
+  }
   advertiseAchievements() {
-         if(this.level.getDungeonId() == BossDungeon.idBossLevel)
-         {
-            main.achievementDispatcher.endLastDungeon();
-         }
-         if(this.level.getDungeonId() == "8")
-         {
-            main.achievementDispatcher.finishFirstPage();
-         }
-         var gear = main.game.getJinn().gear;
-         if(gear.equipment_1.isEmpty() && gear.equipment_2.isEmpty() && gear.shield.isEmpty() && gear.weapon.isEmpty())
-         {
-            main.achievementDispatcher.unequippedDungeonCompleted(this.level);
-         }
-      }
+    if (this.level.getDungeonId() == Dungeon.BOSS_LEVEL_ID) {
+      services.achievements.endLastDungeon();
+    }
+    if (this.level.getDungeonId() == '8') {
+      services.achievements.finishFirstPage();
+    }
+    const gear = this.game.getJinn().gear;
+    if (gear.equipment_1.isEmpty() && gear.equipment_2.isEmpty() && gear.shield.isEmpty() && gear.weapon.isEmpty()) {
+      services.achievements.unequippedDungeonCompleted(this.level);
+    }
+  }
+  /** the player left the dungeon */
   suddenDeath() {
-         this.stats.end(this.getDefeated());
-         if(this.fighting)
-         {
-            this.currentFight.suddenDeath();
-            this.fighting = false;
-         }
-         else
-         {
-            this.onLose.emit();
-         }
-      }
-  getDefeated() {
-         var list = new Array();
-         var i = uint(0);
-         while(i < this.current)
-         {
-            list.push(this.fights[i].getEnemy());
-            i++;
-         }
-         return list;
-      }
+    this.stats.end(this.getDefeated());
+    if (this.fighting) {
+      this.currentFight.suddenDeath();
+      this.fighting = false;
+    } else {
+      this.onLose.emit();
+    }
+  }
+  /** enemies beaten so far */
+  getDefeated(): any[] {
+    const list = [];
+    for (let i = 0; i < this.current; i++) {
+      list.push(this.fights[i].getEnemy());
+    }
+    return list;
+  }
   goToNextFight() {
-         this.currentFight.deactivate();
-         ++this.current;
-         this.startFight();
-      }
+    this.currentFight.deactivate();
+    ++this.current;
+    this.startFight();
+  }
   lostFight() {
-         this.fighting = false;
-         this.stats.end(this.getDefeated());
-         main.game.getJinn().gear.unlock();
-         main.game.getJinn().liver.lock();
-         main.game.getJinn().liver.clearBuffs();
-         this.onLose.emit();
-      }
+    this.fighting = false;
+    this.stats.end(this.getDefeated());
+    this.releaseJinn();
+    this.onLose.emit();
+  }
   clear() {
-         var fight = null;
-         while(this.current < this.fights.length)
-         {
-            this.currentFight.deactivate();
-            ++this.current;
-         }
-         for (fight of as3values(this.fights))
-         {
-            fight.clear();
-         }
-         this.fights = null;
-         this.stats.clear();
-         this.stats = null;
-         this.onLose.clear();
-         this.onLose = null;
-         this.onWin.clear();
-         this.onWin = null;
-         this.onFight.clear();
-         this.onFight = null;
-      }
-  getLevel() {
-         return this.level;
-      }
+    while (this.current < this.fights.length) {
+      this.currentFight.deactivate();
+      ++this.current;
+    }
+    for (const fight of as3values(this.fights)) {
+      fight.clear();
+    }
+    this.fights = null;
+    this.stats.clear();
+    this.stats = null;
+    this.onLose.clear();
+    this.onLose = null;
+    this.onWin.clear();
+    this.onWin = null;
+    this.onFight.clear();
+    this.onFight = null;
+  }
+  getLevel(): any {
+    return this.level;
+  }
 }
-Dungeon.prototype.onFight = null;
-Dungeon.prototype.loot = null;
-Dungeon.prototype.fights = null;
-Dungeon.prototype.current = 0;
-Dungeon.prototype.fighting = false;
-Dungeon.prototype.level = null;
-Dungeon.prototype.stats = null;
-Dungeon.prototype.onLose = null;
-Dungeon.prototype.onWin = null;
 bindMethods(Dungeon);

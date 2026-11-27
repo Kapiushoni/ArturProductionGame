@@ -1,101 +1,90 @@
-// @ts-nocheck
 import { as3values, bindMethods } from '@/flash/as3';
 import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
 
+/**
+ * Buttons that share sounds and extra handlers (ButtonGroup.get("gui")): every button made with
+ * createButton() also runs the group's click / over / out handlers and plays its sounds.
+ */
 export class ButtonGroup {
-  static groups = [];
-  declare soundMixer: any;
-  declare clickSound: any;
-  declare overSound: any;
-  declare mouseOutFuncs: any;
-  declare mouseOverFuncs: any;
-  declare clickFuncs: any;
+  static groups: any = [];
+  private soundMixer: any = null;
+  private clickSound: string = null;
+  private overSound: string = null;
+  private mouseOutFuncs: Function[];
+  private mouseOverFuncs: Function[];
+  private clickFuncs: Function[];
+
   constructor() {
-         
-         this.mouseOutFuncs = [];
-         this.mouseOverFuncs = [];
-         this.clickFuncs = [];
+    this.mouseOutFuncs = [];
+    this.mouseOverFuncs = [];
+    this.clickFuncs = [];
+  }
+  static get(name: string): ButtonGroup {
+    if (ButtonGroup.groups[name] == undefined) {
+      ButtonGroup.groups[name] = new ButtonGroup();
+    }
+    return ButtonGroup.groups[name];
+  }
+  setSoundMixer(soundMixer: any): ButtonGroup {
+    this.soundMixer = soundMixer;
+    return this;
+  }
+  setClickSound(sound: string): ButtonGroup {
+    this.clickSound = sound;
+    return this;
+  }
+  setOverSound(sound: string): ButtonGroup {
+    this.overSound = sound;
+    return this;
+  }
+  /** over / out: a handler or a frame label */
+  createButton(
+    click: Function,
+    over: any = null,
+    out: any = null,
+    playLabels = true,
+    hitBox: string = null,
+  ): ButtonInfo {
+    if (typeof over === 'string') {
+      over = ButtonInfo.defaultGoto(over, playLabels, hitBox);
+    }
+    if (typeof out === 'string') {
+      out = ButtonInfo.defaultGoto(out, playLabels, hitBox);
+    }
+    const onClick = this.createFunc(click, this.clickSound, this.clickFuncs);
+    const onOver = this.createFunc(over, this.overSound, this.mouseOverFuncs);
+    const onOut = this.createFunc(out, null, this.mouseOutFuncs);
+    return new ButtonInfo(onClick, onOver, onOut, playLabels, hitBox);
+  }
+  addMouseOver(handler: Function): ButtonGroup {
+    this.mouseOverFuncs.push(handler);
+    return this;
+  }
+  addMouseOut(handler: Function): ButtonGroup {
+    this.mouseOutFuncs.push(handler);
+    return this;
+  }
+  addClick(handler: Function): ButtonGroup {
+    this.clickFuncs.push(handler);
+    return this;
+  }
+  /** one handler running: the group's handlers (as they are now), then callback, then the sound */
+  createFunc(callback: Function, sound: string, groupHandlers: Function[]): (event: any) => void {
+    const handlers = [];
+    if (callback != null) {
+      handlers.push(callback);
+    }
+    if (sound) {
+      handlers.push((_event: any) => {
+        this.soundMixer.play(sound);
+      });
+    }
+    const all = groupHandlers.concat(handlers);
+    return (event: any) => {
+      for (const handler of as3values(all)) {
+        handler(event);
       }
-  static get(text) {
-         if(ButtonGroup.groups[text] == undefined)
-         {
-            ButtonGroup.groups[text] = new ButtonGroup();
-         }
-         return ButtonGroup.groups[text];
-      }
-  setSoundMixer(soundMixer) {
-         this.soundMixer = soundMixer;
-         return this;
-      }
-  setClickSound(clickSound) {
-         this.clickSound = clickSound;
-         return this;
-      }
-  setOverSound(overSound) {
-         this.overSound = overSound;
-         return this;
-      }
-  createButton(callback, value = null, value2 = null, flag = true, text = null) {
-         var func = null;
-         if((typeof value === "string"))
-         {
-            value = ButtonInfo.defaultGoto(value,flag,text);
-         }
-         if((typeof value2 === "string"))
-         {
-            value2 = ButtonInfo.defaultGoto(value2,flag,text);
-         }
-         func = this.createFunc(callback,this.clickSound,this.clickFuncs);
-         var func2 = this.createFunc(value,this.overSound,this.mouseOverFuncs);
-         var func3 = this.createFunc(value2,null,this.mouseOutFuncs);
-         return new ButtonInfo(func,func2,func3,flag,text);
-      }
-  addMouseOver(callback) {
-         this.mouseOverFuncs.push(callback);
-         return this;
-      }
-  addMouseOut(callback) {
-         this.mouseOutFuncs.push(callback);
-         return this;
-      }
-  addClick(callback) {
-         this.clickFuncs.push(callback);
-         return this;
-      }
-  createFunc(callback, text, list2) { const __self = this;
-         var o = null;
-         var oList = null;
-         var cb = callback;
-         var sound = text;
-         var list = list2;
-         oList = [];
-         if(cb != null)
-         {
-            oList.push(cb);
-         }
-         if(sound)
-         {
-            oList.push(function(event)
-            {
-               __self.soundMixer.play(sound);
-            });
-         }
-         oList = list.concat(oList);
-         o = function(event2)
-         {
-            var oListItem = null;
-            for (oListItem of as3values(oList))
-            {
-               oListItem(event2);
-            }
-         };
-         return o;
-      }
+    };
+  }
 }
-ButtonGroup.prototype.soundMixer = null;
-ButtonGroup.prototype.clickSound = null;
-ButtonGroup.prototype.overSound = null;
-ButtonGroup.prototype.mouseOutFuncs = null;
-ButtonGroup.prototype.mouseOverFuncs = null;
-ButtonGroup.prototype.clickFuncs = null;
 bindMethods(ButtonGroup);

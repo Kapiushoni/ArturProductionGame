@@ -1,24 +1,20 @@
-// @ts-nocheck
-import { __DEFER, bindMethods, int } from '@/flash/as3';
+import { bindMethods, int } from '@/flash/as3';
 
+/** A numeric stat of a fighter (attack, defense, luck, ...), identified by a StatType. */
 export class Stat {
-  declare value: any;
-  declare type: any;
-  constructor(...__a) { if (__a[0] !== __DEFER) this.__init_Stat(...__a); }
-  __init_Stat(type, value = 0) { type = int(type); value = Number(value);
-         
-         this.value = Number(value);
-         this.type = int(type);
-      }
-  modifyValue(num) { num = Number(num);
-         this.value = Number(this.value + (num));
-      }
-  getValue() {
-         return Number(this.value);
-      }
-  clear() {
-      }
+  protected value: number;
+  protected type: number;
+
+  constructor(type: number, value = 0) {
+    this.value = Number(value);
+    this.type = int(type);
+  }
+  modifyValue(amount: number) {
+    this.value += Number(amount);
+  }
+  getValue(): number {
+    return this.value;
+  }
+  clear() {}
 }
-Stat.prototype.value = NaN;
-Stat.prototype.type = 0;
 bindMethods(Stat);

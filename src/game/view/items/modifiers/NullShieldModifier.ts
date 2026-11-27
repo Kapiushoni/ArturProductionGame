@@ -1,13 +1,10 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 
 export class NullShieldModifier {
-  constructor() {
-         
-      }
+  constructor() {}
   modify(clip) {
-         clip.stop();
-         clip.visible = false;
-      }
+    clip.stop();
+    clip.visible = false;
+  }
 }
 bindMethods(NullShieldModifier);

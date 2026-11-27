@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Dictionary, __DEFER, bindMethods, uint } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { ButtonGroup } from '@/game/cb/data/ButtonGroup';
@@ -11,96 +10,89 @@ import { Util } from '@/game/util/Util';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
 
 export class Pause extends AnimatedScreen {
-  static BUTTONS = ["cancel","help","level_select","replay","sound"];
-  declare onLevelSelect: any;
-  declare onReplay: any;
-  declare onCancel: any;
-  declare level: any;
-  constructor(level) {super(__DEFER); 
-         this.level = level;
-          this.__init_AnimatedScreen(main.swfLoader.getClass("assets.Pause"),this.getButtonInfo());
-         this.initializeSignals();
-         this.initialize();
-      }
+  static BUTTONS = ['cancel', 'help', 'level_select', 'replay', 'sound'];
+  onLevelSelect: any = null;
+  onReplay: any = null;
+  onCancel: any = null;
+  level: any = null;
+  constructor(level) {
+    super(__DEFER);
+    this.level = level;
+    this.__init_AnimatedScreen(main.swfLoader.getClass('assets.Pause'), this.getButtonInfo());
+    this.initializeSignals();
+    this.initialize();
+  }
   getButtonInfo() {
-         var dict = new Dictionary();
-         var buttonGroup = ButtonGroup.get("gui");
-         dict.set("cancel", buttonGroup.createButton(this.cancel,"mouseOver","mouseOut"));
-         dict.set("help", buttonGroup.createButton(this.help,"mouseOver","mouseOut"));
-         dict.set("level_select", buttonGroup.createButton(this.levelSelect,"mouseOver","mouseOut"));
-         dict.set("replay", buttonGroup.createButton(this.replay,"mouseOver","mouseOut"));
-         dict.set("sound", ButtonGroup.get("sound_gui").createButton(null,"mouseOver","mouseOut"));
-         return dict;
-      }
+    var dict = new Dictionary();
+    var buttonGroup = ButtonGroup.get('gui');
+    dict.set('cancel', buttonGroup.createButton(this.cancel, 'mouseOver', 'mouseOut'));
+    dict.set('help', buttonGroup.createButton(this.help, 'mouseOver', 'mouseOut'));
+    dict.set('level_select', buttonGroup.createButton(this.levelSelect, 'mouseOver', 'mouseOut'));
+    dict.set('replay', buttonGroup.createButton(this.replay, 'mouseOver', 'mouseOut'));
+    dict.set('sound', ButtonGroup.get('sound_gui').createButton(null, 'mouseOver', 'mouseOut'));
+    return dict;
+  }
   initializeSignals() {
-         this.onCancel = new Signal();
-         this.onLevelSelect = new Signal();
-         this.onReplay = new Signal();
-      }
-  initialize() { const __self = this;
-         __self.bg.container.dungeon.title.text = this.level.getName();
-         Buttons.setButtons(__self.bg,Pause.BUTTONS,true);
-         main.soundManager.updateSoundButton(__self.bg["sound"]);
-         main.soundManager.playMusic(GameSounds.MAP_MUSIC);
-         this.putAdvice(__self.bg.tips.tip_text.title);
-      }
+    this.onCancel = new Signal();
+    this.onLevelSelect = new Signal();
+    this.onReplay = new Signal();
+  }
+  initialize() {
+    this.bg.container.dungeon.title.text = this.level.getName();
+    Buttons.setButtons(this.bg, Pause.BUTTONS, true);
+    main.soundManager.updateSoundButton(this.bg['sound']);
+    main.soundManager.playMusic(GameSounds.MAP_MUSIC);
+    this.putAdvice(this.bg.tips.tip_text.title);
+  }
   putAdvice(textField) {
-         var num = uint(1);
-         if(!main.theTutorial.isMixKnown())
-         {
-            num = uint(main.config.get("InitialConfig").mixAdvices + 1);
-         }
-         var text = main.locale.get("advice" + Random.nextRange(num,main.config.get("InitialConfig").advices).toString());
-         textField.text = text;
-      }
+    var num = 1;
+    if (!main.theTutorial.isMixKnown()) {
+      num = uint(main.config.get('InitialConfig').mixAdvices + 1);
+    }
+    var text = main.locale.get('advice' + Random.nextRange(num, main.config.get('InitialConfig').advices).toString());
+    textField.text = text;
+  }
   enter(callback = null) {
-         main.game.onPause.emit(true);
-         super.enter(callback);
-      }
-  leave(callback = null) { const __self = this;
-         main.game.onPause.emit(false);
-         Buttons.setButtons(__self.bg,Pause.BUTTONS,false);
-         super.leave(callback);
-      }
+    main.game.onPause.emit(true);
+    super.enter(callback);
+  }
+  leave(callback = null) {
+    main.game.onPause.emit(false);
+    Buttons.setButtons(this.bg, Pause.BUTTONS, false);
+    super.leave(callback);
+  }
   clear() {
-         super.clear();
-         this.onCancel.clear();
-         this.onLevelSelect.clear();
-         this.onReplay.clear();
-      }
+    super.clear();
+    this.onCancel.clear();
+    this.onLevelSelect.clear();
+    this.onReplay.clear();
+  }
   replay(event = null) {
-         this.showConfirmation(Util.l(this.emitAndLeave,this.onReplay),Util.pass);
-      }
+    this.showConfirmation(Util.l(this.emitAndLeave, this.onReplay), Util.pass);
+  }
   levelSelect(event = null) {
-         this.showConfirmation(Util.l(this.emitAndLeave,this.onLevelSelect),Util.pass);
-      }
-  emitAndLeave(signal2) { const __self = this;
-         var signal = signal2;
-         signal.emit();
-         this.leave(function()
-         {
-            __self.pop();
-         });
-      }
-  showConfirmation(callback, callback2) { const __self = this;
-         var text = main.locale.get("leave_dungeonConfirmation");
-         var confirmationPopUp = new ConfirmationPopUp(__self.bg,callback,callback2,text);
-         main.tutorialHolder.addChild(confirmationPopUp);
-         confirmationPopUp.enter();
-      }
-  help(event = null) {
-      }
-  cancel(event = null) { const __self = this;
-         var ev = event;
-         this.leave(function()
-         {
-            __self.onCancel.emit();
-            __self.pop();
-         });
-      }
+    this.showConfirmation(Util.l(this.emitAndLeave, this.onLevelSelect), Util.pass);
+  }
+  emitAndLeave(signal2) {
+    var signal = signal2;
+    signal.emit();
+    this.leave(() => {
+      this.pop();
+    });
+  }
+  showConfirmation(callback, callback2) {
+    var text = main.locale.get('leave_dungeonConfirmation');
+    var confirmationPopUp = new ConfirmationPopUp(this.bg, callback, callback2, text);
+    main.tutorialHolder.addChild(confirmationPopUp);
+    confirmationPopUp.enter();
+  }
+  help(event = null) {}
+  cancel(event = null) {
+    var ev = event;
+    this.leave(() => {
+      this.onCancel.emit();
+      this.pop();
+    });
+  }
 }
-Pause.prototype.onLevelSelect = null;
-Pause.prototype.onReplay = null;
-Pause.prototype.onCancel = null;
-Pause.prototype.level = null;
 bindMethods(Pause);

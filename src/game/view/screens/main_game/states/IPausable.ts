@@ -1,6 +1,5 @@
-// @ts-nocheck
-
+/** Can be paused (the pause menu). */
 export interface IPausable {
-  pause(): any;
-  resume(): any;
+  pause(): void;
+  resume(): void;
 }

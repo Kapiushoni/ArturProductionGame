@@ -1,47 +1,35 @@
-// @ts-nocheck
 import { as3as, bindMethods, int } from '@/flash/as3';
 import { Modifier } from '@/game/main_game/items/modifiers/Modifier';
 import { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 
+/** Changes the maximum of health (MH) or experience (MX). */
 export class MaxHealthModifier extends Modifier {
-  declare primary_char: any;
-  constructor(obj) {
-          super(obj);
-         if(this.characteristic == StatType.MAX_HP)
-         {
-            this.primary_char = int(StatType.HEALTH);
-         }
-         else if(this.characteristic == StatType.MAX_XP)
-         {
-            this.primary_char = int(StatType.EXPERIENCE);
-         }
-      }
-  modifyIcon(clip) { const __self = this;
-         super.modifyIcon(clip);
-         if(clip.max_health)
-         {
-            if(__self.value >= 0)
-            {
-               clip.max_health.gotoAndStop("up");
-            }
-            else
-            {
-               clip.max_health.gotoAndStop("down");
-            }
-         }
-      }
-  affect(stats) {
-         var healthStat = as3as(stats.getStat(this.primary_char), HealthStat);
-         healthStat.modifyUpperBound(this.value);
-      }
-  disaffect(stats) {
-         var healthStat = as3as(stats.getStat(this.primary_char), HealthStat);
-         healthStat.modifyUpperBound(-this.value);
-      }
-  getStat(stats) {
-         return (as3as(stats.getStat(this.primary_char), HealthStat)).getUpperBound();
-      }
+  /** the stat whose maximum is changed */
+  private primary_char = 0;
+
+  constructor(config: { Category: string; Value: any }) {
+    super(config);
+    if (this.characteristic == StatType.MAX_HP) {
+      this.primary_char = int(StatType.HEALTH);
+    } else if (this.characteristic == StatType.MAX_XP) {
+      this.primary_char = int(StatType.EXPERIENCE);
+    }
+  }
+  modifyIcon(clip: any) {
+    super.modifyIcon(clip);
+    if (clip.max_health) {
+      clip.max_health.gotoAndStop(this.value >= 0 ? 'up' : 'down');
+    }
+  }
+  affect(stats: any) {
+    (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).modifyUpperBound(this.value);
+  }
+  disaffect(stats: any) {
+    (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).modifyUpperBound(-this.value);
+  }
+  getStat(stats: any): any {
+    return (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).getUpperBound();
+  }
 }
-MaxHealthModifier.prototype.primary_char = 0;
 bindMethods(MaxHealthModifier);

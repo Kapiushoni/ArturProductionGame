@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+/** Loads a named resource and calls back when done (see PostLoader, SoundResourceLoader). */
 export interface ResourceLoader {
-  load(param1, param2): any;
+  load(resource: string, onLoaded: Function): void;
 }

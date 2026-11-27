@@ -1,69 +1,45 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 
+/**
+ * The handlers of a button (see Screen): click, mouse over, mouse out. A string handler is a frame label:
+ * the button (or, with a hit box, the button's parent) goes to it.
+ */
 export class ButtonInfo {
-  declare _click: any;
-  declare _over: any;
-  declare _out: any;
-  declare hitBox: any;
-  constructor(click, over = null, out = null, flag = true, hitBox = null) {
-         
-         this._click = click;
-         if((typeof over === "string"))
-         {
-            this._over = ButtonInfo.defaultGoto(over,flag,hitBox);
-         }
-         else
-         {
-            this._over = over;
-         }
-         if((typeof out === "string"))
-         {
-            this._out = ButtonInfo.defaultGoto(out,flag,hitBox);
-         }
-         else
-         {
-            this._out = out;
-         }
-         this.hitBox = hitBox;
+  private _click: Function;
+  private _over: Function;
+  private _out: Function;
+  private hitBox: string;
+
+  /** playLabels: gotoAndPlay (else gotoAndStop) for label handlers */
+  constructor(click: Function, over: any = null, out: any = null, playLabels = true, hitBox: string = null) {
+    this._click = click;
+    this._over = typeof over === 'string' ? ButtonInfo.defaultGoto(over, playLabels, hitBox) : over;
+    this._out = typeof out === 'string' ? ButtonInfo.defaultGoto(out, playLabels, hitBox) : out;
+    this.hitBox = hitBox;
+  }
+  /** a handler that moves the button to a frame label */
+  static defaultGoto(label: string, play = false, hitBox: string = null): (event: any) => void {
+    return (event: any) => {
+      event.stopPropagation();
+      const clip = hitBox ? event.currentTarget.parent : event.currentTarget;
+      if (play) {
+        clip.gotoAndPlay(label);
+      } else {
+        clip.gotoAndStop(label);
       }
-  static defaultGoto(text, flag = false, text2 = null) {
-         var label = text;
-         var playAsDefault = flag;
-         var hitBox = text2;
-         return function(event)
-         {
-            event.stopPropagation();
-            var parent = event.currentTarget;
-            if(hitBox)
-            {
-               parent = event.currentTarget.parent;
-            }
-            if(playAsDefault)
-            {
-               parent.gotoAndPlay(label);
-            }
-            else
-            {
-               parent.gotoAndStop(label);
-            }
-         };
-      }
-  getHitBox() {
-         return this.hitBox;
-      }
-  get click() {
-         return this._click;
-      }
-  get over() {
-         return this._over;
-      }
-  get out() {
-         return this._out;
-      }
+    };
+  }
+  getHitBox(): string {
+    return this.hitBox;
+  }
+  get click(): Function {
+    return this._click;
+  }
+  get over(): Function {
+    return this._over;
+  }
+  get out(): Function {
+    return this._out;
+  }
 }
-ButtonInfo.prototype._click = null;
-ButtonInfo.prototype._over = null;
-ButtonInfo.prototype._out = null;
-ButtonInfo.prototype.hitBox = null;
 bindMethods(ButtonInfo);

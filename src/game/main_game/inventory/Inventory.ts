@@ -1,88 +1,72 @@
-// @ts-nocheck
 import { as3as, as3values, bindMethods, uint } from '@/flash/as3';
-import { main } from '@/game/main';
+import { services } from '@/game/services';
 import { Trash } from '@/game/main_game/inventory/Trash';
 import { Slot } from '@/game/main_game/item_containers/Slot';
 import { Item } from '@/game/main_game/items/Item';
+import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
 
+/** The 12 inventory slots (saved as inventory slots 0-11) and the trash. */
 export class Inventory {
-  static SLOTS = uint(12);
-  declare slots: any;
-  declare trash: any;
+  static SLOTS = 12;
+  private slots: Slot[];
+  private trash: Trash;
+
   constructor() {
-         
-         this.trash = new Trash();
-         this.slots = new Array(Inventory.SLOTS);
-         var i = uint(0);
-         while(i < Inventory.SLOTS)
-         {
-            this.slots[i] = new Slot();
-            i++;
-         }
-         this.loadData();
-      }
+    this.trash = new Trash();
+    this.slots = new Array(Inventory.SLOTS);
+    for (let i = 0; i < Inventory.SLOTS; i++) {
+      this.slots[i] = new Slot();
+    }
+    this.loadData();
+  }
+  /** loads the saved items, then saves every later change */
   loadData() {
-         var item = null;
-         var i = uint(0);
-         while(i < Inventory.SLOTS)
-         {
-            item = main.saveSystem.loadInventoryItem(i);
-            if(item != null)
-            {
-               this.slots[i].add(item);
-            }
-            this.slots[i].onChange.add(this.saveSlot(i));
-            i++;
-         }
+    for (let i = 0; i < Inventory.SLOTS; i++) {
+      const item = services.saveSystem.loadInventoryItem(i);
+      if (item != null) {
+        this.slots[i].add(item);
       }
-  saveSlot(num) { num = uint(num);
-         var i = uint(num);
-         return function(slotChange)
-         {
-            main.saveSystem.saveInventorySlot(i,slotChange.getNewItem());
-         };
+      this.slots[i].onChange.add(this.saveSlot(i));
+    }
+  }
+  saveSlot(index: number) {
+    const i = uint(index);
+    return (change: SlotChange) => {
+      services.saveSystem.saveInventorySlot(i, change.getNewItem());
+    };
+  }
+  getEmptySlot(): Slot | null {
+    for (const slot of as3values(this.slots)) {
+      if (slot.isEmpty()) {
+        return slot;
       }
-  getEmptySlot() {
-         var slot = null;
-         for (slot of as3values(this.slots))
-         {
-            if(slot.isEmpty())
-            {
-               return slot;
-            }
-         }
-         return null;
+    }
+    return null;
+  }
+  getTrash(): Trash {
+    return this.trash;
+  }
+  itemOfSlot(index: number): Item | null {
+    return as3as((as3as(this.slots[uint(index)], Slot) as Slot).getContent(), Item);
+  }
+  getSlot(index: number): Slot {
+    return as3as(this.slots[uint(index)], Slot);
+  }
+  /** number of slots with an item */
+  get fullSlots(): number {
+    let count = 0;
+    for (const slot of as3values(this.slots)) {
+      if (!slot.isEmpty()) {
+        count++;
       }
-  getTrash() {
-         return this.trash;
-      }
-  itemOfSlot(num) { num = uint(num);
-         return as3as((as3as(this.slots[num], Slot)).getContent(), Item);
-      }
-  getSlot(num) { num = uint(num);
-         return as3as(this.slots[num], Slot);
-      }
-  get fullSlots() {
-         var slot = null;
-         var num = uint(0);
-         for (slot of as3values(this.slots))
-         {
-            if(!slot.isEmpty())
-            {
-               num++;
-            }
-         }
-         return uint(num);
-      }
+    }
+    return count;
+  }
   clear() {
-         var slot = null;
-         this.trash.clear();
-         for (slot of as3values(this.slots))
-         {
-            slot.clear();
-         }
-      }
+    this.trash.clear();
+    for (const slot of as3values(this.slots)) {
+      slot.clear();
+    }
+  }
 }
-Inventory.prototype.slots = null;
-Inventory.prototype.trash = null;
 bindMethods(Inventory);

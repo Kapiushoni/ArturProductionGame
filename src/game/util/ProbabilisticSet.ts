@@ -1,78 +1,62 @@
-// @ts-nocheck
 import { bindMethods, int, uint } from '@/flash/as3';
 
+/** Elements with weights: getElement() / pop() pick one at random, proportionally to its weight. */
 export class ProbabilisticSet {
-  declare items: any;
-  declare probs: any;
-  declare totalProb: any;
-  constructor() {
-         
-         this.items = new Array();
-         this.probs = new Array();
-         this.totalProb = Number(0);
+  private items: any[] = [];
+  private probs: number[] = [];
+  totalProb = 0;
+
+  get length(): number {
+    return uint(this.items.length);
+  }
+  /** picks an element and removes it */
+  pop(): any {
+    return this.remove(this.getOne());
+  }
+  getElement(): any {
+    return this.items[this.getOne()];
+  }
+  remove(index: number): any {
+    index = int(index);
+    const prob = Number(this.probs[index]);
+    const item = this.items[index];
+    this.probs.splice(index, 1);
+    this.items.splice(index, 1);
+    this.totalProb = this.totalProb - prob;
+    return item;
+  }
+  /** index of a random element (weighted) */
+  getOne(): number {
+    let roll = Math.random() * this.totalProb;
+    for (let i = 0; i < this.items.length; i++) {
+      const prob = Number(this.probs[i]);
+      if (roll <= prob) {
+        return i;
       }
-  get length() {
-         return uint(this.items.length);
+      roll = roll - prob;
+    }
+    return this.items.length;
+  }
+  contains(item: any): boolean {
+    return this.getIndexOf(item) >= 0;
+  }
+  /** by identity, or with item.equals() when the item has it */
+  getIndexOf(item: any): number {
+    const index = int(this.items.indexOf(item));
+    // (AS3 hasOwnProperty('equals') is true for class methods; in JS they are on the prototype)
+    if (index < 0 && typeof item.equals === 'function') {
+      for (let i = 0; i < this.items.length; i++) {
+        if (item.equals(this.items[i])) {
+          return i;
+        }
       }
-  pop() {
-         var one = int(this.getOne());
-         return this.remove(one);
-      }
-  getElement() {
-         var one = int(this.getOne());
-         return this.items[one];
-      }
-  remove(num) { num = int(num);
-         var num2 = Number(Number(this.probs[num]));
-         var obj = this.items[num];
-         this.probs.splice(num,1);
-         this.items.splice(num,1);
-         this.totalProb = Number(this.totalProb - (num2));
-         return obj;
-      }
-  getOne() {
-         var num = Number(Math.random() * this.totalProb);
-         var num2 = Number(0);
-         var i = int(0);
-         while(i < this.items.length)
-         {
-            num2 = Number(Number(this.probs[i]));
-            if(num <= num2)
-            {
-               return int(i);
-            }
-            num = Number(num - (num2));
-            i++;
-         }
-         return int(this.items.length);
-      }
-  contains(obj) {
-         return this.getIndexOf(obj) >= 0;
-      }
-  getIndexOf(obj) {
-         var i = int(0);
-         var num = int(this.items.indexOf(obj));
-         if(num < 0 && obj.hasOwnProperty("equals"))
-         {
-            i = int(0);
-            while(i < this.items.length)
-            {
-               if(obj.equals(this.items[i]))
-               {
-                  return int(i);
-               }
-               i++;
-            }
-         }
-         return int(num);
-      }
-  add(obj, num = 1) { num = Number(num);
-         this.items.push(obj);
-         this.probs.push(num);
-         this.totalProb = Number(this.totalProb + (num));
-      }
+    }
+    return index;
+  }
+  add(item: any, weight = 1) {
+    this.items.push(item);
+    this.probs.push(Number(weight));
+    this.totalProb = this.totalProb + Number(weight);
+  }
 }
-ProbabilisticSet.prototype.items = null;
-ProbabilisticSet.prototype.probs = null;
-ProbabilisticSet.prototype.totalProb = NaN;
 bindMethods(ProbabilisticSet);

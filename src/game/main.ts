@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Event, MovieClip, Sprite, as3as, bindMethods } from '@/flash/as3';
 import { AchievementDispatcher } from '@/game/AchievementDispatcher';
 import { BasicState } from '@/game/aplication/BasicState';
@@ -27,228 +26,238 @@ import { TransitionWindow } from '@/game/view/screens/main_game/TransitionWindow
 import { TransitionWindowJakeLess } from '@/game/view/screens/main_game/TransitionWindowJakeLess';
 import { MainMenu } from '@/game/view/screens/MainMenu';
 import { Outro } from '@/game/view/screens/Outro';
+import { services } from '@/game/services';
+import type { ClassLoader } from '@/game/bonus/ClassLoader';
+import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
+import type { Locale } from '@/game/cb/data/Locale';
+import type { SwfBulkLoader } from '@/game/cb/display/SwfBulkLoader';
 
+/**
+ * The application (the document class of the original game). Its static fields are what the screens use;
+ * the services shared with the game logic (texts, config, save, sound, ...) live in services.ts
+ * and are reached here through accessors. Screens are an FSM: preloading -> mainMenu -> (intro ->) game (-> outro), see init().
+ */
 export class main extends Sprite {
-  static locale = null;
-  static swfLoader = null;
-  static soundManager = null;
-  static config = null;
-  static levels = null;
-  static game = null;
-  static drag = null;
-  static saveSystem = null;
-  static activeBonus = null;
-  static theTutorial = null;
-  static achievementDispatcher = null;
-  static gameHolder = null;
-  static popUpHolder = null;
-  static tutorialHolder = null;
-  static transitionHolder = null;
-  static postLoader = null;
-  declare fsmAplication: any;
+  /** texts (locale.txt) */
+  static get locale(): Locale {
+    return services.texts as Locale;
+  }
+  static set locale(value: Locale) {
+    services.texts = value;
+  }
+  /** asset libraries */
+  static get swfLoader(): SwfBulkLoader {
+    return services.assets as SwfBulkLoader;
+  }
+  static set swfLoader(value: SwfBulkLoader) {
+    services.assets = value;
+  }
+  static get soundManager(): SoundManager {
+    return services.sound as SoundManager;
+  }
+  static set soundManager(value: SoundManager) {
+    services.sound = value;
+  }
+  /** config.di */
+  static get config(): any {
+    return services.config;
+  }
+  static set config(value: any) {
+    services.config = value;
+  }
+  /** the game model, while in the game */
+  static game: Game = null;
+  static drag: DragDispatcher = null;
+  static get saveSystem(): SaveSystem {
+    return services.saveSystem;
+  }
+  static set saveSystem(value: SaveSystem) {
+    services.saveSystem = value;
+  }
+  /** today's bonus, or null */
+  static activeBonus: IDailyBonus = null;
+  static get theTutorial(): Tutorial {
+    return services.tutorial as Tutorial;
+  }
+  static set theTutorial(value: Tutorial) {
+    services.tutorial = value;
+  }
+  static get achievementDispatcher(): AchievementDispatcher {
+    return services.achievements as AchievementDispatcher;
+  }
+  static set achievementDispatcher(value: AchievementDispatcher) {
+    services.achievements = value;
+  }
+  /** display layers, bottom to top */
+  static gameHolder: any = null;
+  static tutorialHolder: any = null;
+  static popUpHolder: any = null;
+  static transitionHolder: any = null;
+  /** loads the rest of the sounds in the background */
+  static postLoader: PostLoader = null;
+  fsmAplication: FSM = null;
+
   constructor() {
-          super(); const __self = this;
-         Log.getLogger("debug").addAppender(new JSConsoleAppender());
-         Log.getLogger("debug").addAppender(new Appender());
-         if(__self.stage)
-         {
-            this.init();
-         }
-         else
-         {
-            __self.addEventListener(Event.ADDED_TO_STAGE,this.init);
-         }
-      }
-  static get theLoader() {
-         return main.postLoader;
-      }
-  static setDailyBonus(classLoader) {
-         DailyBonus.config = classLoader;
-         main.activeBonus = DailyBonus.getBonusOfDate(new Date());
-      }
-  static waitForResourcesJakeLess(list, callback, callback2 = null) {
-         var transitionWindowJakeLess = new TransitionWindowJakeLess(list,callback,callback2);
-         transitionWindowJakeLess.start(main.transitionHolder);
-      }
-  static waitForResources(list, callback, callback2 = null) {
-         var transitionWindow = new TransitionWindow(list,callback,callback2);
-         transitionWindow.start(main.transitionHolder);
-      }
-  init(event = null) { const __self = this;
-         var preloader = null;
-         var e = event;
-         main.popUpHolder = new MovieClip();
-         main.tutorialHolder = new MovieClip();
-         main.gameHolder = new MovieClip();
-         main.transitionHolder = new MovieClip();
-         this.addChild(main.gameHolder);
-         this.addChild(main.tutorialHolder);
-         this.addChild(main.popUpHolder);
-         main.popUpHolder.mouseChildren = false;
-         main.popUpHolder.mouseEnabled = false;
-         this.addChild(main.transitionHolder);
-         this.disableKeyboard();
-         __self.removeEventListener(Event.ADDED_TO_STAGE,this.init);
-         main.drag = new DragDispatcher(__self.stage);
-         main.soundManager = new SoundManager();
-         main.saveSystem = new SaveSystem(__self.stage);
-         preloader = new Preloader(main.gameHolder);
-         preloader.onLocaleLoaded.add(function(locale)
-         {
-            main.locale = locale;
-         });
-         preloader.onConfigLoaded.add(function(classLoader)
-         {
-            main.config = classLoader;
-         });
-         preloader.onCharactersLoaded.add(function(dict)
-         {
-            CharacterFactory.setConfig(dict);
-         });
-         preloader.onItemsLoaded.add(function(dict2)
-         {
-            ItemFactory.setConfig(dict2);
-         });
-         preloader.onDungeonsLoaded.add(function(dict3)
-         {
-            DungeonFactory.setConfig(dict3);
-         });
-         preloader.onLevelsLoaded.add(function(classLoader2)
-         {
-            main.levels = classLoader2;
-         });
-         preloader.onSwfLoaded.add(function(swfBulkLoader)
-         {
-            main.swfLoader = swfBulkLoader;
-         });
-         preloader.onSoundLoaded.add(function(soundLoader)
-         {
-            main.soundManager.start(soundLoader);
-         });
-         preloader.onFinishLoading.add(this.preloadingComplete);
-         main.achievementDispatcher = new AchievementDispatcher();
-         this.fsmAplication = new FSM(new BasicState("preloading",preloader.start,main.achievementDispatcher.gameLoaded));
-         this.fsmAplication.addState(new BasicState("mainMenu",this.showMainMenu,this.removeMainMenu));
-         this.fsmAplication.addState(new BasicState("intro",this.showIntro,this.removeIntro));
-         this.fsmAplication.addState(new BasicState("game",this.loadGame,this.leaveGame));
-         this.fsmAplication.addState(new BasicState("outro",this.showOutro,this.removeOutro));
-         this.fsmAplication.addTransition("preloading","mainMenu","loaded");
-         this.fsmAplication.addTransition("mainMenu","intro","newGame");
-         this.fsmAplication.addTransition("mainMenu","game","continueGame");
-         this.fsmAplication.addTransition("intro","game","next");
-         this.fsmAplication.addTransition("intro","mainMenu","back");
-         this.fsmAplication.addTransition("game","mainMenu","toMainMenu");
-         this.fsmAplication.addTransition("game","outro","endGame");
-         this.fsmAplication.addTransition("outro","game","next");
-         this.fsmAplication.start();
-      }
+    super();
+    Log.getLogger('debug').addAppender(new JSConsoleAppender());
+    Log.getLogger('debug').addAppender(new Appender());
+    if (this.stage) {
+      this.init();
+    } else {
+      this.addEventListener(Event.ADDED_TO_STAGE, this.init);
+    }
+  }
+  static get theLoader(): PostLoader {
+    return main.postLoader;
+  }
+  static setDailyBonus(config: ClassLoader) {
+    DailyBonus.config = config;
+    main.activeBonus = DailyBonus.getBonusOfDate(new Date());
+  }
+  /** a transition screen until the resources are loaded, then callback */
+  static waitForResourcesJakeLess(resources: string[], callback: Function, callback2: Function = null) {
+    new TransitionWindowJakeLess(resources, callback, callback2).start(main.transitionHolder);
+  }
+  /** the same, with Jake on the transition screen */
+  static waitForResources(resources: string[], callback: Function, callback2: Function = null) {
+    new TransitionWindow(resources, callback, callback2).start(main.transitionHolder);
+  }
+  init(_event: any = null) {
+    main.popUpHolder = new MovieClip();
+    main.tutorialHolder = new MovieClip();
+    main.gameHolder = new MovieClip();
+    main.transitionHolder = new MovieClip();
+    this.addChild(main.gameHolder);
+    this.addChild(main.tutorialHolder);
+    this.addChild(main.popUpHolder);
+    main.popUpHolder.mouseChildren = false;
+    main.popUpHolder.mouseEnabled = false;
+    this.addChild(main.transitionHolder);
+    this.disableKeyboard();
+    this.removeEventListener(Event.ADDED_TO_STAGE, this.init);
+    main.drag = new DragDispatcher(this.stage);
+    main.soundManager = new SoundManager();
+    main.saveSystem = new SaveSystem(this.stage);
+
+    const preloader = new Preloader(main.gameHolder);
+    preloader.onLocaleLoaded.add((locale: Locale) => (main.locale = locale));
+    preloader.onConfigLoaded.add((config: ClassLoader) => (main.config = config));
+    preloader.onCharactersLoaded.add((rows: any) => CharacterFactory.setConfig(rows));
+    preloader.onItemsLoaded.add((rows: any) => ItemFactory.setConfig(rows));
+    preloader.onDungeonsLoaded.add((rows: any) => DungeonFactory.setConfig(rows));
+    preloader.onSwfLoaded.add((swfs: SwfBulkLoader) => (main.swfLoader = swfs));
+    preloader.onSoundLoaded.add((sounds: any) => main.soundManager.start(sounds));
+    preloader.onFinishLoading.add(this.preloadingComplete);
+    main.achievementDispatcher = new AchievementDispatcher();
+
+    const fsm = new FSM(new BasicState('preloading', preloader.start, main.achievementDispatcher.gameLoaded));
+    this.fsmAplication = fsm;
+    fsm.addState(new BasicState('mainMenu', this.showMainMenu, this.removeMainMenu));
+    fsm.addState(new BasicState('intro', this.showIntro, this.removeIntro));
+    fsm.addState(new BasicState('game', this.loadGame, this.leaveGame));
+    fsm.addState(new BasicState('outro', this.showOutro, this.removeOutro));
+    fsm.addTransition('preloading', 'mainMenu', 'loaded');
+    fsm.addTransition('mainMenu', 'intro', 'newGame');
+    fsm.addTransition('mainMenu', 'game', 'continueGame');
+    fsm.addTransition('intro', 'game', 'next');
+    fsm.addTransition('intro', 'mainMenu', 'back');
+    fsm.addTransition('game', 'mainMenu', 'toMainMenu');
+    fsm.addTransition('game', 'outro', 'endGame');
+    fsm.addTransition('outro', 'game', 'next');
+    fsm.start();
+  }
   disableKeyboard() {
-         main.gameHolder.tabEnabled = false;
-         main.gameHolder.tabChildren = false;
-         main.tutorialHolder.tabEnabled = false;
-         main.tutorialHolder.tabChildren = false;
-      }
-  preloadingComplete(preloader) {
-         assert(main.swfLoader != null,"swfLoader is missing!");
-         assert(main.locale != null,"Locale is missing!");
-         assert(main.soundManager.ready(),"soundMixer is missing!");
-         assert(main.config != null,"config is missing!");
-         assert(DailyBonus.config != null,"dailybonus is missing!");
-         main.postLoader = new PostLoader(GameSounds.soundsToLoad,new SoundResourceLoader(main.soundManager));
-         main.postLoader.start();
-         preloader.pop();
-         this.fsmAplication.takeTransition("loaded");
-      }
-  showMainMenu() { const __self = this;
-         var mm = new MainMenu();
-         (as3as(this.fsmAplication.getActualState(), BasicState)).persistency = mm;
-         main.gameHolder.addChild(mm);
-         mm.onNewGame.add(Util.l(main.waitForResourcesJakeLess,[],function()
-         {
-            __self.fsmAplication.takeTransition("newGame");
-         }));
-         mm.onContinueGame.add(Util.l(main.waitForResources,GameSounds.mapSounds,function()
-         {
-            __self.fsmAplication.takeTransition("continueGame");
-         }));
-         mm.enter();
-      }
+    main.gameHolder.tabEnabled = false;
+    main.gameHolder.tabChildren = false;
+    main.tutorialHolder.tabEnabled = false;
+    main.tutorialHolder.tabChildren = false;
+  }
+  preloadingComplete(preloader: Preloader) {
+    assert(main.swfLoader != null, 'swfLoader is missing!');
+    assert(main.locale != null, 'Locale is missing!');
+    assert(main.soundManager.ready(), 'soundMixer is missing!');
+    assert(main.config != null, 'config is missing!');
+    assert(DailyBonus.config != null, 'dailybonus is missing!');
+    main.postLoader = new PostLoader(GameSounds.soundsToLoad, new SoundResourceLoader(main.soundManager));
+    main.postLoader.start();
+    preloader.pop();
+    this.fsmAplication.takeTransition('loaded');
+  }
+  /** the screen object of the current state */
+  private get currentScreen(): any {
+    return (as3as(this.fsmAplication.getActualState(), BasicState) as BasicState).persistency;
+  }
+  private set currentScreen(screen: any) {
+    (as3as(this.fsmAplication.getActualState(), BasicState) as BasicState).persistency = screen;
+  }
+  showMainMenu() {
+    const menu = new MainMenu();
+    this.currentScreen = menu;
+    main.gameHolder.addChild(menu);
+    menu.onNewGame.add(Util.l(main.waitForResourcesJakeLess, [], () => this.fsmAplication.takeTransition('newGame')));
+    menu.onContinueGame.add(
+      Util.l(main.waitForResources, GameSounds.mapSounds, () => this.fsmAplication.takeTransition('continueGame')),
+    );
+    menu.enter();
+  }
   removeMainMenu() {
-         var mainMenu = as3as((as3as(this.fsmAplication.getActualState(), BasicState)).persistency, MainMenu);
-         mainMenu.exit();
-      }
-  showIntro() { const __self = this;
-         var intro = null;
-         main.saveSystem.reset();
-         intro = new Intro();
-         (as3as(this.fsmAplication.getActualState(), BasicState)).persistency = intro;
-         main.gameHolder.addChild(intro);
-         intro.onNext.add(Util.l(main.waitForResources,GameSounds.mapSounds,function()
-         {
-            main.saveSystem.onFirstPlay();
-            __self.fsmAplication.takeTransition("next");
-         }));
-         intro.onBack.add(Util.l(main.waitForResourcesJakeLess,[],function()
-         {
-            __self.fsmAplication.takeTransition("back");
-         }));
-         intro.enter();
-      }
+    as3as(this.currentScreen, MainMenu).exit();
+  }
+  /** a new game: the save is reset */
+  showIntro() {
+    main.saveSystem.reset();
+    const intro = new Intro();
+    this.currentScreen = intro;
+    main.gameHolder.addChild(intro);
+    intro.onNext.add(
+      Util.l(main.waitForResources, GameSounds.mapSounds, () => {
+        main.saveSystem.onFirstPlay();
+        this.fsmAplication.takeTransition('next');
+      }),
+    );
+    intro.onBack.add(Util.l(main.waitForResourcesJakeLess, [], () => this.fsmAplication.takeTransition('back')));
+    intro.enter();
+  }
   removeIntro() {
-         var intro = as3as((as3as(this.fsmAplication.getActualState(), BasicState)).persistency, Intro);
-         intro.exit();
-      }
-  showOutro() { const __self = this;
-         var outro = null;
-         main.achievementDispatcher.gameWon();
-         outro = new Outro();
-         (as3as(this.fsmAplication.getActualState(), BasicState)).persistency = outro;
-         main.gameHolder.addChild(outro);
-         outro.onNext.add(Util.l(main.waitForResourcesJakeLess,[],function()
-         {
-            main.saveSystem.onFirstPlay();
-            __self.fsmAplication.takeTransition("next");
-         }));
-         outro.onBack.add(Util.l(main.waitForResources,[],function()
-         {
-            __self.fsmAplication.takeTransition("next");
-         }));
-         outro.enter();
-      }
+    as3as(this.currentScreen, Intro).exit();
+  }
+  showOutro() {
+    main.achievementDispatcher.gameWon();
+    const outro = new Outro();
+    this.currentScreen = outro;
+    main.gameHolder.addChild(outro);
+    outro.onNext.add(
+      Util.l(main.waitForResourcesJakeLess, [], () => {
+        main.saveSystem.onFirstPlay();
+        this.fsmAplication.takeTransition('next');
+      }),
+    );
+    outro.onBack.add(Util.l(main.waitForResources, [], () => this.fsmAplication.takeTransition('next')));
+    outro.enter();
+  }
   removeOutro() {
-         var outro = as3as((as3as(this.fsmAplication.getActualState(), BasicState)).persistency, Outro);
-         outro.exit();
-      }
-  loadGame() { const __self = this;
-         var gameView = null;
-         main.theTutorial = new Tutorial();
-         main.game = new Game();
-         main.game.enter();
-         if(main.activeBonus != null)
-         {
-            main.activeBonus.activate();
-         }
-         gameView = new GameView();
-         main.gameHolder["gameView"] = gameView;
-         main.gameHolder.addChild(gameView);
-         gameView.onExit.add(Util.l(main.waitForResources,[],function()
-         {
-            __self.fsmAplication.takeTransition("toMainMenu");
-         }));
-         gameView.onEnd.add(Util.l(main.waitForResources,[],function()
-         {
-            __self.fsmAplication.takeTransition("endGame");
-         }));
-         gameView.start();
-         main.theTutorial.next();
-         main.achievementDispatcher.gamePlayed();
-      }
+    as3as(this.currentScreen, Outro).exit();
+  }
+  loadGame() {
+    main.theTutorial = new Tutorial();
+    main.game = new Game();
+    main.game.enter();
+    if (main.activeBonus != null) {
+      main.activeBonus.activate(main.game);
+    }
+    const gameView = new GameView();
+    main.gameHolder['gameView'] = gameView;
+    main.gameHolder.addChild(gameView);
+    gameView.onExit.add(Util.l(main.waitForResources, [], () => this.fsmAplication.takeTransition('toMainMenu')));
+    gameView.onEnd.add(Util.l(main.waitForResources, [], () => this.fsmAplication.takeTransition('endGame')));
+    gameView.start();
+    main.theTutorial.next();
+    main.achievementDispatcher.gamePlayed();
+  }
   leaveGame() {
-         var gameView = main.gameHolder["gameView"];
-         gameView.exit();
-         main.drag.clear();
-         main.game.exit();
-      }
+    main.gameHolder['gameView'].exit();
+    main.drag.clear();
+    main.game.exit();
+  }
 }
-main.prototype.fsmAplication = null;
 bindMethods(main);

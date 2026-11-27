@@ -1,61 +1,60 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import { services } from '@/game/services';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
 import { GameSounds } from '@/game/sound/GameSounds';
+import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
+import type { Item } from '@/game/main_game/items/Item';
 
-export class Trash {
-  declare onThrow: any;
-  declare locked: any;
+/** Items dropped here are destroyed (onThrow(item) first). */
+export class Trash implements IDragContainer {
+  onThrow: Signal;
+  private locked = false;
+
   constructor() {
-         
-         this.locked = false;
-         this.onThrow = new Signal();
-      }
-  remove(item) {
-         throw new Error("Trash Cant Remove Items");
-      }
-  canRemove(item) {
-         return false;
-      }
-  moveFrom(item, dragContainer) {
-         dragContainer.remove(item);
-         this.add(item);
-      }
-  getContainToDrag() {
-         return null;
-      }
-  add(item) {
-         this.onThrow.emit(item);
-         item.clear();
-         main.saveSystem.savePendingItems();
-         main.soundManager.playFx(GameSounds.ITEM_TRASH);
-      }
-  getContent() {
-         return null;
-      }
-  isEmpty() {
-         return true;
-      }
-  canMoveFrom(item, dragContainer) {
-         return !this.locked;
-      }
-  itsCompatible(item, dragContainer) {
-         return true;
-      }
+    this.onThrow = new Signal();
+  }
+  remove(_item: Item) {
+    throw new Error('Trash Cant Remove Items');
+  }
+  canRemove(_item: Item): boolean {
+    return false;
+  }
+  moveFrom(item: Item, from: IDragContainer) {
+    from.remove(item);
+    this.add(item);
+  }
+  getContainToDrag(): Item | null {
+    return null;
+  }
+  add(item: Item) {
+    this.onThrow.emit(item);
+    item.clear();
+    services.saveSystem.savePendingItems();
+    services.sound.playFx(GameSounds.ITEM_TRASH);
+  }
+  getContent(): Item | null {
+    return null;
+  }
+  isEmpty(): boolean {
+    return true;
+  }
+  canMoveFrom(_item: Item, _from: IDragContainer): boolean {
+    return !this.locked;
+  }
+  itsCompatible(_item: Item, _from: IDragContainer): boolean {
+    return true;
+  }
   clear() {
-         this.onThrow.clear();
-      }
-  canSwap(dragContainer) {
-         return false;
-      }
+    this.onThrow.clear();
+  }
+  canSwap(_other: IDragContainer): boolean {
+    return false;
+  }
   lock() {
-         this.locked = true;
-      }
+    this.locked = true;
+  }
   unlock() {
-         this.locked = false;
-      }
+    this.locked = false;
+  }
 }
-Trash.prototype.onThrow = null;
-Trash.prototype.locked = false;
 bindMethods(Trash);

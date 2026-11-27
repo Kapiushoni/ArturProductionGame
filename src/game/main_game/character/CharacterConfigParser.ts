@@ -1,52 +1,46 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { Element } from '@/game/main_game/element/Element';
+import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 
-export class CharacterConfigParser {
-  declare theBaseHP: any;
-  declare theBaseAttack: any;
-  declare theBaseDefense: any;
-  declare theBaseLuck: any;
-  declare theBaseXP: any;
-  declare theElement: any;
-  declare theNameString: any;
-  constructor(obj) {
-         
-         this.theBaseHP = Number(obj["BaseHP"]);
-         this.theBaseAttack = Number(obj["BaseAttack"]);
-         this.theBaseDefense = Number(obj["BaseDefense"]);
-         this.theBaseLuck = Number(obj["BaseLuck"]);
-         this.theBaseXP = Number(obj["BaseXP"]);
-         this.theElement = Element.parseElement(obj["Element"]);
-         this.theNameString = obj["NameString"];
-      }
-  get baseHP() {
-         return Number(this.theBaseHP);
-      }
-  get baseAttack() {
-         return Number(this.theBaseAttack);
-      }
-  get baseDefense() {
-         return Number(this.theBaseDefense);
-      }
-  get baseLuck() {
-         return Number(this.theBaseLuck);
-      }
-  get baseXP() {
-         return Number(this.theBaseXP);
-      }
-  get element() {
-         return this.theElement;
-      }
-  get nameString() {
-         return this.theNameString;
-      }
+/** A row of characters.csv: { BaseHP, BaseAttack, BaseDefense, BaseLuck, BaseXP, Element, NameString }. */
+export class CharacterConfigParser implements CharacterConfigData {
+  private theBaseHP: number;
+  private theBaseAttack: number;
+  private theBaseDefense: number;
+  private theBaseLuck: number;
+  private theBaseXP: number;
+  private theElement: Element;
+  private theNameString: string;
+
+  constructor(row: any) {
+    this.theBaseHP = Number(row['BaseHP']);
+    this.theBaseAttack = Number(row['BaseAttack']);
+    this.theBaseDefense = Number(row['BaseDefense']);
+    this.theBaseLuck = Number(row['BaseLuck']);
+    this.theBaseXP = Number(row['BaseXP']);
+    this.theElement = Element.parseElement(row['Element']);
+    this.theNameString = row['NameString'];
+  }
+  get baseHP(): number {
+    return this.theBaseHP;
+  }
+  get baseAttack(): number {
+    return this.theBaseAttack;
+  }
+  get baseDefense(): number {
+    return this.theBaseDefense;
+  }
+  get baseLuck(): number {
+    return this.theBaseLuck;
+  }
+  get baseXP(): number {
+    return this.theBaseXP;
+  }
+  get element(): Element {
+    return this.theElement;
+  }
+  get nameString(): string {
+    return this.theNameString;
+  }
 }
-CharacterConfigParser.prototype.theBaseHP = NaN;
-CharacterConfigParser.prototype.theBaseAttack = NaN;
-CharacterConfigParser.prototype.theBaseDefense = NaN;
-CharacterConfigParser.prototype.theBaseLuck = NaN;
-CharacterConfigParser.prototype.theBaseXP = NaN;
-CharacterConfigParser.prototype.theElement = null;
-CharacterConfigParser.prototype.theNameString = null;
 bindMethods(CharacterConfigParser);

@@ -1,36 +1,35 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
 import { NoneFilter } from '@/game/bonus/filter/NoneFilter';
-import { main } from '@/game/main';
 import { Element } from '@/game/main_game/element/Element';
+import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
+import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
-export class ExtraDungeon {
-  declare dungeonId: any;
-  declare element: any;
-  constructor(dungeonId, element) {
-         
-         this.dungeonId = dungeonId;
-         this.element = element;
-      }
-  activate() {
-         var level = main.game.getMap().getLevel(this.dungeonId);
-         level.unlock();
-         main.game.getMap().unlockUnlocked();
-      }
-  getElement() {
-         return Element.parseElement(this.element);
-      }
-  getIcon() {
-         return BonusIcon.getExtraDungeon(this.element);
-      }
-  getFilter() {
-         return new NoneFilter();
-      }
-  getAction() {
-         return "";
-      }
+/** "specialDungeon": opens a legendary dungeon for the day. */
+export class ExtraDungeon implements IDailyBonus {
+  private dungeonId: string;
+  /** element code of the dungeon ("I" / "F") */
+  private element: string;
+
+  constructor(dungeonId: string, element: string) {
+    this.dungeonId = dungeonId;
+    this.element = element;
+  }
+  activate(game: any) {
+    game.getMap().getLevel(this.dungeonId).unlock();
+    game.getMap().unlockUnlocked();
+  }
+  getElement(): Element {
+    return Element.parseElement(this.element);
+  }
+  getIcon(): BonusIcon {
+    return BonusIcon.getExtraDungeon(this.element);
+  }
+  getFilter(): IBonusFilter {
+    return new NoneFilter();
+  }
+  getAction(): string {
+    return '';
+  }
 }
-ExtraDungeon.prototype.dungeonId = null;
-ExtraDungeon.prototype.element = null;
 bindMethods(ExtraDungeon);

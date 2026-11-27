@@ -1,6 +1,7 @@
-// @ts-nocheck
+import type { Signal } from '@/game/cb/signals/Signal';
 
+/** Loads resources on demand (see PostLoader). */
 export interface DynamicLoader {
-  isLoaded(param1): any;
-  get onLoad(): any;
+  isLoaded(resource: string): boolean;
+  get onLoad(): Signal;
 }

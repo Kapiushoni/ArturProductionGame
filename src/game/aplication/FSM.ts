@@ -1,63 +1,58 @@
-// @ts-nocheck
 import { as3values, bindMethods } from '@/flash/as3';
+import type { State } from '@/game/aplication/State';
 
+/** A finite state machine: named states and named transitions between them. */
 export class FSM {
-  declare states: any;
-  declare actual_state: any;
-  constructor(actual_state) {
-         
-         this.states = new Array();
-         this.actual_state = actual_state;
-         this.addState(this.actual_state);
-      }
+  private states: State[];
+  private actual_state: State;
+
+  constructor(initial: State) {
+    this.states = [];
+    this.actual_state = initial;
+    this.addState(this.actual_state);
+  }
+  /** enters the initial state */
   start() {
-         this.getActualState().enter();
+    this.getActualState().enter();
+  }
+  addState(state: State) {
+    this.states.push(state);
+  }
+  addTransition(from: string, to: string, transition: string) {
+    const source = this.getState(from);
+    const target = this.getState(to);
+    this.checkState(source);
+    this.checkState(target);
+    source.addTransition(target, transition);
+  }
+  getState(name: string): State {
+    for (const state of as3values(this.states)) {
+      if (name == state.getName()) {
+        return state;
       }
-  addState(state) {
-         this.states.push(state);
-      }
-  addTransition(text, text2, text3) {
-         var state = this.getState(text);
-         var state2 = this.getState(text2);
-         this.checkState(state);
-         this.checkState(state2);
-         state.addTransition(state2,text3);
-      }
-  getState(text) {
-         var state = null;
-         for (state of as3values(this.states))
-         {
-            if(text == state.getName())
-            {
-               return state;
-            }
-         }
-         throw new Error("No existe estado con nombre " + text);
-      }
-  takeTransition(text) {
-         this.getActualState().leave();
-         this.actual_state = this.getActualState().getTargetForTransition(text);
-         this.getActualState().enter();
-      }
-  getActualState() {
-         return this.actual_state;
-      }
-  checkState(state) {
-         if(this.states.indexOf(state) < 0)
-         {
-            throw new Error("Estado " + state.getName() + " no se encuentra en la FSM");
-         }
-      }
+    }
+    throw new Error('No existe estado con nombre ' + name); // "no state named ..."
+  }
+  /** leaves the current state and enters the target of `transition` */
+  takeTransition(transition: string) {
+    this.getActualState().leave();
+    this.actual_state = this.getActualState().getTargetForTransition(transition);
+    this.getActualState().enter();
+  }
+  getActualState(): State {
+    return this.actual_state;
+  }
+  checkState(state: State) {
+    if (this.states.indexOf(state) < 0) {
+      throw new Error('Estado ' + state.getName() + ' no se encuentra en la FSM'); // "state not in the FSM"
+    }
+  }
   clear() {
-         var state = null;
-         for (state of as3values(this.states))
-         {
-            state.clear();
-         }
-         this.states = null;
-         this.actual_state = null;
-      }
+    for (const state of as3values(this.states)) {
+      state.clear();
+    }
+    this.states = null;
+    this.actual_state = null;
+  }
 }
-FSM.prototype.states = null;
-FSM.prototype.actual_state = null;
 bindMethods(FSM);

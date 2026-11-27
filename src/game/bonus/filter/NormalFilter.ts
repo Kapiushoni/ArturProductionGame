@@ -1,18 +1,15 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
+import type { Element } from '@/game/main_game/element/Element';
+import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 
-export class NormalFilter {
-  constructor() {
-         
-      }
-  doesApply(element) {
-         return !element.isOfFire && !element.isOfIce;
-      }
-  getIcons() {
-         var _loc1_ = [];
-         _loc1_.push(BonusIcon.getNormal());
-         return _loc1_;
-      }
+/** Normal (neither fire nor ice) enemies. */
+export class NormalFilter implements IBonusFilter {
+  doesApply(element: Element): boolean {
+    return !element.isOfFire && !element.isOfIce;
+  }
+  getIcons(): BonusIcon[] {
+    return [BonusIcon.getNormal()];
+  }
 }
 bindMethods(NormalFilter);

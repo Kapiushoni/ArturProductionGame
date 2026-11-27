@@ -1,25 +1,25 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import type { Item } from '@/game/main_game/items/Item';
 
+/** What kind of item it is (decides where it can be put). Subclasses: Shield, Equipment, Weapon, Consumable. */
 export class Category {
-  static SHIELD_CATEGORY = "S";
-  static EQUIPABLE_CATEGORY = "E";
-  static WEAPON_CATEGORY = "W";
-  static CONSUMABLE_CATEGORY = "C";
-  declare item: any;
-  constructor(item, obj) {
-         
-         this.item = item;
-      }
-  get type() {
-         throw new Error("Abstract class");
-      }
-  canBeContained(itemContainer) {
-         return true;
-      }
+  static SHIELD_CATEGORY = 'S';
+  static EQUIPABLE_CATEGORY = 'E';
+  static WEAPON_CATEGORY = 'W';
+  static CONSUMABLE_CATEGORY = 'C';
+  protected item: Item;
+
+  constructor(item: Item, _config: any) {
+    this.item = item;
+  }
+  get type(): string {
+    throw new Error('Abstract class');
+  }
+  canBeContained(_itemContainer: any): boolean {
+    return true;
+  }
   clear() {
-         this.item = null;
-      }
+    this.item = null;
+  }
 }
-Category.prototype.item = null;
 bindMethods(Category);

@@ -1,6 +1,8 @@
-// @ts-nocheck
+import type { BonusIcon } from '@/game/bonus/filter/BonusIcon';
+import type { Element } from '@/game/main_game/element/Element';
 
+/** Which enemies a daily bonus applies to (by element), and the icons that show it. */
 export interface IBonusFilter {
-  doesApply(param1): any;
-  getIcons(): any;
+  doesApply(element: Element): boolean;
+  getIcons(): BonusIcon[];
 }

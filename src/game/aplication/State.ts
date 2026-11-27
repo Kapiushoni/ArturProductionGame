@@ -1,10 +1,9 @@
-// @ts-nocheck
-
+/** A state of an FSM. */
 export interface State {
-  enter(): any;
-  leave(): any;
-  addTransition(param1, param2): any;
-  getName(): any;
-  getTargetForTransition(param1): any;
-  clear(): any;
+  enter(): void;
+  leave(): void;
+  addTransition(target: State, transition: string): void;
+  getName(): string;
+  getTargetForTransition(transition: string): State;
+  clear(): void;
 }

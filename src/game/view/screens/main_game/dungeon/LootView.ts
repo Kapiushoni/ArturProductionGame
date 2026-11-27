@@ -1,129 +1,107 @@
-// @ts-nocheck
 import { Timer, TimerEvent, as3as, as3values, bindMethods, int, uint } from '@/flash/as3';
 import { main } from '@/game/main';
 import { SmokeEffect } from '@/game/view/effect/SmokeEffect';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 
 export class LootView {
-  declare loot: any;
-  declare slots: any;
-  declare bg: any;
-  declare timer: any;
-  declare showing: any;
+  loot: any = null;
+  slots: any = null;
+  bg: any = null;
+  timer: any = null;
+  showing = 0;
   constructor(loot, bg) {
-         
-         this.bg = bg;
-         this.loot = loot;
-         this.slots = [];
-         this.initialize();
-      }
+    this.bg = bg;
+    this.loot = loot;
+    this.slots = [];
+    this.initialize();
+  }
   pause() {
-         if(this.showing < 3)
-         {
-            this.clearTimer();
-            while(this.showing < 3)
-            {
-               this.showing = int(this.showing + (1));
-               (as3as(this.slots[this.showing - 1], SlotView)).unHideItem();
-            }
-            this.showing = int(this.showing + (1));
-         }
+    if (this.showing < 3) {
+      this.clearTimer();
+      while (this.showing < 3) {
+        this.showing = int(this.showing + 1);
+        as3as(this.slots[this.showing - 1], SlotView).unHideItem();
       }
-  resume() {
-      }
+      this.showing = int(this.showing + 1);
+    }
+  }
+  resume() {}
   initialize() {
-         this.showing = int(0);
-         var i = uint(1);
-         while(i <= 3)
-         {
-            this.slots[i - 1] = new SlotView(this.loot.getSlot(i - 1));
-            this.slots[i - 1].initialize(this.bg["slot_" + i]);
-            (as3as(this.slots[i - 1], SlotView)).hideItem();
-            i++;
-         }
-      }
+    this.showing = 0;
+    var i = 1;
+    while (i <= 3) {
+      this.slots[i - 1] = new SlotView(this.loot.getSlot(i - 1));
+      this.slots[i - 1].initialize(this.bg['slot_' + i]);
+      as3as(this.slots[i - 1], SlotView).hideItem();
+      i++;
+    }
+  }
   showLoot() {
-         if(this.showing >= 3)
-         {
-            return;
-         }
-         this.timer = new Timer(300,3);
-         this.timer.addEventListener(TimerEvent.TIMER,this.showOneLoot);
-         this.timer.start();
-      }
-  showOneLoot(... rest) {
-         if(this.showing >= 3)
-         {
-            this.clearTimer();
-            return;
-         }
-         this.showing = int(this.showing + (1));
-         this.showLootOf(this.showing);
-         if(this.showing >= 3)
-         {
-            this.clearTimer();
-         }
-      }
-  showLootOf(num) { num = int(num);
-         var smokeEffect = new SmokeEffect();
-         smokeEffect.playOn(this.bg["slot_" + num]);
-         (as3as(this.slots[num - 1], SlotView)).unHideItem();
-      }
+    if (this.showing >= 3) {
+      return;
+    }
+    this.timer = new Timer(300, 3);
+    this.timer.addEventListener(TimerEvent.TIMER, this.showOneLoot);
+    this.timer.start();
+  }
+  showOneLoot(...rest) {
+    if (this.showing >= 3) {
+      this.clearTimer();
+      return;
+    }
+    this.showing = int(this.showing + 1);
+    this.showLootOf(this.showing);
+    if (this.showing >= 3) {
+      this.clearTimer();
+    }
+  }
+  showLootOf(num) {
+    num = int(num);
+    var smokeEffect = new SmokeEffect();
+    smokeEffect.playOn(this.bg['slot_' + num]);
+    as3as(this.slots[num - 1], SlotView).unHideItem();
+  }
   takeAll() {
-         var bootyItem = null;
-         var emptySlot = null;
-         var content = null;
-         this.clearTimer();
-         if(this.showing < 3)
-         {
-            while(this.showing < 3)
-            {
-               this.showing = int(this.showing + (1));
-               this.showLootOf(this.showing);
-            }
-            this.takeAll();
-         }
-         else
-         {
-            for (bootyItem of as3values(this.loot.getBooty()))
-            {
-               if(!bootyItem.isEmpty())
-               {
-                  emptySlot = main.game.getInventory().getEmptySlot();
-                  if(emptySlot == null)
-                  {
-                     return;
-                  }
-                  content = bootyItem.getContent();
-                  bootyItem.remove(content);
-                  emptySlot.add(content);
-               }
-            }
-         }
+    var bootyItem = null;
+    var emptySlot = null;
+    var content = null;
+    this.clearTimer();
+    if (this.showing < 3) {
+      while (this.showing < 3) {
+        this.showing = int(this.showing + 1);
+        this.showLootOf(this.showing);
       }
+      this.takeAll();
+    } else {
+      for (bootyItem of as3values(this.loot.getBooty())) {
+        if (!bootyItem.isEmpty()) {
+          emptySlot = main.game.getInventory().getEmptySlot();
+          if (emptySlot == null) {
+            return;
+          }
+          content = bootyItem.getContent();
+          bootyItem.remove(content);
+          emptySlot.add(content);
+        }
+      }
+    }
+  }
   clearTimer() {
-         if(this.timer != null)
-         {
-            this.timer.stop();
-            this.timer = null;
-         }
-      }
+    if (this.timer != null) {
+      this.timer.stop();
+      this.timer = null;
+    }
+  }
   clear() {
-         var slot = null;
-         for (slot of as3values(this.slots))
-         {
-            slot.clear();
-         }
-         this.loot.clear();
-         this.clearTimer();
-      }
+    var slot = null;
+    for (slot of as3values(this.slots)) {
+      slot.clear();
+    }
+    this.loot.clear();
+    this.clearTimer();
+  }
   isEmpty() {
-         return this.loot.getSlot(0).isEmpty();
-      }
+    return this.loot.getSlot(0).isEmpty();
+  }
 }
-LootView.prototype.loot = null;
-LootView.prototype.slots = null;
-LootView.prototype.bg = null;
-LootView.prototype.timer = null;
-LootView.prototype.showing = 0;
 bindMethods(LootView);

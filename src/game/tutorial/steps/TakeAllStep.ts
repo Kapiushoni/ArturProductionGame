@@ -1,51 +1,50 @@
-// @ts-nocheck
-import { MouseEvent, as3as, bindMethods, uint } from '@/flash/as3';
+import { MouseEvent, as3as, bindMethods } from '@/flash/as3';
 import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
 import { main } from '@/game/main';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { GameView } from '@/game/view/screens/main_game/GameView';
+import type { Tutorial } from '@/game/tutorial/Tutorial';
 
+/** Step 4: when the win window opens, "take all the loot"; closes when the loot button is clicked. */
 export class TakeAllStep extends TutorialStep {
-  declare listeningClick: any;
-  constructor(num, tutorial) {
-          super(num.toString(),tutorial,num,"assets.Tutorial" + num.toString()); num = uint(num);
-         this.listeningClick = false;
-      }
+  private listeningClick = false;
+
+  constructor(step: number, tutorial: Tutorial) {
+    super(step.toString(), tutorial, step, 'assets.Tutorial' + step.toString());
+  }
   enter() {
-         WinWindow.onShow = this.wonDungeon;
-      }
-  get winWindow() {
-         return (as3as(main.gameHolder.gameView, GameView)).pauseHolder["window"];
-      }
+    WinWindow.onShow = this.wonDungeon;
+  }
+  get winWindow(): any {
+    return as3as(main.gameHolder.gameView, GameView).pauseHolder['window'];
+  }
   wonDungeon() {
-         this.winWindow.lootMcButton.addEventListener(MouseEvent.CLICK,this.loot);
-         this.listeningClick = true;
-         super.enter();
-      }
-  loot(event) { const __self = this;
-         this.stopListening();
-         __self.theView.leave();
-      }
+    this.winWindow.lootMcButton.addEventListener(MouseEvent.CLICK, this.loot);
+    this.listeningClick = true;
+    super.enter();
+  }
+  loot(_event: any) {
+    this.stopListening();
+    this.theView.leave();
+  }
   leave() {
-         WinWindow.onShow = null;
-         this.stopListening();
-         super.leave();
-      }
-  setText(clip) {
-         clip.text.text.text = main.locale.get("tutorialTakeAll");
-      }
+    WinWindow.onShow = null;
+    this.stopListening();
+    super.leave();
+  }
+  setText(clip: any) {
+    clip.text.text.text = main.locale.get('tutorialTakeAll');
+  }
   stopListening() {
-         if(this.listeningClick)
-         {
-            this.winWindow.lootMcButton.removeEventListener(MouseEvent.CLICK,this.loot);
-            this.listeningClick = false;
-         }
-      }
+    if (this.listeningClick) {
+      this.winWindow.lootMcButton.removeEventListener(MouseEvent.CLICK, this.loot);
+      this.listeningClick = false;
+    }
+  }
   clear() {
-         this.stopListening();
-         WinWindow.onShow = null;
-         super.clear();
-      }
+    this.stopListening();
+    WinWindow.onShow = null;
+    super.clear();
+  }
 }
-TakeAllStep.prototype.listeningClick = false;
 bindMethods(TakeAllStep);

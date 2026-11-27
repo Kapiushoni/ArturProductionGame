@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BaseState } from '@/game/bonus/states/BaseState';
 import { WaitingForAttributeError } from '@/game/bonus/errors/WaitingForAttributeError';
@@ -9,39 +8,34 @@ import { PossibleComment } from '@/game/bonus/states/PossibleComment';
 import { WaitingForClass } from '@/game/bonus/states/WaitingForClass';
 import { WaitingForConstant } from '@/game/bonus/states/WaitingForConstant';
 
+/** Inside a block: waits for an attribute name or "}" (inside an array: returns to it). */
 export class WaitingForAttribute extends BaseState {
-  constructor(baseState = null) {
-          super(null,null,baseState);
+  constructor(parent: BaseState = null) {
+    super(null, null, parent);
+  }
+  onSpace(_char: string): BaseState {
+    return this;
+  }
+  onMisc(char: string): BaseState {
+    if (char == '}') {
+      if (this.parent) {
+        this.stream.ungetc();
+        return this.parent;
       }
-  onSpace(text) {
-         return this;
-      }
-  onMisc(text) { const __self = this;
-         var event = null;
-         if(text == "}")
-         {
-            if(__self.parent)
-            {
-               __self.stream.ungetc();
-               return __self.parent;
-            }
-            event = new ParseEvent(LexicalParser.END_CLASS);
-            __self.dispatchEvent(event);
-            return new WaitingForClass();
-         }
-         if(text == ",")
-         {
-            return new WaitingForConstant(null,__self.parent);
-         }
-         if(text == "/")
-         {
-            return new PossibleComment(this);
-         }
-         throw new WaitingForAttributeError(text,__self.stream.getLineNumber());
-      }
-  onLetter(text) { const __self = this;
-         __self.stream.ungetc();
-         return new AttributeDefinition();
-      }
+      this.dispatchEvent(new ParseEvent(LexicalParser.END_CLASS));
+      return new WaitingForClass();
+    }
+    if (char == ',') {
+      return new WaitingForConstant(null, this.parent);
+    }
+    if (char == '/') {
+      return new PossibleComment(this);
+    }
+    throw new WaitingForAttributeError(char, this.stream.getLineNumber());
+  }
+  onLetter(_char: string): BaseState {
+    this.stream.ungetc();
+    return new AttributeDefinition();
+  }
 }
 bindMethods(WaitingForAttribute);

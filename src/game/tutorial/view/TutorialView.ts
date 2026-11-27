@@ -1,29 +1,29 @@
-// @ts-nocheck
 import { Dictionary, __DEFER, bindMethods } from '@/flash/as3';
 import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { Signal } from '@/game/cb/signals/Signal';
 
+/** A tutorial window (animated in on "start", out on "end"); onEnd when it has closed. */
 export class TutorialView extends AnimatedScreen {
-  declare onEnd: any;
-  constructor(cls) {super(__DEFER); 
-          this.__init_AnimatedScreen(cls,this.getButtonInfo(),"start","end");
-         this.onEnd = new Signal();
+  onEnd: Signal;
+
+  /** cls: library class of the window clip */
+  constructor(cls: any) {
+    super(__DEFER);
+    this.__init_AnimatedScreen(cls, this.getButtonInfo(), 'start', 'end');
+    this.onEnd = new Signal();
+  }
+  /** buttons of the window (none) */
+  getButtonInfo(): any {
+    return new Dictionary();
+  }
+  leave(callback: Function = null) {
+    super.leave(() => {
+      if (callback != null) {
+        callback();
       }
-  getButtonInfo() {
-         return new Dictionary();
-      }
-  leave(callback = null) { const __self = this;
-         var end = callback;
-         super.leave(function()
-         {
-            if(end != null)
-            {
-               end();
-            }
-            __self.onEnd.emit();
-            __self.pop();
-         });
-      }
+      this.onEnd.emit();
+      this.pop();
+    });
+  }
 }
-TutorialView.prototype.onEnd = null;
 bindMethods(TutorialView);

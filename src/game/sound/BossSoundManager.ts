@@ -1,18 +1,19 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 import { GameSounds } from '@/game/sound/GameSounds';
+import type { Boss } from '@/game/main_game/boss_dungeon/Boss';
 
+/** The boss's sounds (a random hurt sound each time). */
 export class BossSoundManager extends FighterSoundManager {
-  declare boss: any;
-  constructor(boss) {super(__DEFER); 
-         this.boss = boss;
-          this.__init_FighterSoundManager("",GameSounds.BOSS_ATTACK,GameSounds.BOSS_LOSE,"",GameSounds.SHIELD_BLOCK);
-      }
-  playHurt() { const __self = this;
-         __self.hurt = GameSounds.BOSS_HURT;
-         super.playHurt();
-      }
+  private boss: Boss;
+
+  constructor(boss: Boss) {
+    super('', GameSounds.BOSS_ATTACK, GameSounds.BOSS_LOSE, '', GameSounds.SHIELD_BLOCK);
+    this.boss = boss;
+  }
+  playHurt() {
+    this.hurt = GameSounds.BOSS_HURT;
+    super.playHurt();
+  }
 }
-BossSoundManager.prototype.boss = null;
 bindMethods(BossSoundManager);

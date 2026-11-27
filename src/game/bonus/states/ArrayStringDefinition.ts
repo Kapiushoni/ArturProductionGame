@@ -1,34 +1,29 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BaseState } from '@/game/bonus/states/BaseState';
 import { WaitingForEndArrayStringDefinition } from '@/game/bonus/states/WaitingForEndArrayStringDefinition';
 
+/** A quoted string in an array. */
 export class ArrayStringDefinition extends BaseState {
-  declare startSymbol: any;
-  constructor(startSymbol, text, baseState = null) {
-          super(text,"",baseState);
-         this.startSymbol = startSymbol;
-      }
-  onMisc(text) { const __self = this;
-         if(text == this.startSymbol)
-         {
-            return new WaitingForEndArrayStringDefinition(__self.name,__self.value,__self.parent);
-         }
-         __self.value += text;
-         return this;
-      }
-  onLetter(text) { const __self = this;
-         __self.value += text;
-         return this;
-      }
-  onDigit(text) { const __self = this;
-         __self.value += text;
-         return this;
-      }
-  onSpace(text) { const __self = this;
-         __self.value += text;
-         return this;
-      }
+  private startSymbol: string;
+
+  constructor(startSymbol: string, name: string, parent: BaseState = null) {
+    super(name, '', parent);
+    this.startSymbol = startSymbol;
+  }
+  onMisc(char: string): BaseState {
+    if (char == this.startSymbol) {
+      return new WaitingForEndArrayStringDefinition(this.name, this.value, this.parent);
+    }
+    return this.addToValue(char);
+  }
+  onLetter(char: string): BaseState {
+    return this.addToValue(char);
+  }
+  onDigit(char: string): BaseState {
+    return this.addToValue(char);
+  }
+  onSpace(char: string): BaseState {
+    return this.addToValue(char);
+  }
 }
-ArrayStringDefinition.prototype.startSymbol = null;
 bindMethods(ArrayStringDefinition);

@@ -1,11 +1,9 @@
-// @ts-nocheck
-import { bindMethods, int } from '@/flash/as3';
 import { GenericError } from '@/game/bonus/errors/GenericError';
 import { LexicalParser } from '@/game/bonus/LexicalParser';
 
+/** Expected "{" after a block name. */
 export class WaitingForEndClassError extends GenericError {
-  constructor(text, num) {
-          super(LexicalParser.fileName,"Expected { but Found " + text,num); num = int(num);
-      }
+  constructor(char: string, line: number) {
+    super(LexicalParser.fileName, 'Expected { but Found ' + char, line);
+  }
 }
-bindMethods(WaitingForEndClassError);

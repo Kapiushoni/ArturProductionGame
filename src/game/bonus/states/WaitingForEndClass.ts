@@ -1,22 +1,21 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BaseState } from '@/game/bonus/states/BaseState';
 import { WaitingForEndClassError } from '@/game/bonus/errors/WaitingForEndClassError';
 import { WaitingForAttribute } from '@/game/bonus/states/WaitingForAttribute';
 
+/** After a block name: waits for "{". */
 export class WaitingForEndClass extends BaseState {
   constructor() {
-          super();
-      }
-  onSpace(text) {
-         return this;
-      }
-  onMisc(text) { const __self = this;
-         if(text == "{")
-         {
-            return new WaitingForAttribute();
-         }
-         throw new WaitingForEndClassError(text,__self.stream.getLineNumber());
-      }
+    super();
+  }
+  onSpace(_char: string): BaseState {
+    return this;
+  }
+  onMisc(char: string): BaseState {
+    if (char == '{') {
+      return new WaitingForAttribute();
+    }
+    throw new WaitingForEndClassError(char, this.stream.getLineNumber());
+  }
 }
 bindMethods(WaitingForEndClass);

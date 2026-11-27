@@ -1,15 +1,16 @@
-// @ts-nocheck
 import { bindMethods, int } from '@/flash/as3';
 
 export class Random {
-  constructor() {
-         
-      }
-  static nextInt(num) { num = int(num);
-         return int(Math.floor(Math.random() * (num + 1)));
-      }
-  static nextRange(num, num2) { num = int(num); num2 = int(num2);
-         return int(Random.nextInt(num2 - num) + num);
-      }
+  /** 0..max, both included */
+  static nextInt(max: number): number {
+    max = int(max);
+    return int(Math.floor(Math.random() * (max + 1)));
+  }
+  /** min..max, both included */
+  static nextRange(min: number, max: number): number {
+    min = int(min);
+    max = int(max);
+    return int(Random.nextInt(max - min) + min);
+  }
 }
 bindMethods(Random);

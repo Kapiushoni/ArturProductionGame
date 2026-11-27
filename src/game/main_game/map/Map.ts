@@ -1,140 +1,115 @@
-// @ts-nocheck
-import { Dictionary, as3as, as3values, bindMethods, int } from '@/flash/as3';
+import { Dictionary, as3as, as3values, bindMethods } from '@/flash/as3';
+import { services } from '@/game/services';
 import { DailyBonus } from '@/game/bonus/DailyBonus';
 import { cbArray } from '@/game/cb/utils/cbArray';
-import { main } from '@/game/main';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { Element } from '@/game/main_game/element/Element';
 import { LegendaryLevel } from '@/game/main_game/map/LegendaryLevel';
 import { Level } from '@/game/main_game/map/Level';
 import { SpecialLevel } from '@/game/main_game/map/SpecialLevel';
 
+/**
+ * The dungeon map. Main path 1 -> 2 -> ... -> 25 (25 = boss); side dungeons 26-30 branch off and rejoin it;
+ * 31 / 32 are the legendary ice / fire dungeons. Clearing a level unlocks the levels it leads to.
+ */
 export class Map {
-  declare levels: any;
+  /** Dictionary: dungeon id -> Level */
+  private levels: any;
+
   constructor() {
-         
-         this.initializeLevels();
-         this.setConections();
-         this.getLevel("1").unlock();
-         this.loadSave();
-         this.unlockUnlocked();
+    this.initializeLevels();
+    this.setConections();
+    this.getLevel('1').unlock();
+    this.loadSave();
+    this.unlockUnlocked();
+  }
+  getNextLevel(level: Level): Level | null {
+    const next = level.getCorrelative();
+    return next.length > 0 ? next[0] : null;
+  }
+  /** a level that leads to `id` */
+  getPreviousLevel(id: string): Level | null {
+    if (!this.levels.get(id)) {
+      return null;
+    }
+    for (const level of as3values(this.levels)) {
+      if (level.getCorrelative().indexOf(this.levels.get(id)) >= 0) {
+        return level;
       }
-  getNextLevel(level) {
-         var correlative = level.getCorrelative();
-         if(correlative.length > 0)
-         {
-            return correlative[0];
-         }
-         return null;
+    }
+    return null;
+  }
+  /** the furthest unlocked level of the main path */
+  biggestUnlockedLevel(): Level | null {
+    let level = null;
+    for (let i = 1; i <= 25; i++) {
+      if ((as3as(this.levels.get(i), Level) as Level).isUnlocked()) {
+        level = this.levels.get(i);
       }
-  getPreviousLevel(text) {
-         var level = null;
-         if(!this.levels.get(text))
-         {
-            return null;
-         }
-         for (level of as3values(this.levels))
-         {
-            if(level.getCorrelative().indexOf(this.levels.get(text)) >= 0)
-            {
-               return level;
-            }
-         }
-         return null;
-      }
-  biggestUnlockedLevel() {
-         var level = null;
-         var i = int(1);
-         while(i <= 25)
-         {
-            if((as3as(this.levels.get(i), Level)).isUnlocked())
-            {
-               level = this.levels.get(i);
-            }
-            i++;
-         }
-         return level;
-      }
-  getLevel(text) {
-         return this.levels.get(text);
-      }
-  getLevels() {
-         return this.levels;
-      }
+    }
+    return level;
+  }
+  getLevel(id: string | number): any {
+    return this.levels.get(id);
+  }
+  getLevels(): any {
+    return this.levels;
+  }
   initializeLevels() {
-         var dungeonsId = null;
-         this.levels = new Dictionary();
-         for (dungeonsId of as3values(DungeonFactory.getInstance().getDungeonsIds()))
-         {
-            if(dungeonsId == "31")
-            {
-               this.addLevel(new LegendaryLevel(dungeonsId,Element.ice,DailyBonus.getNextSpecialDungeonDate(Element.ice)));
-            }
-            else if(dungeonsId == "32")
-            {
-               this.addLevel(new LegendaryLevel(dungeonsId,Element.fire,DailyBonus.getNextSpecialDungeonDate(Element.fire)));
-            }
-            else if(["26","27","28","29","30"].indexOf(dungeonsId) >= 0)
-            {
-               this.addLevel(new SpecialLevel(dungeonsId));
-            }
-            else
-            {
-               this.addLevel(new Level(dungeonsId));
-            }
-         }
+    this.levels = new Dictionary();
+    for (const id of as3values(DungeonFactory.getInstance().getDungeonsIds())) {
+      if (id == '31') {
+        this.addLevel(new LegendaryLevel(id, Element.ice, DailyBonus.getNextSpecialDungeonDate(Element.ice)));
+      } else if (id == '32') {
+        this.addLevel(new LegendaryLevel(id, Element.fire, DailyBonus.getNextSpecialDungeonDate(Element.fire)));
+      } else if (['26', '27', '28', '29', '30'].indexOf(id) >= 0) {
+        this.addLevel(new SpecialLevel(id));
+      } else {
+        this.addLevel(new Level(id));
       }
-  addLevel(level) {
-         this.levels.set(level.getDungeonId(), level);
-      }
+    }
+  }
+  addLevel(level: Level) {
+    this.levels.set(level.getDungeonId(), level);
+  }
+  /** which level leads to which */
   setConections() {
-         var i = int(1);
-         while(i < 25)
-         {
-            this.levels.get(i).addCorrelative(this.levels.get(i + 1));
-            i++;
-         }
-         this.levels.get(4).addCorrelative(this.levels.get(26));
-         this.levels.get(15).addCorrelative(this.levels.get(27));
-         this.levels.get(19).addCorrelative(this.levels.get(28));
-         this.levels.get(23).addCorrelative(this.levels.get(29));
-         this.levels.get(29).addCorrelative(this.levels.get(30));
-         this.levels.get(26).addCorrelative(this.levels.get(6));
-         this.levels.get(27).addCorrelative(this.levels.get(16));
-         this.levels.get(28).addCorrelative(this.levels.get(20));
-         this.levels.get(30).addCorrelative(this.levels.get(24));
-      }
+    const link = (from: number, to: number) => this.levels.get(from).addCorrelative(this.levels.get(to));
+    for (let i = 1; i < 25; i++) {
+      link(i, i + 1);
+    }
+    link(4, 26);
+    link(15, 27);
+    link(19, 28);
+    link(23, 29);
+    link(29, 30);
+    link(26, 6);
+    link(27, 16);
+    link(28, 20);
+    link(30, 24);
+  }
   loadSave() {
-         var loc1_Item = null;
-         var clearedLevels = main.saveSystem.getClearedLevels();
-         for (loc1_Item of as3values(clearedLevels))
-         {
-            this.getLevel(loc1_Item).clear();
-         }
+    for (const id of as3values(services.saveSystem.getClearedLevels())) {
+      this.getLevel(id).clear();
+    }
+  }
+  /** unlocks the levels after the cleared ones; returns the newly unlocked levels */
+  unlockUnlocked(): cbArray {
+    const unlocked = new cbArray();
+    for (const level of as3values(this.levels)) {
+      if (level.isCleared()) {
+        for (const next of as3values(level.getCorrelative())) {
+          if (next.isLocked()) {
+            next.unlock();
+            unlocked.pushIfNotPresent(next);
+          }
+        }
       }
-  unlockUnlocked() {
-         var level = null;
-         var correlativeItem = null;
-         var cbArray2 = new cbArray();
-         for (level of as3values(this.levels))
-         {
-            if(level.isCleared())
-            {
-               for (correlativeItem of as3values(level.getCorrelative()))
-               {
-                  if(correlativeItem.isLocked())
-                  {
-                     correlativeItem.unlock();
-                     cbArray2.pushIfNotPresent(correlativeItem);
-                  }
-               }
-            }
-         }
-         return cbArray2;
-      }
+    }
+    return unlocked;
+  }
   clear() {
-         this.levels = null;
-      }
+    this.levels = null;
+  }
 }
-Map.prototype.levels = null;
 bindMethods(Map);

@@ -1,18 +1,15 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { BonusIcon } from '@/game/bonus/filter/BonusIcon';
+import type { Element } from '@/game/main_game/element/Element';
+import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 
-export class FireFilter {
-  constructor() {
-         
-      }
-  doesApply(element) {
-         return element.isOfFire;
-      }
-  getIcons() {
-         var _loc1_ = [];
-         _loc1_.push(BonusIcon.getFire());
-         return _loc1_;
-      }
+/** Fire enemies. */
+export class FireFilter implements IBonusFilter {
+  doesApply(element: Element): boolean {
+    return element.isOfFire;
+  }
+  getIcons(): BonusIcon[] {
+    return [BonusIcon.getFire()];
+  }
 }
 bindMethods(FireFilter);

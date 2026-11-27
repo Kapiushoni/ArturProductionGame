@@ -1,146 +1,100 @@
-// @ts-nocheck
 import { as3values, bindMethods, int, uint } from '@/flash/as3';
 
-export class cbArray extends Array {
-  constructor(... rest) {
-         var num = Number(NaN);
-         var num2 = uint(0);
-         var i = int(0);
-          super(); const __self = this;
-         var num3 = uint(uint(rest.length));
-         if(num3 == 1 && (typeof rest[0] === "number"))
-         {
-            num = Number(Number(rest[0]));
-            num2 = uint(num);
-            if(num2 != num)
-            {
-               throw new RangeError("Array index is not a 32-bit unsigned integer (" + num + ")");
-            }
-            __self.length = num2;
-         }
-         else
-         {
-            __self.length = num3;
-            i = int(0);
-            while(i < num3)
-            {
-               this[i] = rest[i];
-               i++;
-            }
-         }
+/** Array with a few helpers. new cbArray(n) makes n empty slots, new cbArray(a, b) contains a and b (like AS3 Array). */
+export class cbArray extends Array<any> {
+  constructor(...items: any[]) {
+    super();
+    if (items.length == 1 && typeof items[0] === 'number') {
+      const length = Number(items[0]);
+      if (uint(length) != length) {
+        throw new RangeError('Array index is not a 32-bit unsigned integer (' + length + ')');
       }
-  static createFromArray(list) {
-         var param1Item = undefined;
-         var cbArray2 = new cbArray();
-         for (param1Item of as3values(list))
-         {
-            cbArray2.push(param1Item);
-         }
-         return cbArray2;
+      this.length = uint(length);
+    } else {
+      this.length = items.length;
+      for (let i = 0; i < items.length; i++) {
+        this[i] = items[i];
       }
-  shuffle() {
-         var cbArray2 = this.clone();
-         var cbArray3 = new cbArray();
-         while(cbArray2.length > 0)
-         {
-            cbArray3.push(cbArray2.splice(Math.round(Math.random() * (cbArray2.length - 1)),1)[0]);
-         }
-         return cbArray3;
+    }
+  }
+  static createFromArray(list: any[]): cbArray {
+    const result = new cbArray();
+    for (const item of as3values(list)) {
+      result.push(item);
+    }
+    return result;
+  }
+  /** a shuffled copy */
+  shuffle(): cbArray {
+    const rest = this.clone();
+    const result = new cbArray();
+    while (rest.length > 0) {
+      result.push(rest.splice(Math.round(Math.random() * (rest.length - 1)), 1)[0]);
+    }
+    return result;
+  }
+  pushIfNotPresent(value: any) {
+    if (this.indexOf(value) < 0) {
+      this.push(value);
+    }
+  }
+  /** removes value, or (with field) the first element whose element[field] === value */
+  remove(value: any, field: string = null) {
+    const index = field == null ? int(this.indexOf(value)) : this.indexOfField(value, field);
+    if (index < 0) {
+      return;
+    }
+    this.splice(index, 1);
+  }
+  indexOfField(value: any, field: string): number {
+    for (let i = 0; i < this.length; i++) {
+      if (value === this[i][field]) {
+        return i;
       }
-  pushIfNotPresent(value) { const __self = this;
-         if(__self.indexOf(value) < 0)
-         {
-            __self.push(value);
-         }
+    }
+    return -1;
+  }
+  indexOfMethodValue(value: any, method: string): number {
+    for (let i = 0; i < this.length; i++) {
+      if (value === this[i][method]()) {
+        return i;
       }
-  remove(value, value2 = null) { const __self = this;
-         var num = int(0);
-         if(value2 == null)
-         {
-            num = int(__self.indexOf(value));
-         }
-         else
-         {
-            num = int(this.indexOfField(value,value2));
-         }
-         if(num < 0)
-         {
-            return;
-         }
-         __self.splice(num,1);
+    }
+    return -1;
+  }
+  findFirstOfField(value: any, field: string): any {
+    for (let i = 0; i < this.length; i++) {
+      if (value === this[i][field]) {
+        return this[i];
       }
-  indexOfField(value, value2) { const __self = this;
-         var i = int(0);
-         while(i < __self.length)
-         {
-            if(value === this[i][value2])
-            {
-               return int(i);
-            }
-            i++;
-         }
-         return int(-1);
+    }
+    return null;
+  }
+  findFirstFromMethodValue(value: any, method: string): any {
+    for (let i = 0; i < this.length; i++) {
+      if (value === this[i][method]()) {
+        return this[i];
       }
-  indexOfMethodValue(value, text) { const __self = this;
-         var i = int(0);
-         while(i < __self.length)
-         {
-            if(value === this[i][text]())
-            {
-               return int(i);
-            }
-            i++;
-         }
-         return int(-1);
+    }
+    return null;
+  }
+  clone(): cbArray {
+    const copy = new cbArray();
+    for (let i = 0; i < this.length; i++) {
+      copy.push(this[i]);
+    }
+    return copy;
+  }
+  /** a copy without (one occurrence of) each element of list */
+  subtract(list: any[]): cbArray {
+    const result = this.clone();
+    for (let i = 0; i < list.length; i++) {
+      const index = int(result.indexOf(list[i]));
+      if (index >= 0) {
+        result.splice(index, 1);
       }
-  findFirstOfField(value, value2) { const __self = this;
-         var i = int(0);
-         while(i < __self.length)
-         {
-            if(value === this[i][value2])
-            {
-               return this[i];
-            }
-            i++;
-         }
-         return null;
-      }
-  findFirstFromMethodValue(value, text) { const __self = this;
-         var i = int(0);
-         while(i < __self.length)
-         {
-            if(value === this[i][text]())
-            {
-               return this[i];
-            }
-            i++;
-         }
-         return null;
-      }
-  clone() { const __self = this;
-         var cbArray2 = new cbArray();
-         var i = int(0);
-         while(i < __self.length)
-         {
-            cbArray2.push(this[i]);
-            i++;
-         }
-         return cbArray2;
-      }
-  subtract(list) {
-         var num = int(0);
-         var cbArray2 = this.clone();
-         var i = int(0);
-         while(i < list.length)
-         {
-            num = int(cbArray2.indexOf(list[i]));
-            if(num >= 0)
-            {
-               cbArray2.splice(num,1);
-            }
-            i++;
-         }
-         return cbArray2;
-      }
+    }
+    return result;
+  }
 }
 bindMethods(cbArray);

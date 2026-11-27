@@ -1,84 +1,57 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 import { GameSounds } from '@/game/sound/GameSounds';
+import type { Enemy } from '@/game/main_game/character/Enemy';
 
+/** Enemy sounds by kind (1 / 2) and element; hurt and die sounds are picked at random each time. */
 export class EnemySoundManager extends FighterSoundManager {
-  declare hurtFunction: any;
-  declare dieFunction: any;
-  constructor(enemy2) {super(__DEFER); 
-         var hurt = null;
-         var attack = null;
-         var die = null;
-         var critical = null;
-         var block = null;
-         var evade = null;
-         var enemy = enemy2;
-         var type = enemy.getType();
-         var element = enemy.getElement();
-         if(type == "1")
-         {
-            this.hurtFunction = function()
-            {
-               return GameSounds.ENEMY1_HURT;
-            };
-            this.dieFunction = function()
-            {
-               return GameSounds.ENEMY1_LOSE;
-            };
-            if(element.isOfFire)
-            {
-               attack = GameSounds.FIRE_ATTACK;
-               evade = GameSounds.SHIELD_BLOCK_FIRE;
-            }
-            else if(element.isOfIce)
-            {
-               attack = GameSounds.ICE_ATTACK;
-               evade = GameSounds.SHIELD_BLOCK_ICE;
-            }
-            else
-            {
-               attack = GameSounds.SWORD_ATTACK;
-               evade = GameSounds.SHIELD_BLOCK;
-            }
-         }
-         else if(type == "2")
-         {
-            this.hurtFunction = function()
-            {
-               return GameSounds.ENEMY2_HURT;
-            };
-            this.dieFunction = function()
-            {
-               return GameSounds.ENEMY2_LOSE;
-            };
-            if(element.isOfFire)
-            {
-               attack = GameSounds.ENEMY2_ATTACK_FIRE;
-               evade = GameSounds.SHIELD_BLOCK_FIRE;
-            }
-            else if(element.isOfIce)
-            {
-               attack = GameSounds.ENEMY2_ATTACK_ICE;
-               evade = GameSounds.SHIELD_BLOCK_ICE;
-            }
-            else
-            {
-               attack = GameSounds.ENEMY2_ATTACK;
-               evade = GameSounds.SHIELD_BLOCK;
-            }
-         }
-          this.__init_FighterSoundManager("",attack,"","",evade);
+  private hurtFunction: () => string = null;
+  private dieFunction: () => string = null;
+
+  constructor(enemy: Enemy) {
+    const type = enemy.getType();
+    const element = enemy.getElement();
+    let attack: string = null;
+    let block: string = null;
+    if (type == '1') {
+      if (element.isOfFire) {
+        attack = GameSounds.FIRE_ATTACK;
+        block = GameSounds.SHIELD_BLOCK_FIRE;
+      } else if (element.isOfIce) {
+        attack = GameSounds.ICE_ATTACK;
+        block = GameSounds.SHIELD_BLOCK_ICE;
+      } else {
+        attack = GameSounds.SWORD_ATTACK;
+        block = GameSounds.SHIELD_BLOCK;
       }
-  playHurt() { const __self = this;
-         __self.hurt = this.hurtFunction();
-         super.playHurt();
+    } else if (type == '2') {
+      if (element.isOfFire) {
+        attack = GameSounds.ENEMY2_ATTACK_FIRE;
+        block = GameSounds.SHIELD_BLOCK_FIRE;
+      } else if (element.isOfIce) {
+        attack = GameSounds.ENEMY2_ATTACK_ICE;
+        block = GameSounds.SHIELD_BLOCK_ICE;
+      } else {
+        attack = GameSounds.ENEMY2_ATTACK;
+        block = GameSounds.SHIELD_BLOCK;
       }
-  playDie() { const __self = this;
-         __self.die = this.dieFunction();
-         super.playDie();
-      }
+    }
+    super('', attack, '', '', block);
+    if (type == '1') {
+      this.hurtFunction = () => GameSounds.ENEMY1_HURT;
+      this.dieFunction = () => GameSounds.ENEMY1_LOSE;
+    } else if (type == '2') {
+      this.hurtFunction = () => GameSounds.ENEMY2_HURT;
+      this.dieFunction = () => GameSounds.ENEMY2_LOSE;
+    }
+  }
+  playHurt() {
+    this.hurt = this.hurtFunction();
+    super.playHurt();
+  }
+  playDie() {
+    this.die = this.dieFunction();
+    super.playDie();
+  }
 }
-EnemySoundManager.prototype.hurtFunction = null;
-EnemySoundManager.prototype.dieFunction = null;
 bindMethods(EnemySoundManager);

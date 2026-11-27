@@ -1,79 +1,77 @@
-// @ts-nocheck
-import { Timer, TimerEvent, bindMethods, int } from '@/flash/as3';
+import { Timer, TimerEvent, bindMethods } from '@/flash/as3';
 import { Category } from '@/game/main_game/items/Category';
 import { Signal } from '@/game/cb/signals/Signal';
-import { main } from '@/game/main';
+import type { Item } from '@/game/main_game/items/Item';
 
+/**
+ * A potion. Instant potions act once; the others wear off over Duration (in 1/10 s per percent:
+ * onChange(percent) goes 100 -> 0, then atEndEffect(item)). The countdown stops while the game is paused.
+ */
 export class Consumable extends Category {
-  declare atEndEffect: any;
-  declare onChange: any;
-  declare percent: any;
-  declare timer: any;
-  constructor(item, obj) {
-          super(item,obj);
-         this.atEndEffect = new Signal();
-         this.onChange = new Signal();
-      }
-  isInstant() { const __self = this;
-         return __self.item.getPrimaryModifier().isInstant() && __self.item.getSecondaryModifier().isInstant();
-      }
-  degrade() { const __self = this;
-         if(this.timer == null)
-         {
-            main.game.onPause.add(this.pause);
-            this.percent = int(100);
-            this.timer = new Timer(__self.item.getDuration() * 10,100);
-            this.timer.addEventListener(TimerEvent.TIMER,this.tick);
-            this.timer.addEventListener(TimerEvent.TIMER_COMPLETE,this.complete);
-            this.timer.start();
-            this.onChange.emit(this.percent);
-         }
-      }
-  pause(flag) {
-         if(flag)
-         {
-            this.timer.stop();
-         }
-         else
-         {
-            this.timer.start();
-         }
-      }
-  tick(event) {
-         --this.percent;
-         this.onChange.emit(this.percent);
-      }
-  complete(event) { const __self = this;
-         this.clearTimer();
-         this.atEndEffect.emit(__self.item);
-      }
-  get type() {
-         return Category.CONSUMABLE_CATEGORY;
-      }
-  canBeContained(itemContainer) {
-         return itemContainer.canContainConsumable();
-      }
+  atEndEffect: Signal;
+  onChange: Signal;
+  percent = 0;
+  private timer: Timer = null;
+  private onPause: Signal = null;
+
+  constructor(item: Item, config: any) {
+    super(item, config);
+    this.atEndEffect = new Signal();
+    this.onChange = new Signal();
+  }
+  isInstant(): boolean {
+    return this.item.getPrimaryModifier().isInstant() && this.item.getSecondaryModifier().isInstant();
+  }
+  /** starts wearing off (once); onPause(paused): the game's pause signal */
+  degrade(onPause: Signal) {
+    if (this.timer == null) {
+      this.onPause = onPause;
+      this.onPause.add(this.pause);
+      this.percent = 100;
+      this.timer = new Timer(this.item.getDuration() * 10, 100);
+      this.timer.addEventListener(TimerEvent.TIMER, this.tick);
+      this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.complete);
+      this.timer.start();
+      this.onChange.emit(this.percent);
+    }
+  }
+  pause(paused: boolean) {
+    if (paused) {
+      this.timer.stop();
+    } else {
+      this.timer.start();
+    }
+  }
+  tick(_event: any) {
+    --this.percent;
+    this.onChange.emit(this.percent);
+  }
+  complete(_event: any) {
+    this.clearTimer();
+    this.atEndEffect.emit(this.item);
+  }
+  get type(): string {
+    return Category.CONSUMABLE_CATEGORY;
+  }
+  canBeContained(itemContainer: any): boolean {
+    return itemContainer.canContainConsumable();
+  }
   clearTimer() {
-         if(this.timer != null)
-         {
-            this.timer.removeEventListener(TimerEvent.TIMER,this.tick);
-            this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE,this.complete);
-            this.timer.stop();
-            this.timer = null;
-            main.game.onPause.remove(this.pause);
-         }
-      }
+    if (this.timer != null) {
+      this.timer.removeEventListener(TimerEvent.TIMER, this.tick);
+      this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, this.complete);
+      this.timer.stop();
+      this.timer = null;
+      this.onPause.remove(this.pause);
+    }
+  }
   clear() {
-         this.clearTimer();
-         this.atEndEffect.clear();
-         this.atEndEffect = null;
-         this.onChange.clear();
-         this.onChange = null;
-         super.clear();
-      }
+    this.clearTimer();
+    this.atEndEffect.clear();
+    this.atEndEffect = null;
+    this.onChange.clear();
+    this.onChange = null;
+    super.clear();
+  }
 }
-Consumable.prototype.atEndEffect = null;
-Consumable.prototype.onChange = null;
-Consumable.prototype.percent = 0;
-Consumable.prototype.timer = null;
 bindMethods(Consumable);

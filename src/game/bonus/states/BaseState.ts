@@ -1,86 +1,93 @@
-// @ts-nocheck
 import { EventDispatcher, bindMethods, int } from '@/flash/as3';
 import { GenericError } from '@/game/bonus/errors/GenericError';
 import { ParseEvent } from '@/game/bonus/events/ParseEvent';
 import { LexicalParser } from '@/game/bonus/LexicalParser';
+import type { FileStream } from '@/game/bonus/FileStream';
 // import cycle (these modules need this one at load time): resolved through the index, used only at run time
 import { PossibleComment } from '@/game/index';
 
+/**
+ * A state of the .di parser. process() reads one character and returns the next state
+ * (by default every character is an error; "/" may start a comment). States report what they read
+ * with ParseEvents (see LexicalParser).
+ */
 export class BaseState extends EventDispatcher {
-  declare stream: any;
-  declare name: any;
-  declare value: any;
-  declare parent: any;
-  constructor(name = null, value = null, parent = null) {
-          super();
-         this.name = name;
-         this.value = value;
-         this.parent = parent;
-      }
-  onLetter(text) {
-         this.error(text);
-         return null;
-      }
-  onSpace(text) {
-         this.error(text);
-         return null;
-      }
-  onMisc(text) {
-         if(text == "/")
-         {
-            return new PossibleComment(this);
-         }
-         this.error(text);
-         return null;
-      }
-  onDigit(text) {
-         this.error(text);
-         return null;
-      }
-  process(stream) {
-         this.stream = stream;
-         var text = stream.getc();
-         var num = int(text.charCodeAt(0));
-         if(num >= 65 && num <= 90 || num >= 97 && num <= 122)
-         {
-            return this.onLetter(text);
-         }
-         if(num >= 48 && num <= 57)
-         {
-            return this.onDigit(text);
-         }
-         if(num == 10 || num == 9 || num == 13 || num == 32)
-         {
-            return this.onSpace(text);
-         }
-         return this.onMisc(text);
-      }
-  constantDefinition(num, obj) { num = int(num); const __self = this;
-         var event = new ParseEvent(LexicalParser.END_ATTRIBUTE);
-         event.name = this.name;
-         event.value = obj;
-         event.valueType = num;
-         __self.dispatchEvent(event);
-      }
-  classNameDefinition(text) { const __self = this;
-         var event = new ParseEvent(LexicalParser.START_PARSING_CLASS);
-         event.name = text;
-         __self.dispatchEvent(event);
-      }
-  addToValue(text) {
-         this.value += text;
-         return this;
-      }
-  addToName(text) {
-         this.name += text;
-         return this;
-      }
-  error(text) {
-         throw new GenericError(LexicalParser.fileName,"Generic error. unexpected char \'" + text + "\'",this.stream.getLineNumber());
-      }
+  protected stream: FileStream = null;
+  /** name of the block / attribute being read */
+  name: string;
+  /** text of the value being read */
+  value: any;
+  /** state to return to (after a comment, or the array we are in) */
+  protected parent: BaseState;
+
+  constructor(name: string = null, value: any = null, parent: BaseState = null) {
+    super();
+    this.name = name;
+    this.value = value;
+    this.parent = parent;
+  }
+  onLetter(char: string): BaseState {
+    this.error(char);
+    return null;
+  }
+  onSpace(char: string): BaseState {
+    this.error(char);
+    return null;
+  }
+  onMisc(char: string): BaseState {
+    if (char == '/') {
+      return new PossibleComment(this);
+    }
+    this.error(char);
+    return null;
+  }
+  onDigit(char: string): BaseState {
+    this.error(char);
+    return null;
+  }
+  process(stream: FileStream): BaseState {
+    this.stream = stream;
+    const char = stream.getc();
+    const code = int(char.charCodeAt(0));
+    if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+      return this.onLetter(char);
+    }
+    if (code >= 48 && code <= 57) {
+      return this.onDigit(char);
+    }
+    if (code == 10 || code == 9 || code == 13 || code == 32) {
+      return this.onSpace(char);
+    }
+    return this.onMisc(char);
+  }
+  /** an attribute value has been read */
+  constantDefinition(valueType: number, value: any) {
+    const event = new ParseEvent(LexicalParser.END_ATTRIBUTE);
+    event.name = this.name;
+    event.value = value;
+    event.valueType = int(valueType);
+    this.dispatchEvent(event);
+  }
+  /** a block starts */
+  classNameDefinition(name: string) {
+    const event = new ParseEvent(LexicalParser.START_PARSING_CLASS);
+    event.name = name;
+    this.dispatchEvent(event);
+  }
+  addToValue(char: string): BaseState {
+    this.value += char;
+    return this;
+  }
+  addToName(char: string): BaseState {
+    this.name += char;
+    return this;
+  }
+  error(char: string) {
+    throw new GenericError(
+      LexicalParser.fileName,
+      "Generic error. unexpected char '" + char + "'",
+      this.stream.getLineNumber(),
+    );
+  }
 }
-BaseState.prototype.stream = null;
-BaseState.prototype.name = null;
-BaseState.prototype.value = null;
-BaseState.prototype.parent = null;
 bindMethods(BaseState);

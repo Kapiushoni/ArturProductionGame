@@ -1,28 +1,23 @@
-// @ts-nocheck
-import { bindMethods, uint } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
+import { services } from '@/game/services';
 import { Level } from '@/game/main_game/map/Level';
-import { main } from '@/game/main';
 
+/** The side dungeons 26-30 (branches of the main path). */
 export class SpecialLevel extends Level {
-  constructor(text, num = 1) {
-          super(text,num); num = uint(num);
-      }
-  isSpecial() {
-         return true;
-      }
-  getName() {
-         return main.locale.get("specialDungeonName");
-      }
-  getArea() { const __self = this;
-         if(__self.getDungeonId() == "26")
-         {
-            return uint(1);
-         }
-         if(__self.getDungeonId() == "27")
-         {
-            return uint(2);
-         }
-         return uint(3);
-      }
+  isSpecial(): boolean {
+    return true;
+  }
+  getName(): string {
+    return services.texts.get('specialDungeonName');
+  }
+  getArea(): number {
+    if (this.getDungeonId() == '26') {
+      return 1;
+    }
+    if (this.getDungeonId() == '27') {
+      return 2;
+    }
+    return 3;
+  }
 }
 bindMethods(SpecialLevel);

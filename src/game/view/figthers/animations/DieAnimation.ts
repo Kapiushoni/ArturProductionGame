@@ -1,24 +1,26 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
 import { FighterAnimation } from '@/game/view/figthers/animations/FighterAnimation';
+import type { Element } from '@/game/main_game/element/Element';
 
+/** Dying (stays on the last frame). */
 export class DieAnimation extends FighterAnimation {
-  static readonly DIE = "die";
-  declare element: any;
-  constructor(element = null) {super(__DEFER); 
-          this.__init_FighterAnimation(DieAnimation.DIE);
-      }
-  make(fighterView) { const __self = this;
-         fighterView.fighterSoundManager.playDie();
-         super.make(fighterView);
-         __self.setEffect(fighterView.getMC(),this.element);
-      }
-  forceKill() {
-         return true;
-      }
-  mustGoToIdle() {
-         return false;
-      }
+  static readonly DIE = 'die';
+  private element: Element = null;
+
+  constructor(element: Element = null) {
+    super(DieAnimation.DIE);
+    this.element = element;
+  }
+  make(fighterView: any) {
+    fighterView.fighterSoundManager.playDie();
+    super.make(fighterView);
+    this.setEffect(fighterView.getMC(), this.element);
+  }
+  forceKill(): boolean {
+    return true;
+  }
+  mustGoToIdle(): boolean {
+    return false;
+  }
 }
-DieAnimation.prototype.element = null;
 bindMethods(DieAnimation);

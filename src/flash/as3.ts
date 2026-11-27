@@ -97,6 +97,20 @@ export class Dictionary {
   constructor(_weak = false) { return new Proxy(new AS3Map(), dictHandler) as any; }
   static [Symbol.hasInstance](v: any) { return !!v && v.__isDict === true; }
 }
+/** typing of the Map behind the Proxy (plus dict[key] access) */
+export interface Dictionary {
+  get(key: any): any;
+  set(key: any, value: any): any;
+  has(key: any): boolean;
+  delete(key: any): boolean;
+  [key: string]: any;
+}
+/** AS3 Date properties (polyfilled below) */
+declare global {
+  interface Date {
+    time: number;
+  }
+}
 
 export function getQualifiedClassName(v: any): string {
   if (v == null) return 'null';

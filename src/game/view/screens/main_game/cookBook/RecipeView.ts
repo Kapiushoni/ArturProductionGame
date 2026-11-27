@@ -1,81 +1,70 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 import { NullSlot } from '@/game/main_game/item_containers/NullSlot';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 
 export class RecipeView {
-  declare primarySlot: any;
-  declare secondarySlot: any;
-  declare resultSlot: any;
-  declare primaryView: any;
-  declare secondaryView: any;
-  declare resultView: any;
-  declare bg: any;
+  primarySlot: any = null;
+  secondarySlot: any = null;
+  resultSlot: any = null;
+  primaryView: any = null;
+  secondaryView: any = null;
+  resultView: any = null;
+  bg: any = null;
   constructor(bg, recipe = null) {
-         
-         this.bg = bg;
-         this.initializeSlots(recipe);
-         this.initializeViews();
-      }
+    this.bg = bg;
+    this.initializeSlots(recipe);
+    this.initializeViews();
+  }
   initializeSlots(recipe) {
-         var instance = null;
-         this.primarySlot = new NullSlot();
-         this.secondarySlot = new NullSlot();
-         this.resultSlot = new NullSlot();
-         if(recipe != null)
-         {
-            instance = ItemFactory.getInstance();
-            this.primarySlot.add(instance.getItem(recipe.primary));
-            this.secondarySlot.add(instance.getItem(recipe.secondary));
-            this.resultSlot.add(instance.getItem(recipe.result));
-         }
-      }
+    var instance = null;
+    this.primarySlot = new NullSlot();
+    this.secondarySlot = new NullSlot();
+    this.resultSlot = new NullSlot();
+    if (recipe != null) {
+      instance = ItemFactory.getInstance();
+      this.primarySlot.add(instance.getItem(recipe.primary));
+      this.secondarySlot.add(instance.getItem(recipe.secondary));
+      this.resultSlot.add(instance.getItem(recipe.result));
+    }
+  }
   initializeViews() {
-         this.primaryView = new SlotView(this.primarySlot);
-         this.secondaryView = new SlotView(this.secondarySlot);
-         this.resultView = new SlotView(this.resultSlot);
-         this.primaryView.initialize(this.bg.slot_1);
-         this.secondaryView.initialize(this.bg.slot_2);
-         this.resultView.initialize(this.bg.slot_3);
-         this.bg.slot_1.mouseEnabled = false;
-         this.bg.slot_1.mouseChildren = false;
-         this.bg.slot_2.mouseEnabled = false;
-         this.bg.slot_2.mouseChildren = false;
-         this.bg.slot_3.mouseEnabled = false;
-         this.bg.slot_3.mouseChildren = false;
-      }
+    this.primaryView = new SlotView(this.primarySlot);
+    this.secondaryView = new SlotView(this.secondarySlot);
+    this.resultView = new SlotView(this.resultSlot);
+    this.primaryView.initialize(this.bg.slot_1);
+    this.secondaryView.initialize(this.bg.slot_2);
+    this.resultView.initialize(this.bg.slot_3);
+    this.bg.slot_1.mouseEnabled = false;
+    this.bg.slot_1.mouseChildren = false;
+    this.bg.slot_2.mouseEnabled = false;
+    this.bg.slot_2.mouseChildren = false;
+    this.bg.slot_3.mouseEnabled = false;
+    this.bg.slot_3.mouseChildren = false;
+  }
   clear() {
-         this.clearViews();
-         this.clearSlots();
-      }
+    this.clearViews();
+    this.clearSlots();
+  }
   clearViews() {
-         this.primaryView.clear();
-         this.secondaryView.clear();
-         this.resultView.clear();
-      }
+    this.primaryView.clear();
+    this.secondaryView.clear();
+    this.resultView.clear();
+  }
   clearSlots() {
-         this.clearSlot(this.primarySlot);
-         this.clearSlot(this.secondarySlot);
-         this.clearSlot(this.resultSlot);
-         this.primarySlot = null;
-         this.secondarySlot = null;
-         this.resultSlot = null;
-      }
+    this.clearSlot(this.primarySlot);
+    this.clearSlot(this.secondarySlot);
+    this.clearSlot(this.resultSlot);
+    this.primarySlot = null;
+    this.secondarySlot = null;
+    this.resultSlot = null;
+  }
   clearSlot(slot) {
-         var content = slot.getContent();
-         if(content != null)
-         {
-            content.clear();
-         }
-         slot.clear();
-      }
+    var content = slot.getContent();
+    if (content != null) {
+      content.clear();
+    }
+    slot.clear();
+  }
 }
-RecipeView.prototype.primarySlot = null;
-RecipeView.prototype.secondarySlot = null;
-RecipeView.prototype.resultSlot = null;
-RecipeView.prototype.primaryView = null;
-RecipeView.prototype.secondaryView = null;
-RecipeView.prototype.resultView = null;
-RecipeView.prototype.bg = null;
 bindMethods(RecipeView);

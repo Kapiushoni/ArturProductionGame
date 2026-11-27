@@ -1,25 +1,27 @@
-// @ts-nocheck
-import { __DEFER, bindMethods } from '@/flash/as3';
+import { bindMethods } from '@/flash/as3';
+import { services } from '@/game/services';
 import { Slot } from '@/game/main_game/item_containers/Slot';
-import { main } from '@/game/main';
+import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
+import type { Item } from '@/game/main_game/items/Item';
 
+/** A loot slot: starts with an item that can only be taken out (nothing can be put back). */
 export class OneTimeSlot extends Slot {
-  constructor(item) {super(__DEFER); 
-          this.__init_Slot();
-         this.add(item);
-      }
-  remove(item) {
-         super.remove(item);
-         main.saveSystem.savePendingItems();
-      }
-  canMoveFrom(item, dragContainer) {
-         return false;
-      }
-  itsCompatible(item, dragContainer) {
-         return false;
-      }
-  canSwap(dragContainer) {
-         return false;
-      }
+  constructor(item: Item | null) {
+    super();
+    this.add(item);
+  }
+  remove(item: Item) {
+    super.remove(item);
+    services.saveSystem.savePendingItems();
+  }
+  canMoveFrom(_item: Item, _from: IDragContainer): boolean {
+    return false;
+  }
+  itsCompatible(_item: Item, _from: IDragContainer): boolean {
+    return false;
+  }
+  canSwap(_other: IDragContainer): boolean {
+    return false;
+  }
 }
 bindMethods(OneTimeSlot);

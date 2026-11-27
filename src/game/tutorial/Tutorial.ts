@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { bindMethods, int } from '@/flash/as3';
 import { BasicState } from '@/game/aplication/BasicState';
 import { FSM } from '@/game/aplication/FSM';
@@ -10,101 +9,90 @@ import { MixTutorialStep } from '@/game/tutorial/steps/MixTutorialStep';
 import { StatTutorialStep } from '@/game/tutorial/steps/StatTutorialStep';
 import { TakeAllStep } from '@/game/tutorial/steps/TakeAllStep';
 
+/**
+ * The tutorial (main.theTutorial): steps 1-6 in order, then "7" = done. It resumes after the last completed
+ * step (saved). Until the right step: potions locked (< 3), mixer disabled (< 5), trash locked (< 6).
+ */
 export class Tutorial {
-  static readonly NEXT = "next";
-  declare fsm: any;
-  declare mixKnown: any;
+  static readonly NEXT = 'next';
+  private fsm: FSM;
+  private mixKnown = false;
+
   constructor() {
-         
-         this.initializeFSM();
-         this.fsm.addTransition("init",(main.saveSystem.tutorialStepCompleted() + 1).toString(),Tutorial.NEXT);
-         this.fsm.start();
-      }
+    this.initializeFSM();
+    this.fsm.addTransition('init', (main.saveSystem.tutorialStepCompleted() + 1).toString(), Tutorial.NEXT);
+    this.fsm.start();
+  }
   initializeFSM() {
-         var state = new BasicState("init",null,this.startTutorial);
-         this.fsm = new FSM(state);
-         state = new FirstTutorialStep(1,this);
-         this.fsm.addState(state);
-         state = new StatTutorialStep(2,this);
-         this.fsm.addState(state);
-         state = new ConsumePotionStep(3,this);
-         this.fsm.addState(state);
-         state = new TakeAllStep(4,this);
-         this.fsm.addState(state);
-         state = new MixInformationStep(5,this);
-         this.fsm.addState(state);
-         state = new MixTutorialStep(6,this);
-         this.fsm.addState(state);
-         state = new BasicState("7",this.endTutorial);
-         this.fsm.addState(state);
-         this.fsm.addTransition("1","2",Tutorial.NEXT);
-         this.fsm.addTransition("2","3",Tutorial.NEXT);
-         this.fsm.addTransition("3","4",Tutorial.NEXT);
-         this.fsm.addTransition("4","5",Tutorial.NEXT);
-         this.fsm.addTransition("5","6",Tutorial.NEXT);
-         this.fsm.addTransition("6","7",Tutorial.NEXT);
-      }
+    this.fsm = new FSM(new BasicState('init', null, this.startTutorial));
+    this.fsm.addState(new FirstTutorialStep(1, this));
+    this.fsm.addState(new StatTutorialStep(2, this));
+    this.fsm.addState(new ConsumePotionStep(3, this));
+    this.fsm.addState(new TakeAllStep(4, this));
+    this.fsm.addState(new MixInformationStep(5, this));
+    this.fsm.addState(new MixTutorialStep(6, this));
+    this.fsm.addState(new BasicState('7', this.endTutorial));
+    for (let step = 1; step <= 6; step++) {
+      this.fsm.addTransition(String(step), String(step + 1), Tutorial.NEXT);
+    }
+  }
+  /** leaving "init": locks what the player has not learned yet */
   startTutorial() {
-         this.mixKnown = false;
-         var num = int(int(main.saveSystem.tutorialStepCompleted()));
-         if(num < 3)
-         {
-            this.lockPotions();
-         }
-         if(num < 5)
-         {
-            this.disableMix();
-         }
-         if(num < 6)
-         {
-            this.lockTrash();
-         }
-      }
-  isMixKnown() {
-         return this.mixKnown;
-      }
+    this.mixKnown = false;
+    const completed = int(main.saveSystem.tutorialStepCompleted());
+    if (completed < 3) {
+      this.lockPotions();
+    }
+    if (completed < 5) {
+      this.disableMix();
+    }
+    if (completed < 6) {
+      this.lockTrash();
+    }
+  }
+  isMixKnown(): boolean {
+    return this.mixKnown;
+  }
   lockTrash() {
-         main.game.getInventory().getTrash().lock();
-      }
+    main.game.getInventory().getTrash().lock();
+  }
   unlockTrash() {
-         main.game.getInventory().getTrash().unlock();
-      }
-  get mixerView() {
-         return main.gameHolder.gameView.mixing;
-      }
+    main.game.getInventory().getTrash().unlock();
+  }
+  get mixerView(): any {
+    return main.gameHolder.gameView.mixing;
+  }
   enableMix() {
-         this.mixKnown = true;
-         this.mixerView.enable();
-      }
+    this.mixKnown = true;
+    this.mixerView.enable();
+  }
   disableMix() {
-         this.mixerView.disable();
-      }
+    this.mixerView.disable();
+  }
+  /** keeps the potion slot locked even when a dungeon unlocks it */
   lockPotions() {
-         main.game.getJinn().liver.onLock.add(this.lockLiver);
-         this.lockLiver();
-      }
-  lockLiver(flag = false) {
-         if(!flag)
-         {
-            main.game.getJinn().liver.lock();
-         }
-      }
+    main.game.getJinn().liver.onLock.add(this.lockLiver);
+    this.lockLiver();
+  }
+  lockLiver(locked = false) {
+    if (!locked) {
+      main.game.getJinn().liver.lock();
+    }
+  }
   unlockPotions() {
-         main.game.getJinn().liver.onLock.remove(this.lockLiver);
-         main.game.getJinn().liver.unlock();
-      }
+    main.game.getJinn().liver.onLock.remove(this.lockLiver);
+    main.game.getJinn().liver.unlock();
+  }
   next() {
-         this.fsm.takeTransition(Tutorial.NEXT);
-      }
+    this.fsm.takeTransition(Tutorial.NEXT);
+  }
   endTutorial() {
-         this.unlockTrash();
-         this.enableMix();
-         main.game.getShmabledum().getLocker().unlock();
-      }
+    this.unlockTrash();
+    this.enableMix();
+    main.game.getShmabledum().getLocker().unlock();
+  }
   clear() {
-         this.fsm.clear();
-      }
+    this.fsm.clear();
+  }
 }
-Tutorial.prototype.fsm = null;
-Tutorial.prototype.mixKnown = false;
 bindMethods(Tutorial);

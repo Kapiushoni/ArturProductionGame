@@ -1,24 +1,25 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
+import type { InteractiveShmabledum } from '@/game/main_game/shmabledum/InteractiveShmabledum';
+import type { ShmabledumInteraction } from '@/game/main_game/shmabledum/ShmabledumInteraction';
 
-export class ShmabledumFeeling {
-  declare theFeeling: any;
-  constructor(theFeeling) {
-         
-         this.theFeeling = theFeeling;
-      }
-  static getJoy() {
-         return new ShmabledumFeeling("happy");
-      }
-  static getSadness() {
-         return new ShmabledumFeeling("sad");
-      }
-  get feeling() {
-         return this.theFeeling;
-      }
-  make(interactiveShmabledum) {
-         interactiveShmabledum.expressFeeling(this);
-      }
+/** The shmabledum is happy or sad (the name of its animation). */
+export class ShmabledumFeeling implements ShmabledumInteraction {
+  private theFeeling: string;
+
+  constructor(feeling: string) {
+    this.theFeeling = feeling;
+  }
+  static getJoy(): ShmabledumFeeling {
+    return new ShmabledumFeeling('happy');
+  }
+  static getSadness(): ShmabledumFeeling {
+    return new ShmabledumFeeling('sad');
+  }
+  get feeling(): string {
+    return this.theFeeling;
+  }
+  make(shmabledum: InteractiveShmabledum) {
+    shmabledum.expressFeeling(this);
+  }
 }
-ShmabledumFeeling.prototype.theFeeling = null;
 bindMethods(ShmabledumFeeling);

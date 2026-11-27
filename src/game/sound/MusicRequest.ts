@@ -1,30 +1,29 @@
-// @ts-nocheck
 import { bindMethods } from '@/flash/as3';
 
+/** A music to play: name, start time (ms) and volume (-1: its own). */
 export class MusicRequest {
-  declare soundName: any;
-  declare startTime: any;
-  declare volume: any;
-  constructor(soundName, startTime, volume) { startTime = Number(startTime); volume = Number(volume);
-         
-         this.soundName = soundName;
-         this.startTime = Number(startTime);
-         this.volume = Number(volume);
-      }
-  equal(musicRequest) {
-         return this.soundName == musicRequest.getName() && this.startTime == musicRequest.getStartTime() && this.volume == musicRequest.getVolume();
-      }
-  getName() {
-         return this.soundName;
-      }
-  getVolume() {
-         return Number(this.volume);
-      }
-  getStartTime() {
-         return Number(this.startTime);
-      }
+  private soundName: string;
+  private startTime: number;
+  private volume: number;
+
+  constructor(soundName: string, startTime: number, volume: number) {
+    this.soundName = soundName;
+    this.startTime = Number(startTime);
+    this.volume = Number(volume);
+  }
+  equal(other: MusicRequest): boolean {
+    return (
+      this.soundName == other.getName() && this.startTime == other.getStartTime() && this.volume == other.getVolume()
+    );
+  }
+  getName(): string {
+    return this.soundName;
+  }
+  getVolume(): number {
+    return this.volume;
+  }
+  getStartTime(): number {
+    return this.startTime;
+  }
 }
-MusicRequest.prototype.soundName = null;
-MusicRequest.prototype.startTime = NaN;
-MusicRequest.prototype.volume = NaN;
 bindMethods(MusicRequest);

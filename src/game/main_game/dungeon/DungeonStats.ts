@@ -1,69 +1,63 @@
-// @ts-nocheck
 import { bindMethods, int } from '@/flash/as3';
-import { main } from '@/game/main';
 import { Dungeon } from '@/game/main_game/dungeon/Dungeon';
+import type { Damage } from '@/game/main_game/dungeon/Damage';
+import type { Game } from '@/game/main_game/Game';
 
+/** Counts mixes and critical hits during a dungeon run, and gives the experience earned at the end. */
 export class DungeonStats {
-  declare defeated: any;
-  declare mixesDone: any;
-  declare criticalHits: any;
-  declare theLevel: any;
-  declare active: any;
-  constructor(theLevel) {
-         
-         this.active = false;
-         this.theLevel = theLevel;
-         this.mixesDone = int(0);
-         this.criticalHits = int(0);
-      }
+  /** enemies beaten (set at the end) */
+  private defeated: any[] = null;
+  private mixesDone = 0;
+  private criticalHits = 0;
+  private theLevel: any;
+  private active = false;
+  private game: Game;
+
+  constructor(level: any, game: Game) {
+    this.theLevel = level;
+    this.game = game;
+  }
   start() {
-         this.active = true;
-         main.game.getMixer().onMixEnd.add(this.onMix);
-         main.game.getJinn().onHit.add(this.onHit);
-      }
-  get level() {
-         return this.theLevel;
-      }
-  onMix(mixResult) {
-         this.mixesDone = int(this.mixesDone + (1));
-      }
-  onHit(jinn, enemy, damage, callback) {
-         if(damage.isCritical())
-         {
-            this.criticalHits = int(this.criticalHits + (1));
-         }
-      }
-  end(defeated) {
-         this.defeated = defeated;
-         this.deactivate();
-      }
-  getCombatExperience() {
-         return Number(Dungeon.xpCalulator.getXp(this.defeated));
-      }
-  getMixExperience() {
-         return Number(Dungeon.xpCalulator.getMixXp(this.mixesDone));
-      }
-  getCriticalExperience() {
-         return Number(Dungeon.xpCalulator.getCriticalXp(this.criticalHits));
-      }
-  getDungeonExperience() {
-         return Number(this.getCombatExperience() + this.getCriticalExperience() + this.getMixExperience());
-      }
+    this.active = true;
+    this.game.getMixer().onMixEnd.add(this.onMix);
+    this.game.getJinn().onHit.add(this.onHit);
+  }
+  get level(): any {
+    return this.theLevel;
+  }
+  onMix(_mixResult: any) {
+    this.mixesDone = int(this.mixesDone + 1);
+  }
+  onHit(_jinn: any, _enemy: any, damage: Damage, _done: Function) {
+    if (damage.isCritical()) {
+      this.criticalHits = int(this.criticalHits + 1);
+    }
+  }
+  end(defeated: any[]) {
+    this.defeated = defeated;
+    this.deactivate();
+  }
+  getCombatExperience(): number {
+    return Number(Dungeon.xpCalulator.getXp(this.defeated));
+  }
+  getMixExperience(): number {
+    return Number(Dungeon.xpCalulator.getMixXp(this.mixesDone, this.game.getJinn()));
+  }
+  getCriticalExperience(): number {
+    return Number(Dungeon.xpCalulator.getCriticalXp(this.criticalHits, this.game.getJinn()));
+  }
+  getDungeonExperience(): number {
+    return Number(this.getCombatExperience() + this.getCriticalExperience() + this.getMixExperience());
+  }
   deactivate() {
-         if(this.active)
-         {
-            main.game.getMixer().onMixEnd.remove(this.onMix);
-            main.game.getJinn().onHit.remove(this.onHit);
-            this.active = false;
-         }
-      }
+    if (this.active) {
+      this.game.getMixer().onMixEnd.remove(this.onMix);
+      this.game.getJinn().onHit.remove(this.onHit);
+      this.active = false;
+    }
+  }
   clear() {
-         this.deactivate();
-      }
+    this.deactivate();
+  }
 }
-DungeonStats.prototype.defeated = null;
-DungeonStats.prototype.mixesDone = 0;
-DungeonStats.prototype.criticalHits = 0;
-DungeonStats.prototype.theLevel = null;
-DungeonStats.prototype.active = false;
 bindMethods(DungeonStats);

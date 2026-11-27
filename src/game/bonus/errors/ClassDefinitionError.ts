@@ -1,11 +1,9 @@
-// @ts-nocheck
-import { bindMethods, int } from '@/flash/as3';
 import { GenericError } from '@/game/bonus/errors/GenericError';
 import { LexicalParser } from '@/game/bonus/LexicalParser';
 
+/** Bad block or attribute name. */
 export class ClassDefinitionError extends GenericError {
-  constructor(text, num) {
-          super(LexicalParser.fileName,text,num); num = int(num);
-      }
+  constructor(message: string, line: number) {
+    super(LexicalParser.fileName, message, line);
+  }
 }
-bindMethods(ClassDefinitionError);

@@ -1,254 +1,188 @@
-// @ts-nocheck
 import { as3keys, as3values, bindMethods, int } from '@/flash/as3';
-import { main } from '@/game/main';
+import { services } from '@/game/services';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import { Category } from '@/game/main_game/items/Category';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { NullModifier } from '@/game/main_game/items/modifiers/NullModifier';
 import { MixData } from '@/game/main_game/mixer/MixData';
 import { MixResult } from '@/game/main_game/mixer/MixResult';
+import type { Item } from '@/game/main_game/items/Item';
+import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
+import type { Recipe } from '@/game/main_game/mixer/Recipe';
 
+type ModifierConfig = { Category: any; Value: any };
+
+/**
+ * What mixing two items gives.
+ * - a special recipe (mix.csv) gives its result item;
+ * - otherwise a "Mix_<first item>" whose modifiers combine both items, weighted by MixConfig
+ *   (config.di: primaryModifier, secondaryModifier, potionModifier, secondModMaxPercent).
+ */
 export class MixStrategy {
-  static recipes = null;
-  constructor() {
-         
+  static recipes: MixData = null;
+
+  static set config(value: any) {
+    MixStrategy.recipes = new MixData(value);
+  }
+  static get mixConfig(): any {
+    return services.config.get('MixConfig');
+  }
+  /** is the item the result of a special recipe? */
+  static isSpecial(item: Item): boolean {
+    for (const recipe of as3values(MixStrategy.recipes.getRecipes())) {
+      if (recipe.isResult(item)) {
+        return true;
       }
-  static set config(value) {
-         MixStrategy.recipes = new MixData(value);
+    }
+    return false;
+  }
+  static getSpecialMixId(item: Item, item2: Item, strictOrder = false): Recipe | null {
+    for (const recipe of as3values(MixStrategy.recipes.getRecipes())) {
+      if (recipe.areIngredients(item, item2, strictOrder)) {
+        return recipe;
       }
-  static get mixConfig() {
-         return main.config.get("MixConfig");
+    }
+    return null;
+  }
+  static getRecipe(id: number): Recipe | null {
+    return MixStrategy.recipes.getRecipeById(int(id));
+  }
+  /** "Mix_sword" -> "sword" */
+  static removeMix(id: string): string {
+    if (id.search('Mix_') == 0) {
+      return id.substring(4);
+    }
+    return id;
+  }
+
+  getMix(item: Item, item2: Item): MixResult {
+    const factory = ItemFactory.getInstance();
+    const recipe = MixStrategy.getSpecialMixId(item, item2);
+    if (recipe == null) {
+      return new MixResult(this.makeMix(item, item2));
+    }
+    // a weapon or shield keeps its modifiers when they are better than the recipe result's
+    let custom = false;
+    let id: string = null;
+    let config: any = null;
+    const type = item.getCategory().type;
+    if (type == Category.SHIELD_CATEGORY || type == Category.WEAPON_CATEGORY) {
+      const resultConfig = factory.getConfigOfItem(recipe.result);
+      id = 'Mix_' + MixStrategy.removeMix(recipe.result);
+      config = {};
+      for (const key of as3keys(resultConfig)) {
+        config[key] = resultConfig[key];
       }
-  static isSpecial(item) {
-         var recipe = null;
-         for (recipe of as3values(MixStrategy.recipes.getRecipes()))
-         {
-            if(recipe.isResult(item))
-            {
-               return true;
-            }
-         }
-         return false;
+      config.FirstModifier = item.getPrimaryModifier().toObject();
+      config.FirstModifier.Value = Math.max(config.FirstModifier.Value, resultConfig.FirstModifier.Value);
+      if (item.getSecondaryModifier().getCategory() != StatType.NULL) {
+        config.SecondModifier = item.getSecondaryModifier().toObject();
+        custom = true;
       }
-  static getSpecialMixId(item, item2, flag = false) {
-         var recipe = null;
-         for (recipe of as3values(MixStrategy.recipes.getRecipes()))
-         {
-            if(recipe.areIngredients(item,item2,flag))
-            {
-               return recipe;
-            }
-         }
-         return null;
+      this.applyLimitToModifiers(config);
+      if (config.FirstModifier.Value != resultConfig.FirstModifier.Value) {
+        custom = true;
       }
-  static getRecipe(num) { num = int(num);
-         return MixStrategy.recipes.getRecipeById(num);
+    }
+    const result = custom ? factory.getCustomItem(id, config) : factory.getItem(recipe.result);
+    return new MixResult(result, recipe);
+  }
+
+  makeMix(item: Item, item2: Item): Item {
+    const config: any = {};
+    config.NameString = item.name;
+    config.Category = item.getCategory().type;
+    const primary = item.getPrimaryModifier();
+    const secondary = item.getSecondaryModifier();
+    const primary2 = item2.getPrimaryModifier();
+    const secondary2 = item2.getSecondaryModifier();
+    const potion = this.isConsumable(item);
+    config.MovieClip = item.getMcName();
+    // a pure healing potion lasts as long as the second item
+    if (primary.getCategory() == StatType.HEALTH && secondary.getCategory() == StatType.NULL) {
+      config.Duration = item2.getDuration();
+    } else {
+      config.Duration = item.getDuration();
+    }
+    config.MaxMod = item.getMaxMod();
+    const primaryWeight = Number(MixStrategy.mixConfig.primaryModifier);
+    let secondaryWeight = Number(MixStrategy.mixConfig.secondaryModifier);
+    if (this.isConsumable(item) && this.isConsumable(item2)) {
+      secondaryWeight = Number(MixStrategy.mixConfig.potionModifier);
+    }
+    if (this.sameCategory(primary, primary2)) {
+      config.FirstModifier = this.combine(primary, primary2, primaryWeight, secondaryWeight, potion);
+      config.SecondModifier = this.combine(secondary, secondary2, primaryWeight, secondaryWeight, potion);
+    } else {
+      // different main stats: the second item's main stat becomes the secondary modifier
+      config.FirstModifier = this.combine(primary, new NullModifier(), primaryWeight, primaryWeight, potion);
+      config.SecondModifier = this.combine(primary2, secondary, secondaryWeight, primaryWeight, potion);
+    }
+    this.applyLimitToModifiers(config);
+    config.Element = item.getElement().type;
+    config.MixTime = item.getMixTime();
+    return ItemFactory.getInstance().getCustomItem('Mix_' + MixStrategy.removeMix(item.getID()), config);
+  }
+
+  /** the first modifier stays within +-MaxMod, the second within +-secondModMaxPercent of MaxMod */
+  applyLimitToModifiers(config: { MaxMod: any; FirstModifier: ModifierConfig; SecondModifier: ModifierConfig }) {
+    const maxMod = Number(config.MaxMod);
+    const maxSecond = Math.round((maxMod * Number(MixStrategy.mixConfig.secondModMaxPercent)) / 100);
+    config.FirstModifier.Value = Math.max(-maxMod, Math.min(maxMod, config.FirstModifier.Value));
+    if (config.SecondModifier.Value != null) {
+      config.SecondModifier.Value = Math.max(-maxSecond, Math.min(maxSecond, config.SecondModifier.Value));
+    }
+  }
+
+  /** weighted sum of two modifiers as a config object; health becomes H for potions and MH for gear */
+  combine(modifier: IModifier, modifier2: IModifier, weight = 1, weight2 = 1, potion = false): ModifierConfig {
+    weight = Number(weight);
+    weight2 = Number(weight2);
+    const result: ModifierConfig = { Category: null, Value: null };
+    if (modifier.getCategory() == StatType.NULL) {
+      if (modifier2.getCategory() != StatType.NULL) {
+        result.Category = modifier2.getCategory();
+        result.Value = this.getNumber(modifier2.getValue(), weight2);
       }
-  static removeMix(text) {
-         if(text.search("Mix_") == 0)
-         {
-            return text.substring(4);
-         }
-         return text;
-      }
-  getMix(item, item2) {
-         var item3 = null;
-         var flag = false;
-         var configOfItem = null;
-         var text = null;
-         var obj = null;
-         var key = null;
-         var instance = ItemFactory.getInstance();
-         var specialMixId = MixStrategy.getSpecialMixId(item,item2);
-         if(specialMixId != null)
-         {
-            flag = false;
-            if(item.getCategory().type == Category.SHIELD_CATEGORY || item.getCategory().type == Category.WEAPON_CATEGORY)
-            {
-               configOfItem = instance.getConfigOfItem(specialMixId.result);
-               text = "Mix_" + MixStrategy.removeMix(specialMixId.result);
-               obj = new Object();
-               for (key of as3keys(configOfItem))
-               {
-                  obj[key] = configOfItem[key];
-               }
-               obj.FirstModifier = item.getPrimaryModifier().toObject();
-               obj.FirstModifier.Value = Math.max(obj.FirstModifier.Value,configOfItem.FirstModifier.Value);
-               if(item.getSecondaryModifier().getCategory() != StatType.NULL)
-               {
-                  obj.SecondModifier = item.getSecondaryModifier().toObject();
-                  flag = true;
-               }
-               this.applyLimitToModifiers(obj);
-               if(obj.FirstModifier.Value != configOfItem.FirstModifier.Value)
-               {
-                  flag = true;
-               }
-            }
-            if(!flag)
-            {
-               item3 = instance.getItem(specialMixId.result);
-            }
-            else
-            {
-               item3 = instance.getCustomItem(text,obj);
-            }
-            return new MixResult(item3,specialMixId);
-         }
-         return new MixResult(this.makeMix(item,item2));
-      }
-  getSpecialConfigForWeapons(item, recipe2) {
-         var prop = null;
-         var primary = item;
-         var recipe = recipe2;
-         var equalOrNull = function(obj, modifier)
-         {
-            return StatType.parse(obj.Category) == StatType.NULL || StatType.parse(obj.Category) == modifier.getCategory();
-         };
-         var factory = ItemFactory.getInstance();
-         var initialConfig = factory.getConfigOfItem(recipe.result);
-         var finalConfig = new Object();
-         for (prop of as3keys(initialConfig))
-         {
-            finalConfig[prop] = initialConfig[prop];
-         }
-         if(equalOrNull(finalConfig.FirstModifier,primary.getPrimaryModifier()))
-         {
-            finalConfig.FirstModifier = primary.getPrimaryModifier().toObject();
-            finalConfig.FirstModifier.Value = Math.max(finalConfig.FirstModifier.Value,initialConfig.FirstModifier.Value);
-         }
-         if(equalOrNull(finalConfig.SecondModifier,primary.getSecondaryModifier()))
-         {
-            finalConfig.SecondModifier = primary.getSecondaryModifier().toObject();
-            finalConfig.SecondModifier.Value = Math.max(finalConfig.SecondModifier.Value,initialConfig.SecondModifier.Value);
-         }
-         this.applyLimitToModifiers(finalConfig);
-         if(finalConfig.FirstModifier.Value != initialConfig.FirstModifier.Value || finalConfig.SecondModifier.Value != initialConfig.SecondModifier.Value)
-         {
-            return finalConfig;
-         }
-         return null;
-      }
-  makeMix(item, item2) {
-         var text = "Mix_" + MixStrategy.removeMix(item.getID());
-         var obj = new Object();
-         obj.NameString = item.name;
-         obj.Category = item.getCategory().type;
-         var primaryModifier = item.getPrimaryModifier();
-         var secondaryModifier = item.getSecondaryModifier();
-         var primaryModifier2 = item2.getPrimaryModifier();
-         var secondaryModifier2 = item2.getSecondaryModifier();
-         var flag = this.isConsumable(item);
-         obj.MovieClip = item.getMcName();
-         if(primaryModifier.getCategory() == StatType.HEALTH && secondaryModifier.getCategory() == StatType.NULL)
-         {
-            obj.Duration = item2.getDuration();
-         }
-         else
-         {
-            obj.Duration = item.getDuration();
-         }
-         obj.MaxMod = item.getMaxMod();
-         var num = Number(Number(MixStrategy.mixConfig.primaryModifier));
-         var potionModifier = Number(Number(MixStrategy.mixConfig.secondaryModifier));
-         if(this.isConsumable(item) && this.isConsumable(item2))
-         {
-            potionModifier = Number(Number(MixStrategy.mixConfig.potionModifier));
-         }
-         if(this.sameCategory(primaryModifier,primaryModifier2))
-         {
-            obj.FirstModifier = this.combine(primaryModifier,primaryModifier2,num,potionModifier,flag);
-            obj.SecondModifier = this.combine(secondaryModifier,secondaryModifier2,num,potionModifier,flag);
-         }
-         else
-         {
-            obj.FirstModifier = this.combine(primaryModifier,new NullModifier(),num,num,flag);
-            obj.SecondModifier = this.combine(primaryModifier2,secondaryModifier,potionModifier,num,flag);
-         }
-         this.applyLimitToModifiers(obj);
-         obj.Element = item.getElement().type;
-         obj.MixTime = item.getMixTime();
-         return ItemFactory.getInstance().getCustomItem(text,obj);
-      }
-  applyLimitToModifiers(obj) {
-         var num = Number(Number(MixStrategy.mixConfig.secondModMaxPercent));
-         var num2 = Number(Number(obj.MaxMod));
-         num = Number(Math.round(num2 * num / 100));
-         obj.FirstModifier.Value = Math.max(-num2,Math.min(num2,obj.FirstModifier.Value));
-         if(obj.SecondModifier.Value != null)
-         {
-            obj.SecondModifier.Value = Math.max(-num,Math.min(num,obj.SecondModifier.Value));
-         }
-      }
-  combine(modifier, modifier2, num = 1, num2 = 1, flag = false) { num = Number(num); num2 = Number(num2);
-         var obj = new Object();
-         if(modifier.getCategory() == StatType.NULL)
-         {
-            if(modifier2.getCategory() == StatType.NULL)
-            {
-               obj.Category = null;
-               obj.Value = null;
-            }
-            else
-            {
-               obj.Category = modifier2.getCategory();
-               obj.Value = this.getNumber(modifier2.getValue(),num2);
-            }
-         }
-         else if(modifier2.getCategory() != StatType.NULL && this.sameCategory(modifier,modifier2))
-         {
-            obj.Category = modifier.getCategory();
-            obj.Value = this.getNumber(modifier.getValue(),num) + this.getNumber(modifier2.getValue(),num2);
-         }
-         else
-         {
-            obj.Category = modifier.getCategory();
-            obj.Value = this.getNumber(modifier.getValue(),num);
-         }
-         if(obj.Category == StatType.MAX_HP || obj.Category == StatType.HEALTH)
-         {
-            if(flag)
-            {
-               obj.Category = StatType.HEALTH;
-            }
-            else
-            {
-               obj.Category = StatType.MAX_HP;
-            }
-         }
-         if(obj.Category != null)
-         {
-            obj.Category = StatType.toString(obj.Category);
-         }
-         return obj;
-      }
-  getNumber(num, num2) { num = Number(num); num2 = Number(num2);
-         var num3 = Number(Math.floor(num * num2));
-         if(num < 0)
-         {
-            return Number(Math.min(-1,num3));
-         }
-         if(num > 0)
-         {
-            return Number(Math.max(1,num3));
-         }
-         return Number(num3);
-      }
-  isConsumable(item) {
-         return item.getCategory().type == Category.CONSUMABLE_CATEGORY;
-      }
-  sameCategory(modifier, modifier2) {
-         return modifier.getCategory() == modifier2.getCategory() || this.modifiesHealth(modifier) && this.modifiesHealth(modifier2);
-      }
-  modifiesHealth(modifier) {
-         return modifier.getCategory() == StatType.MAX_HP || modifier.getCategory() == StatType.HEALTH;
-      }
-  healthCategory(flag) {
-         if(flag)
-         {
-            return int(StatType.HEALTH);
-         }
-         return int(StatType.MAX_HP);
-      }
+    } else if (modifier2.getCategory() != StatType.NULL && this.sameCategory(modifier, modifier2)) {
+      result.Category = modifier.getCategory();
+      result.Value = this.getNumber(modifier.getValue(), weight) + this.getNumber(modifier2.getValue(), weight2);
+    } else {
+      result.Category = modifier.getCategory();
+      result.Value = this.getNumber(modifier.getValue(), weight);
+    }
+    if (result.Category == StatType.MAX_HP || result.Category == StatType.HEALTH) {
+      result.Category = potion ? StatType.HEALTH : StatType.MAX_HP;
+    }
+    if (result.Category != null) {
+      result.Category = StatType.toString(result.Category);
+    }
+    return result;
+  }
+
+  /** value * weight rounded down, but a non-zero value never becomes 0 */
+  getNumber(value: number, weight: number): number {
+    value = Number(value);
+    const scaled = Math.floor(value * Number(weight));
+    if (value < 0) {
+      return Math.min(-1, scaled);
+    }
+    if (value > 0) {
+      return Math.max(1, scaled);
+    }
+    return scaled;
+  }
+  isConsumable(item: Item): boolean {
+    return item.getCategory().type == Category.CONSUMABLE_CATEGORY;
+  }
+  sameCategory(modifier: IModifier, modifier2: IModifier): boolean {
+    return (
+      modifier.getCategory() == modifier2.getCategory() ||
+      (this.modifiesHealth(modifier) && this.modifiesHealth(modifier2))
+    );
+  }
+  modifiesHealth(modifier: IModifier): boolean {
+    return modifier.getCategory() == StatType.MAX_HP || modifier.getCategory() == StatType.HEALTH;
+  }
 }
 bindMethods(MixStrategy);

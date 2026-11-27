@@ -1,202 +1,171 @@
-// @ts-nocheck
 import { Mouse, MouseCursor, MouseEvent, Point, bindMethods } from '@/flash/as3';
 import { DragListener } from '@/game/drag_and_drop/DragListener';
-import { ItemFactory } from '@/game/main_game/items/ItemFactory';
+import { ItemViews } from '@/game/view/items/ItemViews';
 import { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
 
 export class BasicSlotView {
-  declare bg: any;
-  declare item_view: any;
-  declare slot: any;
-  declare popUp: any;
-  declare drag_listener: any;
-  declare selected: any;
+  bg: any = null;
+  item_view: any = null;
+  slot: any = null;
+  popUp: any = null;
+  drag_listener: any = null;
+  selected = false;
   enabled = true;
   hide = false;
   constructor(slot) {
-         
-         this.slot = slot;
-         this.createPopUp();
-         this.selected = false;
-         this.slot.onChange.add(this.refresh);
-      }
+    this.slot = slot;
+    this.createPopUp();
+    this.selected = false;
+    this.slot.onChange.add(this.refresh);
+  }
   hideItem() {
-         this.hide = true;
-         if(this.item_view != null)
-         {
-            this.item_view.getMC().visible = false;
-            this.updateState(this.item_view);
-         }
-      }
+    this.hide = true;
+    if (this.item_view != null) {
+      this.item_view.getMC().visible = false;
+      this.updateState(this.item_view);
+    }
+  }
   unHideItem() {
-         this.hide = false;
-         if(this.item_view != null)
-         {
-            this.item_view.getMC().visible = true;
-            this.updateState(this.item_view);
-         }
-      }
+    this.hide = false;
+    if (this.item_view != null) {
+      this.item_view.getMC().visible = true;
+      this.updateState(this.item_view);
+    }
+  }
   enable() {
-         if(this.selected && !this.enabled)
-         {
-            this.enabled = true;
-            this.selected = false;
-            this.select();
-         }
-         this.enabled = true;
-      }
+    if (this.selected && !this.enabled) {
+      this.enabled = true;
+      this.selected = false;
+      this.select();
+    }
+    this.enabled = true;
+  }
   disable() {
-         if(this.enabled && this.selected)
-         {
-            this.deselect();
-         }
-         this.enabled = false;
-      }
+    if (this.enabled && this.selected) {
+      this.deselect();
+    }
+    this.enabled = false;
+  }
   createPopUp() {
-         this.popUp = new ItemPopUp();
-      }
+    this.popUp = new ItemPopUp();
+  }
   initialize(bg) {
-         this.bg = bg;
-         this.bg.gotoAndStop("mouseOver");
-         this.drag_listener = new DragListener(this.bg,this.slot);
-         this.drag_listener.onEnd.add(this.endDrag);
-         this.drag_listener.onStart.add(this.startDrag);
-         this.refresh();
-      }
+    this.bg = bg;
+    this.bg.gotoAndStop('mouseOver');
+    this.drag_listener = new DragListener(this.bg, this.slot);
+    this.drag_listener.onEnd.add(this.endDrag);
+    this.drag_listener.onStart.add(this.startDrag);
+    this.refresh();
+  }
   refresh(slotChange = null) {
-         var point = null;
-         this.removeEvents();
-         if(this.item_view != null)
-         {
-            this.item_view.clear();
-            this.item_view = null;
-         }
-         var content = this.slot.getContent();
-         this.popUp.refreshItem(content);
-         if(content)
-         {
-            this.item_view = ItemFactory.getInstance().getView(content);
-            this.item_view.putIn(this.bg);
-            this.popUp.addIn(this.bg);
-            point = this.bg.localToGlobal(new Point(this.bg.mouseX,this.bg.mouseY));
-            if(this.bg.hitTestPoint(point.x,point.y,true))
-            {
-               this.mouseOver(null);
-            }
-         }
-         else
-         {
-            this.popUp.clear();
-         }
-         this.updateState(this.item_view);
-         this.addEvents();
+    var point = null;
+    this.removeEvents();
+    if (this.item_view != null) {
+      this.item_view.clear();
+      this.item_view = null;
+    }
+    var content = this.slot.getContent();
+    this.popUp.refreshItem(content);
+    if (content) {
+      this.item_view = ItemViews.create(content);
+      this.item_view.putIn(this.bg);
+      this.popUp.addIn(this.bg);
+      point = this.bg.localToGlobal(new Point(this.bg.mouseX, this.bg.mouseY));
+      if (this.bg.hitTestPoint(point.x, point.y, true)) {
+        this.mouseOver(null);
       }
-  updateState(itemView) {
-      }
+    } else {
+      this.popUp.clear();
+    }
+    this.updateState(this.item_view);
+    this.addEvents();
+  }
+  updateState(itemView) {}
   addEvents() {
-         this.bg.addEventListener(MouseEvent.ROLL_OVER,this.mouseOver,false,0,true);
-         this.bg.addEventListener(MouseEvent.ROLL_OUT,this.mouseOut,false,0,true);
-      }
+    this.bg.addEventListener(MouseEvent.ROLL_OVER, this.mouseOver, false, 0, true);
+    this.bg.addEventListener(MouseEvent.ROLL_OUT, this.mouseOut, false, 0, true);
+  }
   removeEvents() {
-         this.bg.removeEventListener(MouseEvent.ROLL_OVER,this.mouseOver);
-         this.bg.removeEventListener(MouseEvent.ROLL_OUT,this.mouseOut);
-      }
+    this.bg.removeEventListener(MouseEvent.ROLL_OVER, this.mouseOver);
+    this.bg.removeEventListener(MouseEvent.ROLL_OUT, this.mouseOut);
+  }
   startDrag(dragListener) {
-         this.popUp.hide();
-         if(dragListener.isInState(DragListener.DRAGGER))
-         {
-            this.item_view.getMC().alpha = 0.3;
-            this.select();
-         }
-      }
+    this.popUp.hide();
+    if (dragListener.isInState(DragListener.DRAGGER)) {
+      this.item_view.getMC().alpha = 0.3;
+      this.select();
+    }
+  }
   endDrag(dragListener) {
-         if(dragListener.isInState(DragListener.DRAGGER))
-         {
-            if(this.item_view)
-            {
-               this.item_view.getMC().alpha = 1;
-            }
-         }
-         if(!dragListener.isInState(DragListener.RECEIVER))
-         {
-            this.deselect();
-         }
+    if (dragListener.isInState(DragListener.DRAGGER)) {
+      if (this.item_view) {
+        this.item_view.getMC().alpha = 1;
       }
+    }
+    if (!dragListener.isInState(DragListener.RECEIVER)) {
+      this.deselect();
+    }
+  }
   mouseOver(event) {
-         if(this.hide)
-         {
-            return;
-         }
-         Mouse.cursor = MouseCursor.AUTO;
-         switch(this.drag_listener.dragState)
-         {
-            case DragListener.ACTIVE_DRAG:
-               this.select();
-               break;
-            case DragListener.NO_DRAG:
-               if(!this.slot.isEmpty())
-               {
-                  this.select();
-                  Mouse.cursor = MouseCursor.HAND;
-               }
-               this.popUp.show();
-               break;
-            case DragListener.RECEIVER:
-               if(!this.slot.isEmpty())
-               {
-                  this.select();
-                  Mouse.cursor = MouseCursor.HAND;
-               }
-               this.popUp.show();
-         }
-      }
+    if (this.hide) {
+      return;
+    }
+    Mouse.cursor = MouseCursor.AUTO;
+    switch (this.drag_listener.dragState) {
+      case DragListener.ACTIVE_DRAG:
+        this.select();
+        break;
+      case DragListener.NO_DRAG:
+        if (!this.slot.isEmpty()) {
+          this.select();
+          Mouse.cursor = MouseCursor.HAND;
+        }
+        this.popUp.show();
+        break;
+      case DragListener.RECEIVER:
+        if (!this.slot.isEmpty()) {
+          this.select();
+          Mouse.cursor = MouseCursor.HAND;
+        }
+        this.popUp.show();
+    }
+  }
   mouseOut(event) {
-         if(this.hide)
-         {
-            return;
-         }
-         Mouse.cursor = MouseCursor.AUTO;
-         switch(this.drag_listener.dragState)
-         {
-            case DragListener.ACTIVE_DRAG:
-               this.deselect();
-               break;
-            case DragListener.NO_DRAG:
-               this.deselect();
-               this.popUp.hide();
-         }
-      }
+    if (this.hide) {
+      return;
+    }
+    Mouse.cursor = MouseCursor.AUTO;
+    switch (this.drag_listener.dragState) {
+      case DragListener.ACTIVE_DRAG:
+        this.deselect();
+        break;
+      case DragListener.NO_DRAG:
+        this.deselect();
+        this.popUp.hide();
+    }
+  }
   select() {
-         if(!this.selected && this.enabled)
-         {
-            this.selected = true;
-            this.bg.gotoAndPlay("mouseOver");
-         }
-      }
+    if (!this.selected && this.enabled) {
+      this.selected = true;
+      this.bg.gotoAndPlay('mouseOver');
+    }
+  }
   deselect() {
-         if(this.selected)
-         {
-            this.selected = false;
-            this.bg.gotoAndPlay("mouseOut");
-         }
-      }
+    if (this.selected) {
+      this.selected = false;
+      this.bg.gotoAndPlay('mouseOut');
+    }
+  }
   clear() {
-         this.removeEvents();
-         this.drag_listener.clear();
-         this.bg = null;
-         this.popUp.clear();
-         this.popUp = null;
-         if(this.item_view != null)
-         {
-            this.item_view.clear();
-         }
-         this.item_view = null;
-      }
+    this.removeEvents();
+    this.drag_listener.clear();
+    this.bg = null;
+    this.popUp.clear();
+    this.popUp = null;
+    if (this.item_view != null) {
+      this.item_view.clear();
+    }
+    this.item_view = null;
+  }
 }
-BasicSlotView.prototype.bg = null;
-BasicSlotView.prototype.item_view = null;
-BasicSlotView.prototype.slot = null;
-BasicSlotView.prototype.popUp = null;
-BasicSlotView.prototype.drag_listener = null;
-BasicSlotView.prototype.selected = false;
 bindMethods(BasicSlotView);
