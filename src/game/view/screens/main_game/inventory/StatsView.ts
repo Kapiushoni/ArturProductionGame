@@ -10,21 +10,23 @@ import { Util } from '@/game/util/Util';
 import { BarView } from '@/game/view/screens/main_game/BarView';
 import { LiverView } from '@/game/view/screens/main_game/inventory/LiverView';
 import { LeftSlotView } from '@/game/view/screens/main_game/slot/LeftSlotView';
+import type { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { TextField } from '@/flash/as3';
 
 export class StatsView {
-  bg: any = null;
-  drag_listener: any = null;
-  weapon_slot: any = null;
-  shield_slot: any = null;
-  equip_slot_1: any = null;
-  equip_slot_2: any = null;
-  liver: any = null;
+  bg: MovieClip = null;
+  drag_listener: DragListener = null;
+  weapon_slot: SlotView = null;
+  shield_slot: SlotView = null;
+  equip_slot_1: SlotView = null;
+  equip_slot_2: SlotView = null;
+  liver: LiverView = null;
   lastLevel = 0;
-  experience: any = null;
+  experience: BarView = null;
   constructor() {
     this.liver = new LiverView(this);
   }
-  initialize(bg: any) {
+  initialize(bg: MovieClip) {
     this.bg = bg;
     this.drag_listener = new DragListener(bg, app.game.getJinn().liver);
     const stats = app.game.getJinn().stats;
@@ -88,7 +90,7 @@ export class StatsView {
       total: total,
     });
   }
-  makeGlow(flag: boolean, textField: any) {
+  makeGlow(flag: boolean, textField: TextField) {
     if (flag) {
       textField.textColor = 16776960;
     } else {
@@ -120,12 +122,12 @@ export class StatsView {
     num = int(num);
     this.updateText(this.bg.luck.title.title, num);
   }
-  updateText(textField: any, num: number) {
+  updateText(textField: TextField, num: number) {
     num = Number(num);
     Tween.killTweensOf(textField);
     Tween.to(textField, 300, { text: num }, null, Util.l(this.interize, textField));
   }
-  interize(textField: any) {
+  interize(textField: TextField) {
     const text = textField.text;
     textField.text = text.split('.')[0];
   }

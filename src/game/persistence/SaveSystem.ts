@@ -4,6 +4,7 @@ import { GameLoop } from '@/game/cb/gameloop/GameLoop';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { SharedUtils } from '@/game/persistence/SharedUtils';
 import type { Item } from '@/game/main_game/items/Item';
+import type { DisplayObject } from '@/flash/as3';
 
 /**
  * The game save (one SharedObject "cbjs"). Simple values are written at once; items, the last played dungeon
@@ -25,7 +26,7 @@ export class SaveSystem {
   private lastPlayed: string = null;
 
   /** displayObject: gives the frame event used to delay the pending saves */
-  constructor(displayObject: any) {
+  constructor(displayObject: DisplayObject) {
     this.recipesChange = false;
     this.gameLoop = new GameLoop(displayObject);
     this.pendingSaves = {};

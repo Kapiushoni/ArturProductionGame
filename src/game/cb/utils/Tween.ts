@@ -127,7 +127,7 @@ class Value {
   to: number;
   change: number;
 
-  constructor(from: any, to: any) {
+  constructor(from: number, to: number) {
     this.from = Number(from);
     this.to = Number(to);
     this.change = this.to - this.from;

@@ -2,6 +2,8 @@ import { Sprite, bindMethods } from '@/flash/as3';
 import { Functor } from '@/game/cb/actions/Functor';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class FightFeedback extends Sprite {
   static readonly gap = -50;
@@ -13,10 +15,10 @@ export class FightFeedback extends Sprite {
     this.slots[1] = null;
     this.slots[2] = null;
   }
-  showIn(displayObjectContainer: any) {
+  showIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer.addChild(this);
   }
-  addFeedback(clip: any) {
+  addFeedback(clip: MovieClip) {
     let above = null;
     let i = 0;
     while (i < 3) {
@@ -32,13 +34,13 @@ export class FightFeedback extends Sprite {
       i++;
     }
   }
-  makeAppear(clip: any) {
+  makeAppear(clip: MovieClip) {
     this.addChild(clip);
     clip.gotoAndPlay(1);
     const smartMC = new SmartMC(clip);
     smartMC.trigger(new EndAnimation(), new Functor(this.removePoster, clip));
   }
-  removePoster(clip: any, params: any[]) {
+  removePoster(clip: MovieClip, params: any[]) {
     const poster = params[0];
     let i = 0;
     while (i < 3) {

@@ -22,7 +22,7 @@ export class Screen extends Sprite {
   initScreen(bgClass: any, btnInfo: any) {
     this.setNew(bgClass, btnInfo);
   }
-  added(_event: any) {
+  added(_event: Event) {
     this.bg.removeEventListener(Event.ADDED_TO_STAGE, this.added);
     for (const path of as3keys(this.btnInfo)) {
       this.configureButton(this.getFather(), path, this.btnInfo.get(path));

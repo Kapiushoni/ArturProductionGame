@@ -19,18 +19,19 @@ import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPa
 import { DungeonState } from '@/game/view/screens/main_game/states/DungeonState';
 import { MapState } from '@/game/view/screens/main_game/states/MapState';
 import type { Level } from '@/game/main_game/map/Level';
+import type { MouseEvent } from '@/flash/as3';
 
 export class GameView extends Screen {
   inventory = new InventoryView();
   mixing = new MixerView();
   stats = new StatsView();
   princess = new ShmabledumView();
-  cookBook: any = null;
+  cookBook: CookBook = null;
   cookBookEnalbed = true;
   fsm: any = null;
-  up_holder: any = null;
-  onExit: any = null;
-  onEnd: any = null;
+  up_holder: MovieClip = null;
+  onExit: Signal = null;
+  onEnd: Signal = null;
   constructor() {
     super();
     this.initScreen(app.swfLoader.getClass('assets.Inventory'), this.getButtonInfo());
@@ -112,7 +113,7 @@ export class GameView extends Screen {
   get recipesButton() {
     return this.bg.inventory.recipes.book;
   }
-  clickOnRecipes(event: any = null) {
+  clickOnRecipes(event: MouseEvent = null) {
     if (!this.cookBookEnalbed) {
       return;
     }

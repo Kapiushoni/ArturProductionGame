@@ -9,10 +9,11 @@ import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
+import type { MouseEvent } from '@/flash/as3';
 
 export class ComicWindow extends AnimatedScreen {
-  onNext: any = null;
-  onBack: any = null;
+  onNext: Signal = null;
+  onBack: Signal = null;
   nextArrow: any = null;
   actualPage = 0;
   totalPages = 0;
@@ -59,11 +60,11 @@ export class ComicWindow extends AnimatedScreen {
       this.nextArrow.show();
     }
   }
-  next(event: any) {
+  next(event: MouseEvent) {
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], false);
     this.onNext.emit();
   }
-  toMainMenu(event: any) {
+  toMainMenu(event: MouseEvent) {
     Buttons.setButtons(this.bg, ['sound', 'ok', 'back'], false);
     this.onBack.emit();
   }

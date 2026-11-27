@@ -8,10 +8,11 @@ import { JinnSoundManager } from '@/game/sound/JinnSoundManager';
 import { PotionEffect } from '@/game/view/effect/PotionEffect';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
 import type { Item } from '@/game/main_game/items/Item';
+import type { DisplayObjectContainer } from '@/flash/as3';
 
 export class JinnView extends FighterView {
-  declare mc: any;
-  declare dragger: any;
+  declare mc: MovieClip;
+  declare dragger: DragListener;
   constructor(jinn: Jinn) {
     super(jinn);
     this.createMc();
@@ -36,11 +37,11 @@ export class JinnView extends FighterView {
     this.setSword(this.mc.sword);
     this.setShield(this.mc.shield);
   }
-  setSword(clip: any) {
+  setSword(clip: MovieClip) {
     const swordModifier = ItemViews.swordModifier(this.jinn.gear.weapon.getContent());
     swordModifier.modify(clip);
   }
-  setShield(clip: any) {
+  setShield(clip: MovieClip) {
     const shieldModifier = ItemViews.shieldModifier(this.jinn.gear.shield.getContent());
     shieldModifier.modify(clip);
   }
@@ -50,7 +51,7 @@ export class JinnView extends FighterView {
   getMC() {
     return this.mc;
   }
-  putIn(displayObjectContainer: any) {
+  putIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer['jinn'] = this.mc;
     displayObjectContainer.addChild(this.mc);
   }

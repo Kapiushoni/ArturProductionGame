@@ -6,6 +6,7 @@ import { Liver } from '@/game/main_game/character/Liver';
 import { JinnStats } from '@/game/main_game/character/stats/JinnStats';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 import type { Item } from '@/game/main_game/items/Item';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 /** The player's jinn: gear, potion slot (liver) and saved experience. */
 export class Jinn extends Fighter {
@@ -39,7 +40,7 @@ export class Jinn extends Fighter {
   createStats(config: CharacterConfigData): JinnStats {
     return new JinnStats(config, this);
   }
-  prepareForFight(_fight: any) {}
+  prepareForFight(_fight: IFight) {}
   clear() {
     super.clear();
     this.onPotionConsumition.clear();

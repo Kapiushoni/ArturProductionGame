@@ -3,6 +3,10 @@ import { XpCalculator } from '@/game/main_game/dungeon/XpCalculator';
 import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Game } from '@/game/main_game/Game';
+import type { Enemy } from '@/game/main_game/character/Enemy';
+import type { Jinn } from '@/game/main_game/character/Jinn';
+import type { Level } from '@/game/main_game/map/Level';
+import type { MixResult } from '@/game/main_game/mixer/MixResult';
 
 /** Counts mixes and critical hits during a dungeon run, and gives the experience earned at the end. */
 export class DungeonStats {
@@ -12,11 +16,11 @@ export class DungeonStats {
   private defeated: any[] = null;
   private mixesDone = 0;
   private criticalHits = 0;
-  private theLevel: any;
+  private theLevel: Level;
   private active = false;
   private game: Game;
 
-  constructor(level: any, game: Game) {
+  constructor(level: Level, game: Game) {
     this.theLevel = level;
     this.game = game;
   }
@@ -25,13 +29,13 @@ export class DungeonStats {
     this.game.getMixer().onMixEnd.add(this.onMix);
     this.game.getJinn().onHit.add(this.onHit);
   }
-  get level(): any {
+  get level(): Level {
     return this.theLevel;
   }
-  onMix(_mixResult: any) {
+  onMix(_mixResult: MixResult) {
     this.mixesDone = int(this.mixesDone + 1);
   }
-  onHit(_jinn: any, _enemy: any, damage: Damage, _done: Function) {
+  onHit(_jinn: Jinn, _enemy: Enemy, damage: Damage, _done: Function) {
     if (damage.critical) {
       this.criticalHits = int(this.criticalHits + 1);
     }

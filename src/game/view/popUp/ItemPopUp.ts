@@ -8,7 +8,7 @@ import type { Item } from '@/game/main_game/items/Item';
 export class ItemPopUp extends PopUp {
   static LEFT = 'Left';
   static RIGHT = 'Right';
-  declare item: any;
+  declare item: Item;
   constructor(text: string = 'Left') {
     const clip = as3as(app.swfLoader.getObject('assets.ItemInformation' + text), MovieClip);
     super(clip);

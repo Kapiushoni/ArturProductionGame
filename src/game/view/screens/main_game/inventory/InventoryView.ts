@@ -6,20 +6,22 @@ import { app } from '@/game/app';
 import { Inventory } from '@/game/main_game/inventory/Inventory';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import { TrashView } from '@/game/view/screens/main_game/slot/TrashView';
+import type { MouseEvent } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class InventoryView {
   static readonly NEXT_BUTTON = 'arrow_next';
   static readonly PREV_BUTTON = 'arrow_prev';
-  bg: any = null;
+  bg: MovieClip = null;
   slots: any = null;
-  trash: any = null;
+  trash: TrashView = null;
   actual_page = 0;
   constructor() {
     this.actual_page = 1;
     this.trash = new TrashView();
     this.slots = new Array(Inventory.SLOTS);
   }
-  initialize(bg: any) {
+  initialize(bg: MovieClip) {
     this.bg = bg;
     this.trash.initialize(bg.trash);
     const inventory = app.game.getInventory();
@@ -34,10 +36,10 @@ export class InventoryView {
     actual_page = uint(actual_page);
     this.actual_page = uint(actual_page);
   }
-  nextPage(event: any) {
+  nextPage(event: MouseEvent) {
     this.goToPage(this.actual_page + 1);
   }
-  previousPage(event: any) {
+  previousPage(event: MouseEvent) {
     this.goToPage(this.actual_page - 1);
   }
   goToPage(num: number) {

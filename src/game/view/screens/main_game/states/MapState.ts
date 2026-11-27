@@ -3,15 +3,18 @@ import { BasicPausableState } from '@/game/view/screens/main_game/states/BasicPa
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { MapView } from '@/game/view/screens/main_game/map/MapView';
+import type { GameView } from '@/game/view/screens/main_game/GameView';
+import type { Level } from '@/game/main_game/map/Level';
+import type { Map } from '@/game/main_game/map/Map';
 
 /** The game screen on the map: shows the MapView (with the newly unlocked levels), heals the jinn, map music. */
 export class MapState extends BasicPausableState {
   /** the GameView */
-  private principal: any;
+  private principal: GameView;
   private mapView: MapView = null;
-  map: any = null;
+  map: Map = null;
 
-  constructor(name: string, principal: any, onEnter: Function = null, onLeave: Function = null) {
+  constructor(name: string, principal: GameView, onEnter: Function = null, onLeave: Function = null) {
     super(name, onEnter, onLeave);
     this.principal = principal;
   }
@@ -35,7 +38,7 @@ export class MapState extends BasicPausableState {
   toMainMenu() {
     this.principal.toMainMenu();
   }
-  toLevel(level: any) {
+  toLevel(level: Level) {
     this.principal.toLevelWaiting(level);
   }
 }

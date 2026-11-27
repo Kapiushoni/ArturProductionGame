@@ -6,18 +6,22 @@ import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { Dungeon } from '@/game/main_game/dungeon/Dungeon';
+import type { GameView } from '@/game/view/screens/main_game/GameView';
+import type { Level } from '@/game/main_game/map/Level';
 
 /** The game screen inside a dungeon: entering starts the dungeon set with setNextDungeon() and shows its view. */
 export class DungeonState extends BasicPausableState implements IDungeonState {
-  private dungeon_view: any = null;
-  private dungeon: any = null;
+  private dungeon_view: DungeonView = null;
+  private dungeon: Dungeon = null;
   /** the GameView */
-  private mainView: any;
-  private next_dungeon: any = null;
+  private mainView: GameView;
+  private next_dungeon: Level = null;
   theOnToDungeon = new Signal();
   theOnToMap = new Signal();
 
-  constructor(name: string, mainView: any, onEnter: Function = null, onLeave: Function = null) {
+  constructor(name: string, mainView: GameView, onEnter: Function = null, onLeave: Function = null) {
     super(name, onEnter, onLeave);
     this.mainView = mainView;
   }
@@ -29,7 +33,7 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   get onToMap(): Signal {
     return this.theOnToMap;
   }
-  get pauseHolder(): any {
+  get pauseHolder(): DisplayObjectContainer {
     return this.mainView.pauseHolder;
   }
   enter() {
@@ -47,7 +51,7 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   resume() {
     this.dungeon_view.resumeFight();
   }
-  setNextDungeon(level: any) {
+  setNextDungeon(level: Level) {
     this.next_dungeon = level;
   }
   /** leaving: the jinn heals and the dungeon is closed */
@@ -58,7 +62,7 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
     super.leave();
     this.dungeon = null;
   }
-  getDungeon(): any {
+  getDungeon(): Dungeon {
     return this.dungeon;
   }
   clear() {

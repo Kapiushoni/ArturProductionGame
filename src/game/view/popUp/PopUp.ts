@@ -1,17 +1,19 @@
 import { bindMethods } from '@/flash/as3';
 import { PopUpPositioner } from '@/game/view/popUp/PopUpPositioner';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class PopUp {
-  theMc: any = null;
-  positioner: any = null;
-  constructor(theMc: any) {
+  theMc: MovieClip = null;
+  positioner: PopUpPositioner = null;
+  constructor(theMc: MovieClip) {
     this.theMc = theMc;
     this.mc.visible = false;
   }
   get mc() {
     return this.theMc;
   }
-  addIn(displayObjectContainer: any) {
+  addIn(displayObjectContainer: DisplayObjectContainer) {
     this.positioner = new PopUpPositioner(displayObjectContainer);
     this.positioner.addMc(this.mc);
   }

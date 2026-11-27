@@ -8,10 +8,11 @@ import { PersistentExperience } from '@/game/main_game/character/stats/Persisten
 import { Stat } from '@/game/main_game/character/stats/Stat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
+import type { Fighter } from '@/game/main_game/character/Fighter';
 
 /** The jinn's stats: the level comes from the saved experience; health starts empty and is refilled on load. */
 export class JinnStats extends Stats {
-  constructor(config: CharacterConfigData, fighter: any) {
+  constructor(config: CharacterConfigData, fighter: Fighter) {
     super(config, fighter, new LevelingStragegy(services.config.get('Leveling_Jinn')));
     this.stats.set(StatType.HEALTH, new HealthStat(StatType.HEALTH, new Stat(StatType.MAX_HP, config.baseHP), 0));
     this.stats.set(StatType.EXPERIENCE, new PersistentExperience(this));

@@ -3,6 +3,7 @@ import { AnimatedScreen } from '@/game/view/screens/AnimatedScreen';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { Util } from '@/game/util/Util';
+import type { Sprite } from '@/flash/as3';
 
 export class TransitionWindow extends AnimatedScreen {
   resources: any = null;
@@ -21,7 +22,7 @@ export class TransitionWindow extends AnimatedScreen {
   get assetClass() {
     return app.swfLoader.getClass('assets.loading');
   }
-  start(sprite: any) {
+  start(sprite: Sprite) {
     sprite.addChild(this);
     this.enter(this.startWaiting);
     app.soundManager.playFx(GameSounds.TRANSITION_IN);

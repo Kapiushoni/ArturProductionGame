@@ -20,10 +20,10 @@ export class MixerClock {
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.endMix);
     this.timer.start();
   }
-  tic(event: any) {
+  tic(event: TimerEvent) {
     this.onTic.emit(event.target.currentCount);
   }
-  endMix(_event: any) {
+  endMix(_event: TimerEvent) {
     this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, this.endMix);
     this.timer.removeEventListener(TimerEvent.TIMER, this.tic);
     this.onTic.clear();

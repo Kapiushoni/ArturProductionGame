@@ -6,12 +6,15 @@ import { StatType } from '@/game/main_game/character/stats/StatType';
 import { BarView } from '@/game/view/screens/main_game/BarView';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { HudSetter } from '@/game/view/figthers/HudSetter';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
+import type { Stats } from '@/game/main_game/character/stats/Stats';
 
 export class HudView {
-  stats: any = null;
-  mc: any = null;
-  bar: any = null;
-  setter: any = null;
+  stats: Stats = null;
+  mc: MovieClip = null;
+  bar: BarView = null;
+  setter: HudSetter = null;
   constructor(cls: any, setter: HudSetter) {
     this.mc = new cls();
     this.setter = setter;
@@ -29,7 +32,7 @@ export class HudView {
     }
     this.refresh();
   }
-  initialize(displayObjectContainer: any) {
+  initialize(displayObjectContainer: DisplayObjectContainer) {
     this.mc.x = 0;
     this.mc.y = 0;
     displayObjectContainer.addChild(this.mc);

@@ -12,6 +12,7 @@ import { NullModifier } from '@/game/main_game/items/modifiers/NullModifier';
 import { Shield } from '@/game/main_game/items/Shield';
 import { Weapon } from '@/game/main_game/items/Weapon';
 import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
+import type { ItemContainer } from '@/game/main_game/item_containers/ItemContainer';
 
 /**
  * An item, built from its row in items.csv:
@@ -83,7 +84,7 @@ export class Item {
     }
     return text;
   }
-  canBeContained(itemContainer: any): boolean {
+  canBeContained(itemContainer: ItemContainer): boolean {
     return this.category.canBeContained(itemContainer);
   }
   clear() {
@@ -92,7 +93,7 @@ export class Item {
     this.primaryModifier.clear();
     this.secondaryModifier.clear();
   }
-  getCategory(): any {
+  getCategory(): Category {
     return this.category;
   }
   getMixTime(): number {

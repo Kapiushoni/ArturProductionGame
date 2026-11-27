@@ -4,6 +4,7 @@ import { DamageCalculator } from '@/game/main_game/dungeon/DamageCalculator';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Jinn } from '@/game/main_game/character/Jinn';
+import type { Enemy } from '@/game/main_game/character/Enemy';
 
 /**
  * The jinn against one enemy. They hit in turns, the jinn first, until one of them dies:
@@ -46,7 +47,7 @@ export class Fight implements IFight {
   get onWin(): Signal {
     return this.theOnWin;
   }
-  getEnemy(): any {
+  getEnemy(): Enemy {
     return this.enemy;
   }
   enter(callback: Function) {

@@ -68,7 +68,7 @@ export class Slot implements ISlot, ItemContainer {
   isLocked(): boolean {
     return this.locked;
   }
-  getContent(): any {
+  getContent(): Item {
     return this.content;
   }
   canRemove(item: Item): boolean {

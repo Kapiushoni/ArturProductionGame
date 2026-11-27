@@ -11,6 +11,9 @@ import { LevelUp } from '@/game/view/popUp/LevelUp';
 import { LootView } from '@/game/view/screens/main_game/dungeon/LootView';
 import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 import type { Loot } from '@/game/main_game/dungeon/Loot';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MouseEvent } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class WinWindow extends AnimatedScreen {
   static onShow = null;
@@ -22,12 +25,12 @@ export class WinWindow extends AnimatedScreen {
   static readonly MIX_BONUS = 'mix_bonus';
   static readonly CRITICAL_BONUS = 'hit_bonus';
   static readonly TOTAL_BONUS = 'total';
-  onReplay: any = null;
-  onBackToMap: any = null;
+  onReplay: Signal = null;
+  onBackToMap: Signal = null;
   onNext: any = null;
-  loot: any = null;
+  loot: LootView = null;
   values: any = null;
-  stats: any = null;
+  stats: DungeonStats = null;
   constructor(loot: Loot, stats: DungeonStats, onNext: Function = null) {
     super();
     this.initAnimatedScreen(app.swfLoader.getClass('assets.LevelWin'), this.getButtonInfo());
@@ -48,7 +51,7 @@ export class WinWindow extends AnimatedScreen {
   get lootMcButton() {
     return this.bg.loot;
   }
-  putIn(displayObjectContainer: any) {
+  putIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer['window'] = this;
     displayObjectContainer.addChild(this);
   }
@@ -163,7 +166,7 @@ export class WinWindow extends AnimatedScreen {
       Tween.to(this, 700, obj, Util.l(this.makeFinalCountAnimation, this.infoMc[label + '_xp'], callback));
     }
   }
-  makeFinalCountAnimation(clip: any, callback: Function) {
+  makeFinalCountAnimation(clip: MovieClip, callback: Function) {
     clip.gotoAndPlay(1);
     callback();
   }
@@ -176,11 +179,11 @@ export class WinWindow extends AnimatedScreen {
     dict.set('loot', buttonGroup.createButton(this.takeAllLoot, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  takeAllLoot(event: any) {
+  takeAllLoot(event: MouseEvent) {
     this.loot.takeAll();
     Buttons.setButtons(this.bg, ['loot'], !this.loot.isEmpty());
   }
-  replay(event: any) {
+  replay(event: MouseEvent) {
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {
@@ -191,7 +194,7 @@ export class WinWindow extends AnimatedScreen {
       this.exit();
     });
   }
-  toMap(event: any) {
+  toMap(event: MouseEvent) {
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {
@@ -202,7 +205,7 @@ export class WinWindow extends AnimatedScreen {
       this.exit();
     });
   }
-  next(event: any) {
+  next(event: MouseEvent) {
     this.stopTweens();
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot'], false);
     if (this.onNext != null) {

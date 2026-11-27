@@ -16,14 +16,15 @@ import { Util } from '@/game/util/Util';
 import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
 import type { Level } from '@/game/main_game/map/Level';
 import type { MapState } from '@/game/view/screens/main_game/states/MapState';
+import type { MouseEvent } from '@/flash/as3';
 
 export class MapView extends Screen {
   static readonly NEXT_BUTTON = 'pages.arrow_right';
   static readonly PREV_BUTTON = 'pages.arrow_left';
-  onToMainMenu: any = null;
-  onToDungeon: any = null;
+  onToMainMenu: Signal = null;
+  onToDungeon: Signal = null;
   buttonsNames: any = null;
-  map: any = null;
+  map: MapState = null;
   nextArrow: any = null;
   prevArrow: any = null;
   actual_page = 0;
@@ -121,7 +122,7 @@ export class MapView extends Screen {
       }
     }
   }
-  putEnemies(button: any, level: Level) {
+  putEnemies(button: MovieClip, level: Level) {
     let skulls = null;
     let enemyElement = null;
     const config = DungeonFactory.getConfigFor(level.dungeonId);
@@ -188,7 +189,7 @@ export class MapView extends Screen {
       this.prevArrow.show();
     }
   }
-  toMainMenu(event: any) {
+  toMainMenu(event: MouseEvent) {
     this.onToMainMenu.emit();
   }
   close() {
@@ -234,7 +235,7 @@ export class MapView extends Screen {
     this.lastPlayedTimer.start();
     this.refreshArrows(this.actual_page);
   }
-  refreshLastLevel(event: any) {
+  refreshLastLevel(event: TimerEvent) {
     const clip = as3as(
       Util.getSprite(this.bg, this.getButtonName(this.map.map.getLevel(app.saveSystem.getLastPlayed()))),
       MovieClip,

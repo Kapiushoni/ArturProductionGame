@@ -4,7 +4,7 @@ import { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
 import type { ISlot } from '@/game/main_game/item_containers/ISlot';
 
 export class LeftSlotView extends AutoSelectSlotView {
-  declare selectionBloked: any;
+  declare selectionBloked: boolean;
   constructor(slot: ISlot) {
     super(slot);
     this.selectionBloked = false;

@@ -4,6 +4,7 @@ import { EquipmentSlot } from '@/game/main_game/item_containers/EquipmentSlot';
 import { ShieldSlot } from '@/game/main_game/item_containers/ShieldSlot';
 import { WeaponSlot } from '@/game/main_game/item_containers/WeaponSlot';
 import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
+import type { Fighter } from '@/game/main_game/character/Fighter';
 
 /**
  * The jinn's equipment: weapon, shield and two equipment slots (saved as gear slots 1-4).
@@ -11,13 +12,13 @@ import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
  */
 export class Gear {
   private locked = false;
-  private fighter: any; // Jinn
+  private fighter: Fighter; // Jinn
   weapon: WeaponSlot;
   shield: ShieldSlot;
   equipment_1: EquipmentSlot;
   equipment_2: EquipmentSlot;
 
-  constructor(fighter: any) {
+  constructor(fighter: Fighter) {
     this.fighter = fighter;
     this.weapon = new WeaponSlot();
     this.shield = new ShieldSlot();

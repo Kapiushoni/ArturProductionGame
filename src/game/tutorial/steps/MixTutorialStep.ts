@@ -3,6 +3,7 @@ import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
 import { app } from '@/game/app';
 import { TutorialViewWithOk } from '@/game/tutorial/view/TutorialViewWithOk';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
+import type { MovieClip } from '@/flash/as3';
 
 /** Step 6: "mix two items" (closes when a mix starts, or with OK). */
 export class MixTutorialStep extends TutorialStep {
@@ -12,7 +13,7 @@ export class MixTutorialStep extends TutorialStep {
   createView(viewClass: string): TutorialViewWithOk {
     return new TutorialViewWithOk(app.swfLoader.getClass(viewClass));
   }
-  setText(clip: any) {
+  setText(clip: MovieClip) {
     clip.title.title.text = app.locale.get('tutorialMixTitle');
     clip.text.text.text = app.locale.get('tutorialMix');
   }

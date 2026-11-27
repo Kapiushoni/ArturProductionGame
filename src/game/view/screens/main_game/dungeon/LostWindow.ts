@@ -8,12 +8,14 @@ import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { LevelUp } from '@/game/view/popUp/LevelUp';
 import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MouseEvent } from '@/flash/as3';
 
 export class LostWindow extends AnimatedScreen {
-  onReplay: any = null;
-  onBackToMap: any = null;
+  onReplay: Signal = null;
+  onBackToMap: Signal = null;
   experience = 0;
-  stats: any = null;
+  stats: DungeonStats = null;
   constructor(stats: DungeonStats) {
     super();
     this.initAnimatedScreen(app.swfLoader.getClass('assets.LevelLose'), this.getButtonInfo());
@@ -22,7 +24,7 @@ export class LostWindow extends AnimatedScreen {
     this.onBackToMap = new Signal();
     this.initialize();
   }
-  putIn(displayObjectContainer: any) {
+  putIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer.addChild(this);
   }
   pause() {}
@@ -69,10 +71,10 @@ export class LostWindow extends AnimatedScreen {
     dict.set('level_select', buttonGroup.createButton(this.back, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  replay(event: any) {
+  replay(event: MouseEvent) {
     this.emitAndLeave(this.onReplay);
   }
-  back(event: any) {
+  back(event: MouseEvent) {
     this.emitAndLeave(this.onBackToMap);
   }
   emitAndLeave(signal2: Signal) {

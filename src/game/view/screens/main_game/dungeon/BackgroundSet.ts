@@ -3,7 +3,7 @@ import { app } from '@/game/app';
 import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 
 export class BackgroundSet {
-  types: any = null;
+  types: ProbabilisticSet = null;
   constructor(backgrounds: any[]) {
     this.types = new ProbabilisticSet();
     for (const background of as3values(backgrounds)) {

@@ -3,10 +3,11 @@ import { Screen } from '@/game/cb/display/Screen';
 import { Functor } from '@/game/cb/actions/Functor';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
+import type { MovieClip } from '@/flash/as3';
 
 export class AnimatedScreen extends Screen {
-  enterLabel: any = null;
-  leaveLabel: any = null;
+  enterLabel: string = null;
+  leaveLabel: string = null;
   /** like Screen: subclasses call super() and then initAnimatedScreen(...) */
   constructor(cls: any = null, dict: any = null, enterLabel: string = 'in', leaveLabel: string = 'out') {
     super();
@@ -29,7 +30,7 @@ export class AnimatedScreen extends Screen {
     this.bg.gotoAndPlay(this.leaveLabel);
     this.callOnEnd(this.bg, callback);
   }
-  callOnEnd(clip: any, callback: Function = null) {
+  callOnEnd(clip: MovieClip, callback: Function = null) {
     let smc = null;
     const mc = clip;
     const fc = callback;

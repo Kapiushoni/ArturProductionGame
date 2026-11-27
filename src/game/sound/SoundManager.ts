@@ -5,6 +5,9 @@ import { cbArray } from '@/game/cb/utils/cbArray';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 import { MusicRequest } from '@/game/sound/MusicRequest';
+import type { MouseEvent } from '@/flash/as3';
+import type { SoundLoader } from '@/game/cb/media/SoundLoader';
+import type { cbSound } from '@/game/cb/media/cbSound';
 
 /**
  * The game's sound (app.soundManager): effects, and a stack of musics (the last requested plays;
@@ -17,11 +20,11 @@ export class SoundManager {
   constructor() {
     this.musicList = new cbArray();
   }
-  addSound(soundLoader: any) {
+  addSound(soundLoader: SoundLoader) {
     this.soundMixer.addSoundLoader(soundLoader);
   }
   /** with the first loaded sounds */
-  start(soundLoader: any) {
+  start(soundLoader: SoundLoader) {
     this.soundMixer = new cbSoundMixer(soundLoader);
     this.initializeSound();
   }
@@ -47,7 +50,7 @@ export class SoundManager {
     }
   }
   /** the mute button: toggles, saves, and restarts the music when unmuting */
-  onSoundClick(event: any) {
+  onSoundClick(event: MouseEvent) {
     if (this.soundMixer.isMuted()) {
       this.soundMixer.unmute();
       const music = this.actualMusic;
@@ -60,7 +63,7 @@ export class SoundManager {
     app.saveSystem.saveMuteState(this.soundMixer.isMuted());
     this.updateSoundButton(as3as(event.currentTarget, MovieClip));
   }
-  updateSoundButton(button: any) {
+  updateSoundButton(button: MovieClip) {
     const icon = as3as(button.getChildByName('icon'), MovieClip);
     const frame = as3as(button.getChildByName('frame'), MovieClip);
     if (!icon) {
@@ -71,7 +74,7 @@ export class SoundManager {
     frame.gotoAndStop(label);
   }
   /** plays a music on top of the stack (nothing if it is already the current one) */
-  playMusic(name: string, start = 0, volume = -1): any {
+  playMusic(name: string, start = 0, volume = -1): cbSound {
     const request = new MusicRequest(name, Number(start), Number(volume));
     if (this.musicList.length != 0) {
       const current = this.actualMusic;
@@ -114,13 +117,13 @@ export class SoundManager {
     }
     return this.musicList[this.musicList.length - 1];
   }
-  playFx(name: string, start = 0, volume = -1): any {
+  playFx(name: string, start = 0, volume = -1): cbSound {
     return this.soundMixer.play(name, Number(start), false, Number(volume));
   }
   stopFx(name: string) {
     this.soundMixer.stop(name);
   }
-  playRequest(request: MusicRequest): any {
+  playRequest(request: MusicRequest): cbSound {
     return this.soundMixer.play(request.getName(), request.startTime, true, request.volume);
   }
   resumeSound(name: string) {

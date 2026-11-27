@@ -11,11 +11,11 @@ import type { Level } from '@/game/main_game/map/Level';
 
 export class TimeLine extends MovieClip {
   static readonly jinnStart = 74;
-  declare dungeonView: any;
-  declare jinn: any;
-  declare scale: any;
-  declare fight: any;
-  declare distance: any;
+  declare dungeonView: DungeonView;
+  declare jinn: MovieClip;
+  declare scale: number;
+  declare fight: number;
+  declare distance: number;
   declare skulls: any;
   alphalize = false;
   constructor(dungeonView: DungeonView) {
@@ -61,7 +61,7 @@ export class TimeLine extends MovieClip {
     this.jinn.x = TimeLine.jinnStart;
     dungeon.onWin.add(Util.l(this.removeSkull, this.skulls[this.skulls.length - 1]));
   }
-  setLevel(clip: any, level: Level) {
+  setLevel(clip: MovieClip, level: Level) {
     if (level.isLegendary()) {
       clip.level.gotoAndStop(as3as(level, LegendaryLevel).element.type);
     } else if (level.isSpecial()) {
@@ -90,7 +90,7 @@ export class TimeLine extends MovieClip {
     }
     this.jinn.x = Math.min(this.jinn.x + num * this.scale, this.positionOfFight(this.fight));
   }
-  removeSkull(clip: any) {
+  removeSkull(clip: MovieClip) {
     Tween.to(
       clip,
       800,

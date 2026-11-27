@@ -2,6 +2,7 @@ import { bindMethods } from '@/flash/as3';
 import { FighterAnimation } from '@/game/view/figthers/animations/FighterAnimation';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Element } from '@/game/main_game/element/Element';
+import type { FighterView } from '@/game/view/figthers/FighterView';
 
 /** Receiving a hit: dies, gets hurt or evades (with the attacker's element effect). */
 export class HurtAnimation extends FighterAnimation {
@@ -22,7 +23,7 @@ export class HurtAnimation extends FighterAnimation {
     super(label);
     this.element = element;
   }
-  make(fighterView: any) {
+  make(fighterView: FighterView) {
     if (this.name == HurtAnimation.EVADE) {
       fighterView.fighterSoundManager.playBlock();
     } else if (this.name == HurtAnimation.HURT) {

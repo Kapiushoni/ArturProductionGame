@@ -1,6 +1,7 @@
 import { Dictionary, SoundTransform, as3keys, as3values, bindMethods } from '@/flash/as3';
 import type { cbSound } from '@/game/cb/media/cbSound';
 import type { SoundMixable } from '@/game/cb/media/SoundMixable';
+import type { SoundLoader } from '@/game/cb/media/SoundLoader';
 
 /** Plays the loaded sounds by name: one channel per sound, mute, pause / resume all, loops. */
 export class cbSoundMixer implements SoundMixable {
@@ -12,11 +13,11 @@ export class cbSoundMixer implements SoundMixable {
   /** Dictionary: name -> channel, the sounds paused by pause() */
   private toResume: any = null;
 
-  constructor(soundLoader: any) {
+  constructor(soundLoader: SoundLoader) {
     this.sounds = soundLoader.data;
     this.channels = new Dictionary();
   }
-  addSoundLoader(soundLoader: any) {
+  addSoundLoader(soundLoader: SoundLoader) {
     for (const name of as3keys(soundLoader.data)) {
       this.sounds.set(name, soundLoader.data[name]);
     }

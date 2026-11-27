@@ -37,7 +37,7 @@ export class Map {
     }
     return level;
   }
-  getLevel(id: string | number): any {
+  getLevel(id: string | number): Level {
     return this.levels.get(id);
   }
   initializeLevels() {

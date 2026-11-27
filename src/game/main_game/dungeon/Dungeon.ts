@@ -9,6 +9,9 @@ import type { IFight } from '@/game/main_game/dungeon/IFight';
 import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
 import type { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 import type { Game } from '@/game/main_game/Game';
+import type { DungeonConfigData } from '@/game/main_game/dungeon/DungeonConfigData';
+import type { Enemy } from '@/game/main_game/character/Enemy';
+import type { Level } from '@/game/main_game/map/Level';
 
 /**
  * A dungeon run: its fights one after another (startFight, then wonFight / lostFight from the view), the loot,
@@ -25,13 +28,13 @@ export class Dungeon {
   /** index of the current fight */
   private current = 0;
   private fighting = false;
-  private level: any; // map Level
+  private level: Level; // map Level
   private stats: DungeonStats;
   /** the game it is played in (the jinn, the mixer) */
   protected game: Game;
 
   /** config: the dungeon's row (enemiesData, lootData); extraLoot: items that drop first (first-time loot) */
-  constructor(level: any, config: any, extraLoot: ProbabilisticSet, game: Game) {
+  constructor(level: Level, config: DungeonConfigData, extraLoot: ProbabilisticSet, game: Game) {
     this.game = game;
     this.level = level;
     this.onLose = new Signal();
@@ -77,10 +80,10 @@ export class Dungeon {
     this.game.getJinn().liver.lock();
     this.game.getJinn().liver.clearBuffs();
   }
-  createLoot(config: any, extraLoot: ProbabilisticSet): Loot {
+  createLoot(config: DungeonConfigData, extraLoot: ProbabilisticSet): Loot {
     return new Loot(config, extraLoot);
   }
-  initializeFights(config: any) {
+  initializeFights(config: DungeonConfigData) {
     let first = true;
     for (const enemy of as3values(config.enemiesData)) {
       // [enemy name, level]
@@ -91,7 +94,7 @@ export class Dungeon {
   createFight(enemy: any, first: boolean): IFight {
     return new Fight(this.game.getJinn(), enemy, first);
   }
-  createEnemy(name: string, level: number): any {
+  createEnemy(name: string, level: number): Enemy {
     return CharacterFactory.getInstance().getEnemy(name, uint(level));
   }
   get enemies(): any[] {
@@ -187,7 +190,7 @@ export class Dungeon {
     this.onFight.clear();
     this.onFight = null;
   }
-  getLevel(): any {
+  getLevel(): Level {
     return this.level;
   }
 }

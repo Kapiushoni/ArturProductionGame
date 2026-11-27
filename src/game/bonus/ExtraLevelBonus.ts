@@ -4,6 +4,7 @@ import { LevelingEnemies } from '@/game/main_game/character/stats/LevelingEnemie
 import { BonusFilters } from '@/game/bonus/filter/IBonusFilter';
 import type { IBonusFilter } from '@/game/bonus/filter/IBonusFilter';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
+import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 
 /** "enemyExtraLevel": enemies of the filter's element are `extraLevel` levels higher (or lower if negative). */
 export class ExtraLevelBonus implements IDailyBonus {
@@ -18,7 +19,7 @@ export class ExtraLevelBonus implements IDailyBonus {
     LevelingEnemies.setBonus(this);
   }
   /** called for every new enemy */
-  apply(characterConfig: any, leveling: LevelingEnemies) {
+  apply(characterConfig: CharacterConfigData, leveling: LevelingEnemies) {
     if (this.filter.doesApply(characterConfig.element)) {
       leveling.setExtraLevel(this.extraLevel);
     }

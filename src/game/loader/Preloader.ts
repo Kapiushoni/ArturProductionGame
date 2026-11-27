@@ -14,6 +14,7 @@ import { Experience } from '@/game/main_game/character/stats/Experience';
 import { DungeonFactory } from '@/game/main_game/dungeon/DungeonFactory';
 import { MixStrategy } from '@/game/main_game/mixer/MixStrategy';
 import { loadCsv, loadDi } from '@/game/loader/files';
+import type { DisplayObjectContainer } from '@/flash/as3';
 
 /**
  * Loads everything the game needs at start: first the preloader screen and the texts, then (showing the
@@ -35,10 +36,10 @@ export class Preloader {
   private loadedSoFar = 0;
   private rule: Rule = null;
   /** the preloader screen clip */
-  private preloader: any = null;
-  private bg: any;
+  private preloader: MovieClip = null;
+  private bg: DisplayObjectContainer;
 
-  constructor(bg: any) {
+  constructor(bg: DisplayObjectContainer) {
     this.bg = bg;
     this.initSignals();
   }

@@ -8,6 +8,7 @@ import { MixInformationStep } from '@/game/tutorial/steps/MixInformationStep';
 import { MixTutorialStep } from '@/game/tutorial/steps/MixTutorialStep';
 import { StatTutorialStep } from '@/game/tutorial/steps/StatTutorialStep';
 import { TakeAllStep } from '@/game/tutorial/steps/TakeAllStep';
+import type { MixerView } from '@/game/view/screens/main_game/inventory/MixerView';
 
 /**
  * The tutorial (app.theTutorial): steps 1-6 in order, then "7" = done. It resumes after the last completed
@@ -59,7 +60,7 @@ export class Tutorial {
   unlockTrash() {
     app.game.getInventory().getTrash().unlock();
   }
-  get mixerView(): any {
+  get mixerView(): MixerView {
     return app.gameHolder.gameView.mixing;
   }
   enableMix() {

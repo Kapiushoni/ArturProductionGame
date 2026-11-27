@@ -11,13 +11,15 @@ import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import type { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MouseEvent } from '@/flash/as3';
 
 export class ShmabledumPopUp {
-  screen: any = null;
+  screen: Screen = null;
   showing = false;
-  principalSlot: any = null;
-  secondarySlot: any = null;
-  onCancelSignal: any = null;
+  principalSlot: SlotView = null;
+  secondarySlot: SlotView = null;
+  onCancelSignal: Signal = null;
   constructor() {
     this.screen = new Screen(app.swfLoader.getClass('assets.PrincessPopUp'), this.getButtonInfo());
     this.showing = false;
@@ -33,13 +35,13 @@ export class ShmabledumPopUp {
     dict.set('container.cancel', ButtonGroup.get('gui').createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  cancel(event: any) {
+  cancel(event: MouseEvent) {
     this.onCancel.emit();
   }
   get mc() {
     return this.screen.bg;
   }
-  addIn(displayObjectContainer: any) {
+  addIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer.addChild(this.screen);
   }
   hide(callback: Function = null) {

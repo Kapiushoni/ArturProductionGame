@@ -10,18 +10,19 @@ import type { BackgroundView } from '@/game/view/screens/main_game/dungeon/Backg
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
+import type { Enemy } from '@/game/main_game/character/Enemy';
 
 export class BasicFightView {
-  bg: any = null;
-  fight: any = null;
-  enemy: any = null;
+  bg: BackgroundView = null;
+  fight: IFight = null;
+  enemy: Enemy = null;
   views: any = null;
-  timer: any = null;
+  timer: Timer = null;
   /**
    * new BasicFightView(fight, bg, ...views), or super() then initFightView(...) in subclasses that must set
    * their fields first: the initialization calls initializeViews(), which subclasses override.
    */
-  constructor(fight: any = null, bg: any = null, ...views: any[]) {
+  constructor(fight: IFight = null, bg: BackgroundView = null, ...views: any[]) {
     if (fight != null) this.initFightView(fight, bg, ...views);
   }
   initFightView(fight: IFight, bg: BackgroundView, ...rest) {

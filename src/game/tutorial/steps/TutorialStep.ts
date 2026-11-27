@@ -3,6 +3,7 @@ import { BasicState } from '@/game/aplication/BasicState';
 import { app } from '@/game/app';
 import { TutorialView } from '@/game/tutorial/view/TutorialView';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
+import type { MovieClip } from '@/flash/as3';
 
 /**
  * A tutorial step (a state of the Tutorial FSM, named by its number). By default entering shows its
@@ -36,7 +37,7 @@ export class TutorialStep extends BasicState {
     this.setText(this.theView.bg);
   }
   /** fills the texts of the window clip */
-  setText(_clip: any) {}
+  setText(_clip: MovieClip) {}
   endStep() {
     this.tut.next();
   }

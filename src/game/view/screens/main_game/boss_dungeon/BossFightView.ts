@@ -9,7 +9,7 @@ import type { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon
 import type { BossFight } from '@/game/main_game/boss_dungeon/BossFight';
 
 export class BossFightView extends BasicFightView {
-  bossDungeonView: any = null;
+  bossDungeonView: BossDungeonView = null;
   constructor(bossDungeonView: BossDungeonView, bossFight: BossFight) {
     super();
     this.bossDungeonView = bossDungeonView;

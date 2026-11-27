@@ -2,6 +2,8 @@ import { MouseEvent, bindMethods, int } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
 import { app } from '@/game/app';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
+import type { Item } from '@/game/main_game/items/Item';
+import type { MovieClip } from '@/flash/as3';
 
 /**
  * Connects a clip (a slot view) to its container for drag and drop: mouse down starts dragging its item,
@@ -21,11 +23,11 @@ export class DragListener {
   static readonly RECEIVER = 6;
   onStart: Signal;
   onEnd: Signal;
-  private mc: any;
-  private container: any;
+  private mc: MovieClip;
+  private container: IDragContainer;
   private dragState: number;
 
-  constructor(mc: any, container: IDragContainer) {
+  constructor(mc: MovieClip, container: IDragContainer) {
     this.mc = mc;
     this.container = container;
     this.dragState = DragListener.NO_DRAG;
@@ -52,25 +54,25 @@ export class DragListener {
   removeDragEvents() {
     this.mc.removeEventListener(MouseEvent.MOUSE_UP, this.mouseUp);
   }
-  mouseOver(_event: any) {
+  mouseOver(_event: MouseEvent) {
     app.drag.onMouseOver(this.container, this.mc);
   }
-  mouseOut(_event: any) {
+  mouseOut(_event: MouseEvent) {
     app.drag.onMouseOut(this.container, this.mc);
   }
-  mouseDown(_event: any) {
+  mouseDown(_event: MouseEvent) {
     const item = this.container.getContainToDrag();
     if (item != null) {
       this.dragState = DragListener.DRAGGER;
       app.drag.beginDrag.emit(this.container, item);
     }
   }
-  mouseUp(_event: any) {
+  mouseUp(_event: MouseEvent) {
     this.dragState = DragListener.RECEIVER;
     app.drag.stopDrag.emit(this.container);
   }
   /** a drag started somewhere: what is this container's role? */
-  beginDrag(from: IDragContainer, item: any) {
+  beginDrag(from: IDragContainer, item: Item) {
     if (!this.isInState(DragListener.DRAGGER)) {
       if (this.container.itsCompatible(item, from)) {
         this.dragState = this.container.canMoveFrom(item, from) ? DragListener.ACTIVE_DRAG : DragListener.ON_DRAG;

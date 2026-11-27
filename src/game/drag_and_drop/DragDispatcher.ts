@@ -6,6 +6,10 @@ import { app } from '@/game/app';
 import { ItemViews } from '@/game/view/items/ItemViews';
 import { GameSounds } from '@/game/sound/GameSounds';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
+import type { Item } from '@/game/main_game/items/Item';
+import type { MovieClip } from '@/flash/as3';
+import type { Sprite } from '@/flash/as3';
+import type { Stage } from '@/flash/as3';
 
 /**
  * Drag and drop of items (app.drag). beginDrag(from, item): a copy of the item's view follows the mouse;
@@ -17,24 +21,24 @@ export class DragDispatcher {
   static ROLLBACK_VELOCITY = 0.6;
   beginDrag: Signal;
   stopDrag: Signal;
-  private stage: any;
-  private content: any = null;
+  private stage: Stage;
+  private content: Item = null;
   private firstContainer: IDragContainer = null;
   private dragging = false;
   /** the dragged copy */
-  private tmp_view: any = null;
+  private tmp_view: Sprite = null;
   private initial_x = 0;
   private initial_y = 0;
   snapped = false;
 
-  constructor(stage: any) {
+  constructor(stage: Stage) {
     this.stage = stage;
     this.beginDrag = new Signal();
     this.stopDrag = new Signal();
     this.beginDrag.add(this.start);
     this.stopDrag.add(this.end);
   }
-  start(from: IDragContainer, item: any) {
+  start(from: IDragContainer, item: Item) {
     if (this.tmp_view != null) {
       this.killTween();
     }
@@ -55,7 +59,7 @@ export class DragDispatcher {
     this.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.move, false, 0, false);
     app.soundManager.playFx(GameSounds.ITEM_CLICK);
   }
-  move(_event: any) {
+  move(_event: MouseEvent) {
     assert(this.dragging, 'No se está dragueando'); // "not dragging"
     if (!this.snapped) {
       this.tmp_view.x = this.stage.mouseX;
@@ -63,7 +67,7 @@ export class DragDispatcher {
     }
   }
   /** released outside every container */
-  mouseUpStage(_event: any) {
+  mouseUpStage(_event: MouseEvent) {
     if (this.dragging) {
       this.stopDrag.emit(null);
     }
@@ -117,21 +121,21 @@ export class DragDispatcher {
     }
     this.tmp_view = null;
   }
-  onMouseOver(container: IDragContainer, clip: any) {
+  onMouseOver(container: IDragContainer, clip: MovieClip) {
     if (this.tmp_view != null && container.canMoveFrom(this.content, this.firstContainer)) {
       this.snapTo(clip);
     }
   }
-  onMouseOut(_container: IDragContainer, clip: any) {
+  onMouseOut(_container: IDragContainer, clip: MovieClip) {
     this.unSnapFrom(clip);
   }
-  snapTo(clip: any) {
+  snapTo(clip: MovieClip) {
     this.snapped = true;
     const point = this.tmp_view.parent.globalToLocal(clip.localToGlobal(new Point(0, 0)));
     this.tmp_view.x = point.x;
     this.tmp_view.y = point.y;
   }
-  unSnapFrom(_clip: any) {
+  unSnapFrom(_clip: MovieClip) {
     this.snapped = false;
   }
 }

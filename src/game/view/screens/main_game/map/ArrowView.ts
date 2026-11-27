@@ -4,6 +4,7 @@ import { SmartMC } from '@/game/cb/display/SmartMC';
 import { EndCurrentLabel } from '@/game/conditions/EndCurrentLabel';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
+import type { MovieClip } from '@/flash/as3';
 
 export class ArrowView {
   mc: any = null;
@@ -22,22 +23,22 @@ export class ArrowView {
     this.initializeButton(mc);
     this.refreshAsButton();
   }
-  initializeButton(clip: any) {
+  initializeButton(clip: MovieClip) {
     clip.hitbox.addEventListener(MouseEvent.CLICK, this.onClick, false, 0, true);
     clip.hitbox.addEventListener(MouseEvent.ROLL_OVER, this.over, false, 0, true);
     clip.hitbox.addEventListener(MouseEvent.ROLL_OUT, this.out, false, 0, true);
   }
-  onClick(event: any) {
+  onClick(event: MouseEvent) {
     app.soundManager.playFx(GameSounds.BUTTON_CLICK);
     this.click();
   }
-  over(event: any) {
+  over(event: MouseEvent) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOver');
       app.soundManager.playFx(GameSounds.MOUSE_OVER);
     }
   }
-  out(event: any) {
+  out(event: MouseEvent) {
     if (this.showing) {
       this.mc.gotoAndPlay('mouseOut');
       app.soundManager.playFx(GameSounds.MOUSE_OVER);

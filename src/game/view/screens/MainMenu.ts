@@ -9,15 +9,16 @@ import { GameSounds } from '@/game/sound/GameSounds';
 import { Buttons } from '@/game/util/Buttons';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
 import { DailyBonusView } from '@/game/view/screens/DailyBonusView';
+import type { MouseEvent } from '@/flash/as3';
 
 export class MainMenu extends Screen {
   static BUTTONS = ['new_game', 'continue_game', 'sound'];
   static readonly ActiveMessage = 'dailyBonusCurrent';
   static readonly NextMessage = 'dailyBonusNext';
-  onNewGame: any = null;
-  onContinueGame: any = null;
-  currentBonus: any = null;
-  nextBonus: any = null;
+  onNewGame: Signal = null;
+  onContinueGame: Signal = null;
+  currentBonus: DailyBonusView = null;
+  nextBonus: DailyBonusView = null;
   constructor() {
     super();
     this.initScreen(app.swfLoader.getClass('assets.MainMenu'), this.getButtonInfo());
@@ -106,11 +107,11 @@ export class MainMenu extends Screen {
     }
     rule.check('start');
   }
-  continueGame(event: any) {
+  continueGame(event: MouseEvent) {
     Buttons.setButtons(this.bg.container, MainMenu.BUTTONS, false);
     this.onContinueGame.emit();
   }
-  newGame(event: any) {
+  newGame(event: MouseEvent) {
     Buttons.setButtons(this.bg.container, MainMenu.BUTTONS, false);
     if (app.saveSystem.hasPlayed()) {
       this.showConfirmationPopUp();

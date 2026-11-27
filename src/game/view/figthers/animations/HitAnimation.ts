@@ -11,20 +11,22 @@ import { Jinn } from '@/game/main_game/character/Jinn';
 import { HurtAnimation } from '@/game/view/figthers/animations/HurtAnimation';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Element } from '@/game/main_game/element/Element';
+import type { FighterView } from '@/game/view/figthers/FighterView';
+import type { MovieClip } from '@/flash/as3';
 
 /**
  * An attack ("attack", or "critical" / "critical_sword" without a shield). At the "hit" label the receiver plays
  * its HurtAnimation and takes the damage; `callback` runs when both animations have ended.
  */
 export class HitAnimation extends FighterAnimation {
-  private receiver: any;
+  private receiver: FighterView;
   private damage: Damage;
   private rule: Rule;
   /** the attacker's element (enemy's, or the jinn's weapon's) */
   private element: Element = null;
   private atContact: Function;
 
-  constructor(receiver: any, damage: Damage, callback: Function, atContact: Function = null) {
+  constructor(receiver: FighterView, damage: Damage, callback: Function, atContact: Function = null) {
     super(damage.critical ? 'critical' : 'attack');
     this.receiver = receiver;
     this.damage = damage;
@@ -32,7 +34,7 @@ export class HitAnimation extends FighterAnimation {
     this.rule = new Rule('made_hit', 'took_hit');
     this.rule.completed.add(callback);
   }
-  make(fighterView: any) {
+  make(fighterView: FighterView) {
     if (this.name == 'critical') {
       fighterView.fighterSoundManager.playCritical();
       if ((as3as(fighterView.fighter, Jinn) as Jinn).gear.shield.isEmpty()) {
@@ -64,7 +66,7 @@ export class HitAnimation extends FighterAnimation {
       }),
     );
   }
-  hitReceiver(_clip: any) {
+  hitReceiver(_clip: MovieClip) {
     const hurt = new HurtAnimation(this.damage, this.element);
     hurt.atFinish.add((_animation: any) => {
       this.rule.check('took_hit');
@@ -75,7 +77,7 @@ export class HitAnimation extends FighterAnimation {
       this.atContact();
     }
   }
-  finishMe(_clip: any) {
+  finishMe(_clip: MovieClip) {
     this.rule.check('made_hit');
     this.finish(null);
   }

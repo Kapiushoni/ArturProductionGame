@@ -36,11 +36,11 @@ export class Util {
     }
     return true;
   }
-  static recursiveStop(clip: any) {
+  static recursiveStop(clip: MovieClip) {
     Util.recursiveApply(clip, (c: any) => c.stop());
   }
   /** callback on the clip and all the movie clips inside it (children first) */
-  static recursiveApply(clip: any, callback: (clip: any) => void) {
+  static recursiveApply(clip: MovieClip, callback: (clip: any) => void) {
     for (let i = int(clip.numChildren - 1); i >= 0; i--) {
       const child = as3as(clip.getChildAt(i), MovieClip);
       if (child) {

@@ -6,12 +6,14 @@ import { NoneAnimation } from '@/game/view/figthers/animations/NoneAnimation';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { FighterSoundManager } from '@/game/sound/FighterSoundManager';
 
 export class FighterView {
-  fighter: any = null;
-  currentAnimation: any = null;
-  nextAnimation: any = null;
-  soundManager: any = null;
+  fighter: Fighter = null;
+  currentAnimation: IFighterAnimation = null;
+  nextAnimation: IFighterAnimation = null;
+  soundManager: FighterSoundManager = null;
   constructor(fighter: Fighter) {
     this.fighter = fighter;
     this.setSoundManager();
@@ -72,7 +74,7 @@ export class FighterView {
   getMC() {
     return null;
   }
-  putIn(displayObjectContainer: any) {}
+  putIn(displayObjectContainer: DisplayObjectContainer) {}
   onHit(fighterView: FighterView, damage: Damage, callback: Function, callback2: Function = null) {
     this.bringToFront();
     const hitAnimation = new HitAnimation(fighterView, damage, callback, callback2);

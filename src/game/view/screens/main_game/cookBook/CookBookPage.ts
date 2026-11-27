@@ -5,7 +5,7 @@ import { RecipeView } from '@/game/view/screens/main_game/cookBook/RecipeView';
 
 export class CookBookPage {
   static readonly RECIPES = 6;
-  bg: any = null;
+  bg: MovieClip = null;
   recipes: any = null;
   constructor(list: any[]) {
     this.bg = as3as(app.swfLoader.getObject('assets.RecipesContainer'), MovieClip);

@@ -4,16 +4,17 @@ import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import type { ISlot } from '@/game/main_game/item_containers/ISlot';
 import type { Recipe } from '@/game/main_game/mixer/Recipe';
+import type { MovieClip } from '@/flash/as3';
 
 export class RecipeView {
-  primarySlot: any = null;
-  secondarySlot: any = null;
-  resultSlot: any = null;
-  primaryView: any = null;
-  secondaryView: any = null;
-  resultView: any = null;
-  bg: any = null;
-  constructor(bg: any, recipe: Recipe = null) {
+  primarySlot: ISlot = null;
+  secondarySlot: ISlot = null;
+  resultSlot: ISlot = null;
+  primaryView: SlotView = null;
+  secondaryView: SlotView = null;
+  resultView: SlotView = null;
+  bg: MovieClip = null;
+  constructor(bg: MovieClip, recipe: Recipe = null) {
     this.bg = bg;
     this.initializeSlots(recipe);
     this.initializeViews();

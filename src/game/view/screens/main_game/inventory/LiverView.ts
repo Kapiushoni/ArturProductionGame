@@ -7,16 +7,17 @@ import { LeftSlotView } from '@/game/view/screens/main_game/slot/LeftSlotView';
 import type { Item } from '@/game/main_game/items/Item';
 import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
 import type { StatsView } from '@/game/view/screens/main_game/inventory/StatsView';
+import type { MovieClip } from '@/flash/as3';
 
 export class LiverView {
-  bg: any = null;
-  stats: any = null;
-  slot: any = null;
+  bg: MovieClip = null;
+  stats: StatsView = null;
+  slot: LeftSlotView = null;
   showing = false;
   constructor(stats: StatsView) {
     this.stats = stats;
   }
-  initialize(liver: Liver, bg: any) {
+  initialize(liver: Liver, bg: MovieClip) {
     this.bg = bg;
     this.showing = false;
     bg.gotoAndStop('stop');

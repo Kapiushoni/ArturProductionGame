@@ -7,6 +7,8 @@ import { Signal } from '@/game/cb/signals/Signal';
 import { Or } from '@/game/conditions/Or';
 import type { Element } from '@/game/main_game/element/Element';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
+import type { FighterView } from '@/game/view/figthers/FighterView';
+import type { MovieClip } from '@/flash/as3';
 
 /**
  * Plays the label `name` of the fighter clip until "end_animation" (or the last frame), then atFinish(this).
@@ -15,7 +17,7 @@ export class FighterAnimation implements IFighterAnimation {
   atFinish: Signal;
   /** label of the fighter clip */
   protected name: string;
-  protected current_mc: any = null;
+  protected current_mc: MovieClip = null;
   protected current_smc: SmartMC = null;
 
   constructor(name: string) {
@@ -28,7 +30,7 @@ export class FighterAnimation implements IFighterAnimation {
   getName(): string {
     return this.name;
   }
-  make(fighterView: any) {
+  make(fighterView: FighterView) {
     fighterView.playAnimation(this);
     this.current_mc = fighterView.getMC();
     this.current_smc = new SmartMC(this.current_mc);
@@ -37,13 +39,13 @@ export class FighterAnimation implements IFighterAnimation {
       new Functor(this.finish),
     );
   }
-  finish(_clip: any) {
+  finish(_clip: MovieClip) {
     this.clearMc();
     this.atFinish.emit(this);
     this.atFinish.clear();
   }
   /** the element look of the "fx" child of the clip (fire / ice / normal) */
-  setEffect(clip: any, element: Element = null) {
+  setEffect(clip: MovieClip, element: Element = null) {
     if (clip.fx) {
       let look = 'normal';
       if (element && element.isOfFire) {

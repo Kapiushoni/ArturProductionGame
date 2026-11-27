@@ -15,6 +15,8 @@ import type { Game } from '@/game/main_game/Game';
 import type { MixRecipe } from '@/game/main_game/shmabledum/MixRecipe';
 import type { MixResult } from '@/game/main_game/mixer/MixResult';
 import type { ShmabledumInteraction } from '@/game/main_game/shmabledum/ShmabledumInteraction';
+import type { Dungeon } from '@/game/main_game/dungeon/Dungeon';
+import type { Fight } from '@/game/main_game/dungeon/Fight';
 
 /**
  * The shmabledum (helper princess): reacts to won / lost dungeons, proposes special mixes and gives tips.
@@ -115,7 +117,7 @@ export class ShmabledumPrincess {
     }
     this.onInteraction.emit(interaction);
   }
-  onDungeon(dungeon: any) {
+  onDungeon(dungeon: Dungeon) {
     dungeon.onWin.add(this.onWinDungeon);
     dungeon.onLose.add(this.onLoseDungeon);
     if (!ShmabledumPrincess.iceEnemyTipShowed) {
@@ -186,7 +188,7 @@ export class ShmabledumPrincess {
     }
   }
   /** the first ice enemy: a tip */
-  onFight(fight: any) {
+  onFight(fight: Fight) {
     const element = fight.getEnemy().getElement();
     if (element.isOfIce && !this.getLocker().isLocked) {
       ShmabledumPrincess.iceEnemyTipShowed = true;

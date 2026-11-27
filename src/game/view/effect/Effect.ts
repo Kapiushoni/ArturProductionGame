@@ -3,13 +3,15 @@ import { RemoveFromParent } from '@/game/cb/actions/RemoveFromParent';
 import { EndAnimation } from '@/game/cb/conditions/EndAnimation';
 import { SmartMC } from '@/game/cb/display/SmartMC';
 import { app } from '@/game/app';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class Effect {
-  effect: any = null;
-  constructor(effect: any) {
+  effect: MovieClip = null;
+  constructor(effect: MovieClip) {
     this.effect = effect;
   }
-  playOn(displayObjectContainer: any, displayObjectContainer2: any = null) {
+  playOn(displayObjectContainer: DisplayObjectContainer, displayObjectContainer2: DisplayObjectContainer = null) {
     let point = null;
     let popUpHolder = null;
     let point2 = null;

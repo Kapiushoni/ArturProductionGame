@@ -101,7 +101,7 @@ export class DailyBonus {
     return next;
   }
   /** is year/month/day after year2/month2/day2? (values can be strings) */
-  static isAfter(year: any, month: any, day: any, year2: any, month2: any, day2: any): boolean {
+  static isAfter(year: number, month: number, day: number, year2: number, month2: number, day2: number): boolean {
     [year, month, day, year2, month2, day2] = [year, month, day, year2, month2, day2].map(int);
     return year > year2 || (year == year2 && month > month2) || (year == year2 && month == month2 && day > day2);
   }

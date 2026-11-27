@@ -1,5 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import type { Condition } from '@/game/cb/conditions/Condition';
+import type { MovieClip } from '@/flash/as3';
 
 /** Either condition. */
 export class Or implements Condition {
@@ -10,7 +11,7 @@ export class Or implements Condition {
     this.c1 = c1;
     this.c2 = c2;
   }
-  complete(clip: any): boolean {
+  complete(clip: MovieClip): boolean {
     return this.c1.complete(clip) || this.c2.complete(clip);
   }
 }

@@ -12,7 +12,7 @@ import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeo
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 export class BossDungeonView extends DungeonView {
-  declare bossView: any;
+  declare bossView: BossView;
   won = false;
   constructor(dungeonState: IDungeonState) {
     super(dungeonState);

@@ -6,9 +6,10 @@ import { EnemySoundManager } from '@/game/sound/EnemySoundManager';
 import { Util } from '@/game/util/Util';
 import type { Fighter } from '@/game/main_game/character/Fighter';
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
+import type { DisplayObjectContainer } from '@/flash/as3';
 
 export class EnemyView extends FighterView {
-  declare container: any;
+  declare container: MovieClip;
   constructor(fighter: Fighter) {
     super(fighter);
     this.container = new MovieClip();
@@ -33,7 +34,7 @@ export class EnemyView extends FighterView {
     const cls = app.swfLoader.getClass(text);
     return new cls();
   }
-  putIn(displayObjectContainer: any) {
+  putIn(displayObjectContainer: DisplayObjectContainer) {
     displayObjectContainer['enemy'] = this.container;
     displayObjectContainer.addChild(this.container);
   }

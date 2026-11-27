@@ -3,6 +3,7 @@ import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
 import { app } from '@/game/app';
 import { TutorialViewWithOk } from '@/game/tutorial/view/TutorialViewWithOk';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
+import type { MovieClip } from '@/flash/as3';
 
 /** Step 2: explains the stats (closed with OK); afterwards the shmabledum says "click me for advice". */
 export class StatTutorialStep extends TutorialStep {
@@ -12,7 +13,7 @@ export class StatTutorialStep extends TutorialStep {
   createView(viewClass: string): TutorialViewWithOk {
     return new TutorialViewWithOk(app.swfLoader.getClass(viewClass));
   }
-  setText(clip: any) {
+  setText(clip: MovieClip) {
     clip.title.title.text = app.locale.get('tutorialStats');
     clip.text1.text.text = app.locale.get('tutorialStatsHealth');
     clip.text2.text.text = app.locale.get('tutorialStatsAttack');

@@ -1,4 +1,5 @@
 import { ColorMatrixFilter, bindMethods } from '@/flash/as3';
+import type { Sprite } from '@/flash/as3';
 
 /** Sepia filters (locked / unavailable things on the map). Singleton. */
 export class Sepializer {
@@ -28,14 +29,14 @@ export class Sepializer {
     }
     return Sepializer.instance;
   }
-  sepialize(sprite: any) {
+  sepialize(sprite: Sprite) {
     sprite.filters = [this.filter];
   }
   /** a darker sepia */
-  sepializeDark(sprite: any) {
+  sepializeDark(sprite: Sprite) {
     sprite.filters = [this.filter2];
   }
-  unsepialize(sprite: any) {
+  unsepialize(sprite: Sprite) {
     sprite.filters = [];
   }
 }

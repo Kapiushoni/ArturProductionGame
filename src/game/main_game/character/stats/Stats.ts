@@ -6,16 +6,17 @@ import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 import type { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import type { LevelingStragegy } from '@/game/main_game/character/stats/LevelingStragegy';
+import type { Fighter } from '@/game/main_game/character/Fighter';
 
 /** All stats of a fighter (StatType -> Stat). Subclasses add health and experience. */
 export class Stats {
   protected levelingStrat: LevelingStragegy;
   protected stats: any; // Dictionary: StatType -> Stat
-  protected fighter: any;
+  protected fighter: Fighter;
   protected guardian: StatsEffectGuardian;
   onChange: Signal;
 
-  constructor(config: CharacterConfigData, fighter: any, levelingStrat: LevelingStragegy) {
+  constructor(config: CharacterConfigData, fighter: Fighter, levelingStrat: LevelingStragegy) {
     this.onChange = new Signal();
     this.levelingStrat = levelingStrat;
     this.fighter = fighter;
@@ -39,7 +40,7 @@ export class Stats {
   getLevel(): number {
     throw new Error('Must implement this method');
   }
-  getStat(type: number): any {
+  getStat(type: number): Stat {
     return this.stats.get(int(type));
   }
   downHP(amount: number) {

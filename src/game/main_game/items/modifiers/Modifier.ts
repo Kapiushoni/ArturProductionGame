@@ -1,6 +1,8 @@
 import { bindMethods, int } from '@/flash/as3';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
+import type { Stat } from '@/game/main_game/character/stats/Stat';
+import type { Stats } from '@/game/main_game/character/stats/Stats';
 
 /** Adds `value` to one stat while the item is equipped. Config: { Category: "A" | "D" | "L" | ..., Value }. */
 export class Modifier implements IModifier {
@@ -11,13 +13,13 @@ export class Modifier implements IModifier {
     this.characteristic = int(StatType.parse(config.Category));
     this.value = Number(config.Value);
   }
-  affect(stats: any) {
+  affect(stats: Stats) {
     this.getStat(stats).modifyValue(this.value);
   }
-  disaffect(stats: any) {
+  disaffect(stats: Stats) {
     this.getStat(stats).modifyValue(-this.value);
   }
-  getStat(stats: any): any {
+  getStat(stats: Stats): Stat {
     return stats.getStat(this.characteristic);
   }
   getValue(): number {

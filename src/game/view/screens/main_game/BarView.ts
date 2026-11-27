@@ -1,14 +1,21 @@
 import { bindMethods, uint } from '@/flash/as3';
 import { app } from '@/game/app';
 import type { Locale } from '@/game/cb/data/Locale';
+import type { MovieClip } from '@/flash/as3';
 
 export class BarView {
-  mc: any = null;
+  mc: MovieClip = null;
   currentVal = NaN;
   totalVal = NaN;
-  locale: any = null;
-  localeText: any = null;
-  constructor(mc: any, locale: Locale = null, localeText: string = '', currentVal: number = 0, totalVal: number = 100) {
+  locale: Locale = null;
+  localeText: string = null;
+  constructor(
+    mc: MovieClip,
+    locale: Locale = null,
+    localeText: string = '',
+    currentVal: number = 0,
+    totalVal: number = 100,
+  ) {
     currentVal = Number(currentVal);
     totalVal = Number(totalVal);
 

@@ -4,7 +4,7 @@ import type { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 import type { Loot } from '@/game/main_game/dungeon/Loot';
 
 export class WinBossDungeonWindow extends WinWindow {
-  declare _showMapAndReplay: any;
+  declare _showMapAndReplay: boolean;
   constructor(loot: Loot, dungeonStats: DungeonStats, showMapAndReplay: boolean, callback: Function = null) {
     super(loot, dungeonStats, callback);
     this._showMapAndReplay = showMapAndReplay;

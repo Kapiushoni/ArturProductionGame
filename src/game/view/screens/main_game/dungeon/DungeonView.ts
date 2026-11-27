@@ -21,13 +21,14 @@ import type { EndDungeonWindow } from '@/game/view/screens/main_game/dungeon/End
 import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 import type { Item } from '@/game/main_game/items/Item';
+import type { MouseEvent } from '@/flash/as3';
 
 export class DungeonView extends Screen {
-  dungeon: any = null;
-  jinnView: any = null;
-  timeLine: any = null;
+  dungeon: IDungeonState = null;
+  jinnView: JinnView = null;
+  timeLine: TimeLine = null;
   innerView: any = null;
-  windowShowing: any = null;
+  windowShowing: EndDungeonWindow = null;
   constructor(dungeon: IDungeonState) {
     super();
     this.dungeon = dungeon;
@@ -87,7 +88,7 @@ export class DungeonView extends Screen {
     }
     this.innerView.resume();
   }
-  pause(event: any) {
+  pause(event: MouseEvent) {
     if (app.game.getJinn().stats.isDead()) {
       return;
     }

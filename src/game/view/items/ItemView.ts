@@ -2,10 +2,12 @@ import { bindMethods } from '@/flash/as3';
 import { app } from '@/game/app';
 import type { Item } from '@/game/main_game/items/Item';
 import type { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
+import type { DisplayObjectContainer } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class ItemView {
-  item: any = null;
-  mc: any = null;
+  item: Item = null;
+  mc: MovieClip = null;
   constructor(item: Item) {
     this.item = item;
   }
@@ -17,7 +19,7 @@ export class ItemView {
     }
     return this.mc;
   }
-  putIn(displayObjectContainer: any) {
+  putIn(displayObjectContainer: DisplayObjectContainer) {
     const mc = this.getMC();
     displayObjectContainer.addChild(mc);
   }

@@ -3,14 +3,15 @@ import { app } from '@/game/app';
 import { SmokeEffect } from '@/game/view/effect/SmokeEffect';
 import { SlotView } from '@/game/view/screens/main_game/slot/SlotView';
 import type { Loot } from '@/game/main_game/dungeon/Loot';
+import type { MovieClip } from '@/flash/as3';
 
 export class LootView {
-  loot: any = null;
+  loot: Loot = null;
   slots: any = null;
-  bg: any = null;
-  timer: any = null;
+  bg: MovieClip = null;
+  timer: Timer = null;
   showing = 0;
-  constructor(loot: Loot, bg: any) {
+  constructor(loot: Loot, bg: MovieClip) {
     this.bg = bg;
     this.loot = loot;
     this.slots = [];

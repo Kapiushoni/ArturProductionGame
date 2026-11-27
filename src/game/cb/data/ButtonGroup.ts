@@ -1,5 +1,6 @@
 import { as3values, bindMethods } from '@/flash/as3';
 import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
+import type { cbSoundMixer } from '@/game/cb/media/cbSoundMixer';
 
 /**
  * Buttons that share sounds and extra handlers (ButtonGroup.get("gui")): every button made with
@@ -7,7 +8,7 @@ import { ButtonInfo } from '@/game/cb/data/ButtonInfo';
  */
 export class ButtonGroup {
   static groups: any = [];
-  private soundMixer: any = null;
+  private soundMixer: cbSoundMixer = null;
   private clickSound: string = null;
   private overSound: string = null;
   private mouseOutFuncs: Function[];
@@ -25,7 +26,7 @@ export class ButtonGroup {
     }
     return ButtonGroup.groups[name];
   }
-  setSoundMixer(soundMixer: any): ButtonGroup {
+  setSoundMixer(soundMixer: cbSoundMixer): ButtonGroup {
     this.soundMixer = soundMixer;
     return this;
   }

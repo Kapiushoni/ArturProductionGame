@@ -13,10 +13,10 @@ import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
 export class CookBook extends AnimatedScreen {
   readonly NEXT_ANIMATION = 'toLeft';
   readonly PREVIOUS_ANIMATION = 'toRight';
-  actualPage: any = null;
-  nextPage: any = null;
-  nextButton: any = null;
-  previousButton: any = null;
+  actualPage: CookBookPage = null;
+  nextPage: CookBookPage = null;
+  nextButton: ArrowView = null;
+  previousButton: ArrowView = null;
   actualIndex = 0;
   constructor(callback: Function) {
     super();

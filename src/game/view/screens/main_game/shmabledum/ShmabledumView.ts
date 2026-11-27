@@ -10,11 +10,13 @@ import type { BubbleGumTip } from '@/game/main_game/shmabledum/BubbleGumTip';
 import type { Locker } from '@/game/util/Locker';
 import type { ShmabledumFeeling } from '@/game/main_game/shmabledum/ShmabledumFeeling';
 import type { ShmabledumInteraction } from '@/game/main_game/shmabledum/ShmabledumInteraction';
+import type { MouseEvent } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class ShmabledumView {
-  bg: any = null;
-  popUp: any = null;
-  timer: any = null;
+  bg: MovieClip = null;
+  popUp: ShmabledumPopUp = null;
+  timer: Timer = null;
   tips: any = null;
   constructor() {
     app.game.getShmabledum().onInteraction.add(this.interact);
@@ -25,7 +27,7 @@ export class ShmabledumView {
     this.timer = new Timer(2000, 1);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.hideTip);
   }
-  initialize(bg: any) {
+  initialize(bg: MovieClip) {
     this.bg = bg;
     this.popUp.addIn(app.tutorialHolder);
     bg.gotoAndPlay('idleFront');
@@ -45,7 +47,7 @@ export class ShmabledumView {
       this.hitbox.buttonMode = true;
     }
   }
-  click(event: any) {
+  click(event: MouseEvent) {
     if (this.tips.length != 0) {
       this.hideTip();
     }

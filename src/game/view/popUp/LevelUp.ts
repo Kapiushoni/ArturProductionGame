@@ -6,7 +6,7 @@ import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
 
 export class LevelUp {
-  mc: any = null;
+  mc: MovieClip = null;
   constructor() {
     this.mc = as3as(app.swfLoader.getObject('assets.LevelUp'), MovieClip);
     app.tutorialHolder.addChild(this.mc);

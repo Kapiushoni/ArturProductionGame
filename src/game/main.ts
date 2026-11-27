@@ -48,7 +48,7 @@ export class main extends Sprite {
       this.addEventListener(Event.ADDED_TO_STAGE, this.init);
     }
   }
-  init(_event: any = null) {
+  init(_event: Event = null) {
     app.popUpHolder = new MovieClip();
     app.tutorialHolder = new MovieClip();
     app.gameHolder = new MovieClip();

@@ -2,6 +2,7 @@ import { Timer, TimerEvent, bindMethods } from '@/flash/as3';
 import { Category } from '@/game/main_game/items/Category';
 import { Signal } from '@/game/cb/signals/Signal';
 import type { Item } from '@/game/main_game/items/Item';
+import type { ItemContainer } from '@/game/main_game/item_containers/ItemContainer';
 
 /**
  * A potion. Instant potions act once; the others wear off over Duration (in 1/10 s per percent:
@@ -42,18 +43,18 @@ export class Consumable extends Category {
       this.timer.start();
     }
   }
-  tick(_event: any) {
+  tick(_event: TimerEvent) {
     --this.percent;
     this.onChange.emit(this.percent);
   }
-  complete(_event: any) {
+  complete(_event: TimerEvent) {
     this.clearTimer();
     this.atEndEffect.emit(this.item);
   }
   get type(): string {
     return Category.CONSUMABLE_CATEGORY;
   }
-  canBeContained(itemContainer: any): boolean {
+  canBeContained(itemContainer: ItemContainer): boolean {
     return itemContainer.canContainConsumable();
   }
   clearTimer() {

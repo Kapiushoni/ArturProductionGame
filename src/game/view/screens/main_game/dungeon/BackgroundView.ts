@@ -12,24 +12,24 @@ import { FightFeedback } from '@/game/view/screens/main_game/dungeon/fight/Fight
 import type { DungeonConfigData } from '@/game/main_game/dungeon/DungeonConfigData';
 
 export class BackgroundView extends MovieClip {
-  declare layer1: any;
-  declare layer2: any;
-  declare layer3: any;
-  declare information: any;
-  declare arena: any;
-  declare mist1: any;
-  declare mist2: any;
-  declare backgrounds1: any;
-  declare backgrounds2: any;
-  declare backgrounds3: any;
-  declare paused: any;
-  declare scrolling: any;
-  declare gameLoop: any;
-  declare onMove: any;
-  declare enemyHudView: any;
-  declare jinnHudView: any;
-  declare jinnFeedback: any;
-  declare enemyFeedback: any;
+  declare layer1: MovieClip;
+  declare layer2: MovieClip;
+  declare layer3: MovieClip;
+  declare information: MovieClip;
+  declare arena: MovieClip;
+  declare mist1: MovieClip;
+  declare mist2: MovieClip;
+  declare backgrounds1: BackgroundSet;
+  declare backgrounds2: BackgroundSet;
+  declare backgrounds3: BackgroundSet;
+  declare paused: boolean;
+  declare scrolling: boolean;
+  declare gameLoop: GameLoop;
+  declare onMove: Signal;
+  declare enemyHudView: HudView;
+  declare jinnHudView: HudView;
+  declare jinnFeedback: FightFeedback;
+  declare enemyFeedback: FightFeedback;
   constructor() {
     super();
     this.onMove = new Signal();
@@ -114,21 +114,21 @@ export class BackgroundView extends MovieClip {
     clip.x = Dungeon.DungeonConfig['pause_btn_x'];
     clip.y = Dungeon.DungeonConfig['pause_btn_y'];
   }
-  addJinnFeddback(clip: any) {
+  addJinnFeddback(clip: MovieClip) {
     this.jinnFeedback.addFeedback(clip);
   }
-  addEnemyFeddback(clip: any) {
+  addEnemyFeddback(clip: MovieClip) {
     this.enemyFeedback.addFeedback(clip);
     clip.scaleX = -1;
     clip.number_heathl_parts_blocked.title.scaleX = -1;
   }
-  setBackground(clip: any, backgroundSet: BackgroundSet) {
+  setBackground(clip: MovieClip, backgroundSet: BackgroundSet) {
     const background = backgroundSet.getBackground();
     clip.addChild(background);
     clip['1'] = background;
     this.checkLayer(clip, backgroundSet);
   }
-  checkLayer(clip: any, backgroundSet: BackgroundSet) {
+  checkLayer(clip: MovieClip, backgroundSet: BackgroundSet) {
     let background = null;
     if (clip['1'].x < -clip['1'].width) {
       clip.removeChild(clip['1']);

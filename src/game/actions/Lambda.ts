@@ -1,5 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import type { Action } from '@/game/cb/actions/Action';
+import type { MovieClip } from '@/flash/as3';
 
 /** An Action calling f(clip, ...params). */
 export class Lambda implements Action {
@@ -20,7 +21,7 @@ export class Lambda implements Action {
       }
     });
   }
-  execute(clip: any) {
+  execute(clip: MovieClip) {
     if (this.params.length == 0) {
       this.f.apply(null, [clip]);
     } else {

@@ -3,6 +3,7 @@ import { TutorialStep } from '@/game/tutorial/steps/TutorialStep';
 import { app } from '@/game/app';
 import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
+import type { MovieClip } from '@/flash/as3';
 
 /** Step 1: equip the sword (the window closes when a weapon is put in the weapon slot). */
 export class FirstTutorialStep extends TutorialStep {
@@ -18,7 +19,7 @@ export class FirstTutorialStep extends TutorialStep {
       this.theView.leave();
     }
   }
-  setText(clip: any) {
+  setText(clip: MovieClip) {
     clip.title.title.text = app.locale.get('tutorialSwordTitle');
     clip.text.text.text = app.locale.get('tutorialSword');
   }

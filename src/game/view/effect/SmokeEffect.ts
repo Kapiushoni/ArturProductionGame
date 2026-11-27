@@ -3,6 +3,7 @@ import { Effect } from '@/game/view/effect/Effect';
 import { Random } from '@/game/cb/utils/Random';
 import { app } from '@/game/app';
 import { GameSounds } from '@/game/sound/GameSounds';
+import type { DisplayObjectContainer } from '@/flash/as3';
 
 export class SmokeEffect extends Effect {
   constructor() {
@@ -10,7 +11,7 @@ export class SmokeEffect extends Effect {
     clip.rotation = Random.nextInt(360);
     super(clip);
   }
-  playOn(displayObjectContainer: any, displayObjectContainer2: any = null) {
+  playOn(displayObjectContainer: DisplayObjectContainer, displayObjectContainer2: DisplayObjectContainer = null) {
     super.playOn(displayObjectContainer, displayObjectContainer2);
     app.soundManager.playFx(GameSounds.SMOKE);
   }

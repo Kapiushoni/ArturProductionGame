@@ -9,13 +9,15 @@ import { Buttons } from '@/game/util/Buttons';
 import { Util } from '@/game/util/Util';
 import { ConfirmationPopUp } from '@/game/view/screens/ConfirmationPopUp';
 import type { Level } from '@/game/main_game/map/Level';
+import type { MouseEvent } from '@/flash/as3';
+import type { TextField } from '@/flash/as3';
 
 export class Pause extends AnimatedScreen {
   static BUTTONS = ['cancel', 'help', 'level_select', 'replay', 'sound'];
-  onLevelSelect: any = null;
-  onReplay: any = null;
-  onCancel: any = null;
-  level: any = null;
+  onLevelSelect: Signal = null;
+  onReplay: Signal = null;
+  onCancel: Signal = null;
+  level: Level = null;
   constructor(level: Level) {
     super();
     this.level = level;
@@ -45,7 +47,7 @@ export class Pause extends AnimatedScreen {
     app.soundManager.playMusic(GameSounds.MAP_MUSIC);
     this.putAdvice(this.bg.tips.tip_text.title);
   }
-  putAdvice(textField: any) {
+  putAdvice(textField: TextField) {
     let num = 1;
     if (!app.theTutorial.isMixKnown()) {
       num = uint(app.config.get('InitialConfig').mixAdvices + 1);
@@ -68,10 +70,10 @@ export class Pause extends AnimatedScreen {
     this.onLevelSelect.clear();
     this.onReplay.clear();
   }
-  replay(event: any = null) {
+  replay(event: MouseEvent = null) {
     this.showConfirmation(Util.l(this.emitAndLeave, this.onReplay), Util.pass);
   }
-  levelSelect(event: any = null) {
+  levelSelect(event: MouseEvent = null) {
     this.showConfirmation(Util.l(this.emitAndLeave, this.onLevelSelect), Util.pass);
   }
   emitAndLeave(signal2: Signal) {
@@ -87,8 +89,8 @@ export class Pause extends AnimatedScreen {
     app.tutorialHolder.addChild(confirmationPopUp);
     confirmationPopUp.enter();
   }
-  help(event: any = null) {}
-  cancel(event: any = null) {
+  help(event: MouseEvent = null) {}
+  cancel(event: MouseEvent = null) {
     this.leave(() => {
       this.onCancel.emit();
       this.pop();

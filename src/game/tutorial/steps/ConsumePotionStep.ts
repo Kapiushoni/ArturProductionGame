@@ -5,6 +5,7 @@ import { StatType } from '@/game/main_game/character/stats/StatType';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 import { GameView } from '@/game/view/screens/main_game/GameView';
 import type { Tutorial } from '@/game/tutorial/Tutorial';
+import type { MovieClip } from '@/flash/as3';
 
 /**
  * Step 3: half a second after the jinn first loses health, the fight is paused, the potions unlocked and
@@ -38,7 +39,7 @@ export class ConsumePotionStep extends TutorialStep {
       this.theView.leave();
     }
   }
-  triggerTutorial(_event: any) {
+  triggerTutorial(_event: TimerEvent) {
     this.tut.unlockPotions();
     this.removeTimer();
     this.initialHealth = this.health;
@@ -53,12 +54,12 @@ export class ConsumePotionStep extends TutorialStep {
     this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, this.triggerTutorial);
     this.timer = null;
   }
-  setText(clip: any) {
+  setText(clip: MovieClip) {
     clip.title.title.text = app.locale.get('tutorialConsumablesTitle');
     clip.text.text.text = app.locale.get('tutorialConsumables');
   }
   /** the fight scene clip of the dungeon view */
-  get arena(): any {
+  get arena(): MovieClip {
     return as3as(as3as(app.gameHolder.gameView, GameView).up_holder.game.dungeonView, DungeonView).background.arena;
   }
   stopFight() {

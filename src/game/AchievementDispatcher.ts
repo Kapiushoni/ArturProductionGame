@@ -1,5 +1,6 @@
 import { bindMethods } from '@/flash/as3';
 import { Log } from '@/game/cb/logger/Log';
+import type { Level } from '@/game/main_game/map/Level';
 
 /**
  * The game events that count for achievements (services.achievements). The original sent them to the
@@ -24,7 +25,7 @@ export class AchievementDispatcher {
   finishFirstPage() {
     this.log.log('Dungeon 8 cleared');
   }
-  unequippedDungeonCompleted(_level: any) {
+  unequippedDungeonCompleted(_level: Level) {
     this.log.log('Clear 10 different dungeons without equipment');
   }
   friendlyRockJrObtained() {

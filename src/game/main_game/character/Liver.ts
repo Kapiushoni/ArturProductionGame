@@ -9,18 +9,19 @@ import { Consumable } from '@/game/main_game/items/Consumable';
 import { GameSounds } from '@/game/sound/GameSounds';
 import type { IDragContainer } from '@/game/drag_and_drop/IDragContainer';
 import type { Item } from '@/game/main_game/items/Item';
+import type { Jinn } from '@/game/main_game/character/Jinn';
 
 /**
  * The jinn's potion slot: a potion dropped here is drunk. Instant potions act and disappear;
  * the others stay here while they wear off. Unlocked only inside a dungeon; onLock(locked) on every change.
  */
 export class Liver extends Slot {
-  private fighter: any; // Jinn
+  private fighter: Jinn; // Jinn
   onLock = new Signal();
   /** the game's pause signal (potions stop wearing off while paused) */
   pauseSignal: Signal = null;
 
-  constructor(fighter: any) {
+  constructor(fighter: Jinn) {
     super();
     this.fighter = fighter;
     this.lock();

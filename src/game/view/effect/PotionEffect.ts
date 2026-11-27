@@ -6,17 +6,17 @@ import type { IModifier } from '@/game/main_game/items/modifiers/IModifier';
 import type { Item } from '@/game/main_game/items/Item';
 
 export class PotionEffect {
-  primaryEffect: any = null;
-  secondaryEffect: any = null;
-  timer: any = null;
-  constructor(item: Item, clip: any) {
+  primaryEffect: MovieClip = null;
+  secondaryEffect: MovieClip = null;
+  timer: Timer = null;
+  constructor(item: Item, clip: MovieClip) {
     this.primaryEffect = this.addPotionEffect(item.primaryModifier, clip);
     this.secondaryEffect = this.addPotionEffect(item.secondaryModifier, clip, -9, 7);
     this.timer = new Timer(2000, 1);
     this.timer.addEventListener(TimerEvent.TIMER_COMPLETE, this.endTimer);
     this.timer.start();
   }
-  addPotionEffect(modifier: IModifier, holder: any, dx: number = 0, dy: number = 0) {
+  addPotionEffect(modifier: IModifier, holder: MovieClip, dx: number = 0, dy: number = 0) {
     dx = Number(dx);
     dy = Number(dy);
     if (modifier.getCategory() == StatType.NULL) {
@@ -31,13 +31,13 @@ export class PotionEffect {
     holder.addChild(feedback);
     return feedback;
   }
-  endTimer(event: any) {
+  endTimer(event: TimerEvent) {
     this.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, this.endTimer);
     this.timer.stop();
     this.timer = null;
     this.clear();
   }
-  removeFromParent(clip: any) {
+  removeFromParent(clip: MovieClip) {
     if (Boolean(clip) && Boolean(clip.parent)) {
       clip.parent.removeChild(clip);
     }

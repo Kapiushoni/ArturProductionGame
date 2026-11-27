@@ -5,10 +5,11 @@ import { ItemPopUp } from '@/game/view/popUp/ItemPopUp';
 import type { ISlot } from '@/game/main_game/item_containers/ISlot';
 import type { ItemView } from '@/game/view/items/ItemView';
 import type { SlotChange } from '@/game/main_game/item_containers/SlotChange';
+import type { MovieClip } from '@/flash/as3';
 
 export class BasicSlotView {
-  bg: any = null;
-  item_view: any = null;
+  bg: MovieClip = null;
+  item_view: ItemView = null;
   slot: any = null;
   popUp: any = null;
   drag_listener: any = null;
@@ -52,7 +53,7 @@ export class BasicSlotView {
   createPopUp() {
     this.popUp = new ItemPopUp();
   }
-  initialize(bg: any) {
+  initialize(bg: MovieClip) {
     this.bg = bg;
     this.bg.gotoAndStop('mouseOver');
     this.drag_listener = new DragListener(this.bg, this.slot);
@@ -109,7 +110,7 @@ export class BasicSlotView {
       this.deselect();
     }
   }
-  mouseOver(event: any) {
+  mouseOver(event: MouseEvent) {
     if (this.hide) {
       return;
     }
@@ -133,7 +134,7 @@ export class BasicSlotView {
         this.popUp.show();
     }
   }
-  mouseOut(event: any) {
+  mouseOut(event: MouseEvent) {
     if (this.hide) {
       return;
     }

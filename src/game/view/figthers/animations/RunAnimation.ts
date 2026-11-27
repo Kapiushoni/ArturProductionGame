@@ -1,9 +1,11 @@
 import { bindMethods, uint } from '@/flash/as3';
 import { FighterAnimation } from '@/game/view/figthers/animations/FighterAnimation';
+import type { FighterView } from '@/game/view/figthers/FighterView';
+import type { MovieClip } from '@/flash/as3';
 
 /** Running `steps` cycles of "run", optionally with the start ("idle2run") and the stop ("run2idle"). */
 export class RunAnimation extends FighterAnimation {
-  private fighter: any = null;
+  private fighter: FighterView = null;
   private steps: number;
   private withFinish: boolean;
 
@@ -12,12 +14,12 @@ export class RunAnimation extends FighterAnimation {
     this.steps = uint(steps);
     this.withFinish = withFinish;
   }
-  make(fighterView: any) {
+  make(fighterView: FighterView) {
     this.fighter = fighterView;
     super.make(fighterView);
   }
   /** the end of one part: go on with the next one */
-  finish(_clip: any) {
+  finish(_clip: MovieClip) {
     switch (this.name) {
       case 'idle2run':
         this.name = 'run';

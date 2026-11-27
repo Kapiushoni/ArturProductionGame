@@ -4,11 +4,12 @@ import { Signal } from '@/game/cb/signals/Signal';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
 import type { Damage } from '@/game/main_game/dungeon/Damage';
 import type { Stats } from '@/game/main_game/character/stats/Stats';
+import type { IFight } from '@/game/main_game/dungeon/IFight';
 
 /** A fighter (the jinn or an enemy). The view listens to onHit(self, target, damage, done) to play the attack. */
 export class Fighter {
   onHit: Signal;
-  stats: any; // Stats (JinnStats / EnemyStats)
+  stats: Stats; // Stats (JinnStats / EnemyStats)
   private name: string;
   private nameString: string;
 
@@ -27,7 +28,7 @@ export class Fighter {
   getName(): string {
     return this.name;
   }
-  prepareForFight(_fight: any) {}
+  prepareForFight(_fight: IFight) {}
   /** attacks: the view plays the animation and calls `done` */
   hit(target: Fighter, damage: Damage, done: () => void) {
     this.onHit.emit(this, target, damage, done);

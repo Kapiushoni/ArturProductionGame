@@ -2,6 +2,7 @@ import { as3values, bindMethods, int } from '@/flash/as3';
 import { OneTimeSlot } from '@/game/main_game/item_containers/OneTimeSlot';
 import { ItemFactory } from '@/game/main_game/items/ItemFactory';
 import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
+import type { DungeonConfigData } from '@/game/main_game/dungeon/DungeonConfigData';
 
 /**
  * The 3 loot slots of a dungeon: first from `extraLoot` (first-time loot), the rest drawn
@@ -10,7 +11,7 @@ import { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
 export class Loot {
   private slots: OneTimeSlot[];
 
-  constructor(config: any, extraLoot: ProbabilisticSet) {
+  constructor(config: DungeonConfigData, extraLoot: ProbabilisticSet) {
     this.slots = [];
     const dungeonLoot = new ProbabilisticSet();
     for (const entry of as3values(config.lootData)) {

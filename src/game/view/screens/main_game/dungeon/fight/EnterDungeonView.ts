@@ -7,12 +7,12 @@ import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighter
 import type { JinnView } from '@/game/view/figthers/JinnView';
 
 export class EnterDungeonView {
-  bg: any = null;
-  jinnView: any = null;
+  bg: BackgroundView = null;
+  jinnView: JinnView = null;
   atEnd: any = null;
   paused = false;
-  gameLoop: any = null;
-  walk: any = null;
+  gameLoop: GameLoop = null;
+  walk: RunAnimation = null;
   constructor(jinnView: JinnView, bg: BackgroundView, atEnd: Function) {
     this.bg = bg;
     this.jinnView = jinnView;

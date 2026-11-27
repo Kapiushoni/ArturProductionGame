@@ -10,11 +10,11 @@ import type { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon
 import type { IFighterAnimation } from '@/game/view/figthers/animations/IFighterAnimation';
 
 export class EnterBossDungeon {
-  bossDungeonView: any = null;
+  bossDungeonView: BossDungeonView = null;
   atEnd: any = null;
-  gameLoop: any = null;
+  gameLoop: GameLoop = null;
   paused = false;
-  walk: any = null;
+  walk: RunAnimation = null;
   constructor(bossDungeonView: BossDungeonView, atEnd: Function) {
     this.bossDungeonView = bossDungeonView;
     this.atEnd = atEnd;

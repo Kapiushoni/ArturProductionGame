@@ -7,16 +7,17 @@ import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { MixerClockView } from '@/game/view/screens/main_game/inventory/MixerClockView';
 import { AutoSelectSlotView } from '@/game/view/screens/main_game/slot/AutoSelectSlotView';
+import type { MouseEvent } from '@/flash/as3';
 
 export class MixerView {
-  bg: any = null;
+  bg: MovieClip = null;
   slots: any = null;
-  clock_view: any = null;
+  clock_view: MixerClockView = null;
   top = null;
   constructor() {
     this.slots = new Array();
   }
-  initialize(bg: any) {
+  initialize(bg: MovieClip) {
     let slot = null;
     let autoSelectSlotView = null;
     this.bg = bg;
@@ -51,7 +52,7 @@ export class MixerView {
   change(value = null) {
     this.refreshButton();
   }
-  mix(event: any) {
+  mix(event: MouseEvent) {
     const mixer = app.game.getMixer();
     mixer.startMix();
     this.clock_view = new MixerClockView(mixer.clock);
@@ -67,7 +68,7 @@ export class MixerView {
       this.bg['mix_button'].gotoAndStop('locked');
     }
   }
-  mixButtonOut(event: any) {
+  mixButtonOut(event: MouseEvent) {
     if (!app.game.getMixer().canMix()) {
       event.stopPropagation();
       this.bg['mix_button'].gotoAndStop('locked');

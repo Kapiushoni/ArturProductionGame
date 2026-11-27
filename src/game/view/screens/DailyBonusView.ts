@@ -5,7 +5,7 @@ import type { BonusIcon } from '@/game/bonus/filter/BonusIcon';
 import type { IDailyBonus } from '@/game/bonus/IDailyBonus';
 
 export class DailyBonusView extends AnimatedScreen {
-  message: any = null;
+  message: string = null;
   constructor(dailyBonus: IDailyBonus, message: string) {
     super();
     this.initAnimatedScreen(app.swfLoader.getClass('assets.Bonus'), new Dictionary());

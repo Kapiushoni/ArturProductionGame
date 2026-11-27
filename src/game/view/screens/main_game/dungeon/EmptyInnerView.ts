@@ -2,7 +2,7 @@ import { bindMethods } from '@/flash/as3';
 import { app } from '@/game/app';
 
 export class EmptyInnerView {
-  _soundTrack: any = null;
+  _soundTrack: string = null;
   constructor(soundTrack: string) {
     this._soundTrack = soundTrack;
   }

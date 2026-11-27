@@ -5,12 +5,13 @@ import { LevelingEnemies } from '@/game/main_game/character/stats/LevelingEnemie
 import { Stat } from '@/game/main_game/character/stats/Stat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 import type { CharacterConfigData } from '@/game/main_game/character/CharacterConfigData';
+import type { Fighter } from '@/game/main_game/character/Fighter';
 
 /** An enemy's stats: starts at full health, EXPERIENCE is the XP it gives when defeated. */
 export class EnemyStats extends Stats {
   private level = 1;
 
-  constructor(config: CharacterConfigData, fighter: any) {
+  constructor(config: CharacterConfigData, fighter: Fighter) {
     super(config, fighter, LevelingEnemies.getNewInstance(config));
     const maxHealth = new Stat(StatType.MAX_HP, config.baseHP);
     this.stats.set(StatType.HEALTH, new HealthStat(StatType.HEALTH, maxHealth, config.baseHP));

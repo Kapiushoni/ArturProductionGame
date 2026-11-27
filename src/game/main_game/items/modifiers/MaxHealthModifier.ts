@@ -2,6 +2,8 @@ import { as3as, bindMethods, int } from '@/flash/as3';
 import { Modifier } from '@/game/main_game/items/modifiers/Modifier';
 import { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import { StatType } from '@/game/main_game/character/stats/StatType';
+import type { Stat } from '@/game/main_game/character/stats/Stat';
+import type { Stats } from '@/game/main_game/character/stats/Stats';
 
 /** Changes the maximum of health (MH) or experience (MX). */
 export class MaxHealthModifier extends Modifier {
@@ -16,13 +18,13 @@ export class MaxHealthModifier extends Modifier {
       this.primary_char = int(StatType.EXPERIENCE);
     }
   }
-  affect(stats: any) {
+  affect(stats: Stats) {
     (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).modifyUpperBound(this.value);
   }
-  disaffect(stats: any) {
+  disaffect(stats: Stats) {
     (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).modifyUpperBound(-this.value);
   }
-  getStat(stats: any): any {
+  getStat(stats: Stats): Stat {
     return (as3as(stats.getStat(this.primary_char), HealthStat) as HealthStat).getUpperBound();
   }
 }

@@ -1,17 +1,20 @@
 import { AudioTimer, ProgressEvent, Sound, SoundTransform, TimerEvent, as3values, bindMethods, int } from '@/flash/as3';
 import { Signal } from '@/game/cb/signals/Signal';
+import type { Event } from '@/flash/as3';
+import type { SoundChannel } from '@/flash/as3';
+import type { Timer } from '@/flash/as3';
 
 /**
  * One sound (a Flash Sound) with its volume and trimmed start / end. Knows when it finishes
  * (a timer on the audio clock), can pause / resume, and calls the onFinish callbacks with its name.
  */
 export class cbSound {
-  volume: any = 1;
-  originalVolume: any = 1;
+  volume: number = 1;
+  originalVolume: number = 1;
   /** ms skipped at the start / end */
-  startMilliseconds: any = 0;
-  endMilliseconds: any = 0;
-  private endTimer: any = null;
+  startMilliseconds: number = 0;
+  endMilliseconds: number = 0;
+  private endTimer: Timer = null;
   isPlaying = false;
   paused = false;
   /** callbacks(name) for the end of the current play */
@@ -46,7 +49,7 @@ export class cbSound {
     return this.isPlaying;
   }
   /** plays from `start` ms (default: the trimmed start); returns the SoundChannel */
-  play(start = 0, loops = 0, transform: SoundTransform = null): any {
+  play(start = 0, loops = 0, transform: SoundTransform = null): SoundChannel {
     start = Number(start);
     loops = int(loops);
     this.isPlaying = true;
@@ -95,7 +98,7 @@ export class cbSound {
     this.currentSndTr = transform;
     return transform;
   }
-  resume(): any {
+  resume(): SoundChannel {
     this.isPlaying = true;
     this.paused = false;
     if (this.endTimer) {
@@ -115,7 +118,7 @@ export class cbSound {
   onFinish(callback: Function) {
     this.atFinish.push(callback);
   }
-  soundComplete(_event: any) {
+  soundComplete(_event: TimerEvent) {
     this.isPlaying = false;
     this.endTimer.removeEventListener(TimerEvent.TIMER, this.soundComplete);
     const callbacks = [...this.atFinish];
@@ -128,7 +131,7 @@ export class cbSound {
   addEventListener(type: string, listener: Function, useCapture = false, priority = 0, weak = false) {
     this.sound.addEventListener(type, listener, useCapture, int(priority), weak);
   }
-  dispatchEvent(event: any): boolean {
+  dispatchEvent(event: Event): boolean {
     return this.sound.dispatchEvent(event);
   }
   hasEventListener(type: string): boolean {

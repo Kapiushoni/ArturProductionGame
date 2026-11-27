@@ -5,12 +5,15 @@ import { app } from '@/game/app';
 import { Buttons } from '@/game/util/Buttons';
 import { Sepializer } from '@/game/util/Sepializer';
 import { Util } from '@/game/util/Util';
+import type { Event } from '@/flash/as3';
+import type { MouseEvent } from '@/flash/as3';
+import type { MovieClip } from '@/flash/as3';
 
 export class ConfirmationPopUp extends AnimatedScreen {
-  background: any = null;
+  background: MovieClip = null;
   onAccept: any = null;
   onCancel: any = null;
-  constructor(background: any, onAccept: Function, onCancel: Function, text: string) {
+  constructor(background: MovieClip, onAccept: Function, onCancel: Function, text: string) {
     super();
     this.initAnimatedScreen(app.swfLoader.getClass('assets.NewGamePopup'), this.getButtonInfo());
     this.onAccept = onAccept;
@@ -28,18 +31,18 @@ export class ConfirmationPopUp extends AnimatedScreen {
     dict.set('cancel', buttonGroup.createButton(this.cancel, 'mouseOver', 'mouseOut'));
     return dict;
   }
-  sepialize(event: any) {
+  sepialize(event: Event) {
     Sepializer.getInstance().sepialize(this.background);
   }
-  unsepialize(event: any) {
+  unsepialize(event: Event) {
     Sepializer.getInstance().unsepialize(this.background);
   }
-  accept(event: any) {
+  accept(event: MouseEvent) {
     Buttons.setButtons(this.bg, ['accept', 'cancel'], false);
     this.onAccept();
     this.pop();
   }
-  cancel(event: any) {
+  cancel(event: MouseEvent) {
     Buttons.setButtons(this.bg, ['accept', 'cancel'], false);
     this.leave(Util.concatenate(this.onCancel, this.pop));
   }

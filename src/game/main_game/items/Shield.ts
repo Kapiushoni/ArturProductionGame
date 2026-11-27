@@ -1,12 +1,13 @@
 import { bindMethods } from '@/flash/as3';
 import { Category } from '@/game/main_game/items/Category';
+import type { ItemContainer } from '@/game/main_game/item_containers/ItemContainer';
 
 /** A shield (goes into the shield slot). */
 export class Shield extends Category {
   get type(): string {
     return Category.SHIELD_CATEGORY;
   }
-  canBeContained(itemContainer: any): boolean {
+  canBeContained(itemContainer: ItemContainer): boolean {
     return itemContainer.canContainShield();
   }
 }
