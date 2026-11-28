@@ -194,6 +194,21 @@ const ROGUELITE = [
     E.check(!GM.app.saveSystem.hasPlayed(), 'the run save is empty: continue is locked');
     GM.Roguelite.tutorialCompleted(); // (the tutorial was played in the normal game above)
   }],
+  ['the bone shop: pick a good on the shelf, buy it', async () => {
+    GM.Roguelite.earn(100);
+    E.byClass('ModButton').refresh();
+    const shopButton = E.allByClass('TextButton').find((b) => b.parent === E.byClass('ModButton') && b.visible && b !== E.byClass('ModButton')._ch[0]);
+    await E.tapClip(shopButton);
+    await E.until(() => E.byClass('ShopScreen') && E.byClass('ShopScreen').art, 'the shop art', 30000);
+    const shop = E.byClass('ShopScreen');
+    const tough = [...shop.items.keys()].find((g) => g.id === 'tough');
+    await E.tapClip(shop.items.get(tough));
+    await E.until(() => shop.selected === tough, 'the good picked', 3000);
+    await E.tapClip(E.allByClass('TextButton').find((b) => b.parent === shop.board));
+    await E.until(() => GM.Roguelite.level('tough') === 1, 'bought', 3000);
+    await E.tapClip(E.allByClass('TextButton').find((b) => b.parent === shop));
+    await E.until(() => !E.byClass('ShopScreen'), 'the shop closed', 3000);
+  }],
   ['a new run, one life: losing starts a new run on the map', async () => {
     await E.tapUntil(/^new_game$/, () => G.state() !== 'mainMenu', 'leaving the menu');
     const t0 = Date.now();

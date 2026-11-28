@@ -3,6 +3,12 @@ import { lang, type Lang } from '@/port/i18n';
 /** Texts of the roguelite mod (in code: the game texts in locale.txt stay as they are). */
 const TEXTS: Record<Lang, Record<string, string>> = {
   ru: {
+    shopSign: 'ЛАВКА',
+    price: '$1 кост.',
+    buyFor: 'Купить за $1',
+    notEnough: 'Не хватает косточек',
+    pick: 'Выбери товар на полке',
+    leave: 'Выйти',
     bones: 'Косточки: $1',
     runBones: 'Косточек за забег: $1',
     gotBones: '+$1 косточек',
@@ -43,6 +49,12 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     ok: 'OK',
   },
   en: {
+    shopSign: 'SHOP',
+    price: '$1 bones',
+    buyFor: 'Buy for $1',
+    notEnough: 'Not enough bones',
+    pick: 'Pick something on the shelves',
+    leave: 'Leave',
     bones: 'Bones: $1',
     runBones: 'Bones this run: $1',
     gotBones: '+$1 bones',
@@ -83,6 +95,12 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     ok: 'OK',
   },
   uk: {
+    shopSign: 'КРАМНИЦЯ',
+    price: '$1 кіст.',
+    buyFor: 'Купити за $1',
+    notEnough: 'Бракує кісточок',
+    pick: 'Обери товар на полиці',
+    leave: 'Вийти',
     bones: 'Кісточки: $1',
     runBones: 'Кісточок за забіг: $1',
     gotBones: '+$1 кісточок',

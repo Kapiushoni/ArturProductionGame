@@ -12,7 +12,7 @@ import { DailyBonusView } from '@/game/view/screens/DailyBonusView';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { ModButton } from '@/game/view/screens/roguelite/ModButton';
 import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
-import { ShopWindow } from '@/game/view/screens/roguelite/ShopWindow';
+import { ShopScreen } from '@/game/view/screens/roguelite/ShopScreen';
 import type { MouseEvent } from '@/flash/as3';
 
 export class MainMenu extends Screen {
@@ -72,7 +72,7 @@ export class MainMenu extends Screen {
         this.refreshContinue();
       },
       () => {
-        const shop = new ShopWindow(() => {
+        const shop = new ShopScreen(() => {
           this.bg.removeChild(shop);
           button.refresh();
         });
