@@ -10,6 +10,8 @@ export interface ShopLayout {
   layers: Record<string, { x: number; y: number; w: number; h: number }>;
   pivots: Record<string, [number, number]>;
   sign: [number, number];
+  /** the dark panel on the front of the counter, for the info board */
+  board: { x: number; y: number; w: number; h: number };
 }
 export interface ShopArt {
   layout: ShopLayout;

@@ -3,8 +3,7 @@ import { Roguelite } from '@/game/roguelite/Roguelite';
 import { RogueliteConfig, type UnlockId, type UpgradeId } from '@/game/roguelite/RogueliteConfig';
 import { layer, loadShopArt, type ShopArt } from '@/game/view/screens/roguelite/shopArt';
 import { rlText } from '@/game/view/screens/roguelite/texts';
-import { COLORS, TextButton, label } from '@/game/view/screens/roguelite/widgets';
-import type { TextField } from '@/flash/as3';
+import { COLORS, Label, TextButton, label } from '@/game/view/screens/roguelite/widgets';
 
 /** what is for sale: the layer of the art, and the upgrade or the unlock it sells */
 const GOODS: { art: string; id: UpgradeId | UnlockId; unlock: boolean }[] = [
@@ -12,9 +11,6 @@ const GOODS: { art: string; id: UpgradeId | UnlockId; unlock: boolean }[] = [
   ...(Object.keys(RogueliteConfig.unlocks) as UnlockId[]).map((id) => ({ art: 'item_' + id, id, unlock: true })),
 ];
 type Good = (typeof GOODS)[number];
-
-/** the info board on the front of the counter */
-const BOARD = { x: 226, y: 366, w: 248, h: 106 };
 
 /**
  * The bone shop of the roguelite mod (main menu): the merchant's shop drawn in Blender (public/assets/shop).
@@ -27,10 +23,11 @@ export class ShopScreen extends Sprite {
   private eyes: Sprite = null;
   private blink: Sprite = null;
   private flame = new Sprite();
+  private light: Sprite = null;
   private sparkles = new Sprite();
   private items = new Map<Good, Sprite>();
-  private tags = new Map<Good, TextField>();
-  private bones: TextField;
+  private tags = new Map<Good, Label>();
+  private bones: Label;
   private board = new Sprite();
   private selected: Good = null;
   private shown: Good = null;
@@ -88,12 +85,14 @@ export class ShopScreen extends Sprite {
     this.flame.y = fp[1];
     this.flame.mouseEnabled = this.flame.mouseChildren = false;
     this.addChild(this.flame);
+    this.light = this.overlay('light');
+    this.overlay('vignette');
 
     // texts: the sign, the price tags, the bones, the board
     const [sx, sy] = art.layout.sign;
-    const sign = label(rlText('shopSign'), 26, 0x3a2410, 240);
+    const sign = new Label(rlText('shopSign'), 28, 0x3a2410, 240, 'center', 'middle');
     sign.x = sx - 120;
-    sign.y = sy - 18;
+    sign.y = sy;
     this.addChild(sign);
     for (const good of GOODS) {
       const l = art.layout.layers[good.art];
@@ -116,6 +115,14 @@ export class ShopScreen extends Sprite {
     this.addEventListener(Event.ENTER_FRAME, this.animate);
   }
 
+  /** a layer drawn over the others that does not take the mouse */
+  private overlay(name: string): Sprite {
+    const s = new Sprite();
+    s.addChild(layer(this.art, name));
+    s.mouseEnabled = s.mouseChildren = false;
+    this.addChild(s);
+    return s;
+  }
   /** prices, levels, bones and the board after a purchase */
   private refresh() {
     this.bones.text = rlText('bones', Roguelite.bones);
@@ -148,7 +155,7 @@ export class ShopScreen extends Sprite {
   /** the info board: name, description, level, and the buy button of the picked good */
   private showBoard(good: Good) {
     while (this.board.numChildren > 0) this.board.removeChildAt(0);
-    const { x, y, w } = BOARD;
+    const { x, y, w } = this.art.layout.board;
     const text = (t: string, size: number, color: number, dy: number) => {
       const l = label(t, size, color, w);
       l.x = x;
@@ -160,11 +167,11 @@ export class ShopScreen extends Sprite {
       return;
     }
     const prefix = good.unlock ? 'un' : 'up';
-    text(rlText(prefix + '_' + good.id), 19, COLORS.title, 2);
-    text(rlText(prefix + 'd_' + good.id), 12, COLORS.text, 28);
+    text(rlText(prefix + '_' + good.id), 19, COLORS.title, 6);
+    text(rlText(prefix + 'd_' + good.id), 13, COLORS.text, 31);
     if (!good.unlock) {
       const id = good.id as UpgradeId;
-      text(rlText('level', Roguelite.level(id), Roguelite.maxLevel(id)), 13, COLORS.dim, 46);
+      text(rlText('level', Roguelite.level(id), Roguelite.maxLevel(id)), 13, COLORS.dim, 49);
     }
     const price = this.price(good);
     if (price == null) {
@@ -204,6 +211,7 @@ export class ShopScreen extends Sprite {
     }
     this.flame.scaleY = 1 + 0.12 * Math.sin(t * 13) + 0.06 * Math.sin(t * 31);
     this.flame.scaleX = 1 + 0.06 * Math.sin(t * 17);
+    if (this.light) this.light.alpha = 0.85 + 0.15 * Math.sin(t * 13) * Math.sin(t * 7);
     this.sparkles.rotation = (t * 15) % 360;
     const s = 1 + 0.08 * Math.sin(t * 3);
     this.sparkles.scaleX = this.sparkles.scaleY = s;

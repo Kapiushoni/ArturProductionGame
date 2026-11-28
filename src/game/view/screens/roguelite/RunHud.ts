@@ -3,7 +3,7 @@ import { Tween } from '@/game/cb/utils/Tween';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { rlText } from '@/game/view/screens/roguelite/texts';
 import { COLORS, label } from '@/game/view/screens/roguelite/widgets';
-import type { TextField } from '@/flash/as3';
+import type { Label } from '@/game/view/screens/roguelite/widgets';
 
 /**
  * The roguelite run's bones at the top of the game screen ("Bones this run: N"), and a "+N" that rises
@@ -11,7 +11,7 @@ import type { TextField } from '@/flash/as3';
  */
 export class RunHud extends Sprite {
   static readonly W = 250;
-  private total: TextField;
+  private total: Label;
 
   constructor() {
     super();

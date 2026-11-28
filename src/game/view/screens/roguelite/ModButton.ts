@@ -2,7 +2,7 @@ import { Sprite } from '@/flash/as3';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { rlText } from '@/game/view/screens/roguelite/texts';
 import { COLORS, TextButton, label } from '@/game/view/screens/roguelite/widgets';
-import type { TextField } from '@/flash/as3';
+import type { Label } from '@/game/view/screens/roguelite/widgets';
 
 /**
  * The roguelite corner of the main menu (top left): the "MOD: ON / OFF" switch, and while the mod is on,
@@ -11,7 +11,7 @@ import type { TextField } from '@/flash/as3';
 export class ModButton extends Sprite {
   private button: TextButton;
   private shop: TextButton;
-  private bones: TextField;
+  private bones: Label;
 
   constructor(
     private onChange: (on: boolean) => void,
