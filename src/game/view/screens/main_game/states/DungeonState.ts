@@ -24,7 +24,7 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   private next_dungeon: Level = null;
   theOnToDungeon = new Signal();
   theOnToMap = new Signal();
-  theOnToMainMenu = new Signal();
+  theOnNewRun = new Signal();
 
   constructor(name: string, mainView: GameView, onEnter: Function = null, onLeave: Function = null) {
     super(name, onEnter, onLeave);
@@ -38,8 +38,8 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   get onToMap(): Signal {
     return this.theOnToMap;
   }
-  get onToMainMenu(): Signal {
-    return this.theOnToMainMenu;
+  get onNewRun(): Signal {
+    return this.theOnNewRun;
   }
   get pauseHolder(): DisplayObjectContainer {
     return this.mainView.pauseHolder;
@@ -103,7 +103,7 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   clear() {
     this.onToDungeon.clear();
     this.onToMap.clear();
-    this.onToMainMenu.clear();
+    this.onNewRun.clear();
     super.clear();
   }
 }

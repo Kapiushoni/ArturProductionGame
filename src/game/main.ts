@@ -36,6 +36,8 @@ import type { SwfLibrary } from '@/game/cb/display/SwfLibrary';
  */
 export class main extends Sprite {
   fsmAplication: FSM = null;
+  /** the next loadGame starts a new roguelite run (the last one was lost) */
+  private newRun = false;
 
   constructor() {
     super();
@@ -90,6 +92,7 @@ export class main extends Sprite {
     fsm.addTransition('intro', 'mainMenu', 'back');
     fsm.addTransition('game', 'mainMenu', 'toMainMenu');
     fsm.addTransition('game', 'outro', 'endGame');
+    fsm.addTransition('game', 'game', 'newRun');
     fsm.addTransition('outro', 'game', 'next');
     fsm.start();
   }
@@ -183,6 +186,13 @@ export class main extends Sprite {
     as3as(this.currentScreen, Outro).exit();
   }
   loadGame() {
+    if (this.newRun) {
+      // the old game has just been left: forget its pending saves, then a fresh run save
+      this.newRun = false;
+      app.saveSystem.switched();
+      app.saveSystem.reset();
+      app.saveSystem.onFirstPlay();
+    }
     app.theTutorial = new Tutorial();
     app.game = new Game();
     app.game.enter();
@@ -194,6 +204,12 @@ export class main extends Sprite {
     app.gameHolder.addChild(gameView);
     gameView.onExit.add(Util.l(app.waitForResources, [], () => this.fsmAplication.takeTransition('toMainMenu')));
     gameView.onEnd.add(Util.l(app.waitForResources, [], () => this.fsmAplication.takeTransition('endGame')));
+    gameView.onNewRun.add(
+      Util.l(app.waitForResources, GameSounds.mapSounds, () => {
+        this.newRun = true;
+        this.fsmAplication.takeTransition('newRun');
+      }),
+    );
     gameView.start();
     app.theTutorial.next();
     app.achievementDispatcher.gamePlayed();

@@ -20,6 +20,8 @@ import { DungeonState } from '@/game/view/screens/main_game/states/DungeonState'
 import { MapState } from '@/game/view/screens/main_game/states/MapState';
 import type { Level } from '@/game/main_game/map/Level';
 import type { MouseEvent } from '@/flash/as3';
+import { Roguelite } from '@/game/roguelite/Roguelite';
+import { RunHud } from '@/game/view/screens/roguelite/RunHud';
 
 export class GameView extends Screen {
   inventory = new InventoryView();
@@ -31,6 +33,9 @@ export class GameView extends Screen {
   fsm: any = null;
   up_holder: MovieClip = null;
   onExit: Signal = null;
+  /** roguelite: the run was lost, start a new one on the map */
+  onNewRun: Signal = null;
+  private runHud: RunHud = null;
   onEnd: Signal = null;
   constructor() {
     super();
@@ -61,6 +66,7 @@ export class GameView extends Screen {
   }
   initialize() {
     this.onExit = new Signal();
+    this.onNewRun = new Signal();
     this.onEnd = new Signal();
     this.inventory.initialize(this.bg.inventory);
     this.mixing.initialize(this.bg.mix);
@@ -68,6 +74,10 @@ export class GameView extends Screen {
     this.princess.initialize(this.bg.mix.pb);
     Buttons.setButtons(this.bg.inventory, ['recipes'], true);
     app.game.onPause.add(this.updatePauseState);
+    if (Roguelite.enabled) {
+      this.runHud = new RunHud();
+      app.tutorialHolder.addChild(this.runHud);
+    }
   }
   updatePauseState(flag: boolean) {
     if (flag) {
@@ -87,12 +97,12 @@ export class GameView extends Screen {
     const dungeonState = new DungeonState('dungeon', this);
     dungeonState.onToDungeon.add(this.toLevel);
     dungeonState.onToMap.add(this.showMap);
-    dungeonState.onToMainMenu.add(this.toMainMenu);
+    dungeonState.onNewRun.add(this.newRun);
     const bossDungeonState = new BossDungeonState('boss', this);
     bossDungeonState.setNextDungeon(app.game.map.getLevel(BossDungeon.idBossLevel));
     bossDungeonState.onToDungeon.add(this.toLevel);
     bossDungeonState.onToMap.add(this.showMap);
-    bossDungeonState.onToMainMenu.add(this.toMainMenu);
+    bossDungeonState.onNewRun.add(this.newRun);
     bossDungeonState.onToOutro.add(this.toOutro);
     this.fsm = new FSM(basicPausableState);
     this.fsm.addState(mapState);
@@ -183,6 +193,9 @@ export class GameView extends Screen {
   toMainMenu() {
     this.onExit.emit();
   }
+  newRun() {
+    this.onNewRun.emit();
+  }
   toOutro() {
     this.onEnd.emit();
   }
@@ -194,6 +207,8 @@ export class GameView extends Screen {
     this.mixing.clear();
     this.stats.clear();
     this.princess.clear();
+    this.runHud?.clear();
+    this.runHud = null;
     this.fsm.clear();
     super.clear();
   }
@@ -208,6 +223,7 @@ bindMethods(GameView, [
   'toLevel',
   'toLevelWithoutWait',
   'toMainMenu',
+  'newRun',
   'toOutro',
   'exit',
   'clear',

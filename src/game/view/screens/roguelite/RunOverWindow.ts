@@ -40,7 +40,7 @@ export class RunOverWindow extends Sprite {
     );
     line(rlText('runBones', result.bones) + '   ·   ' + rlText('bones', result.totalBones), 16, COLORS.title);
     line(rlText('runs', result.runs), 16, COLORS.dim);
-    const button = new TextButton(rlText(abandoned ? 'ok' : 'toMenu'), 200, 40, () => {
+    const button = new TextButton(rlText(abandoned ? 'ok' : 'newRun'), 200, 40, () => {
       button.mouseEnabled = false;
       onMenu();
     });

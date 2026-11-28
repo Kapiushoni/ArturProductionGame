@@ -9,7 +9,7 @@ export interface IDungeonState {
   setNextDungeon(level: any): void;
   get onToDungeon(): Signal;
   get onToMap(): Signal;
-  /** straight to the main menu (the roguelite run is over) */
-  get onToMainMenu(): Signal;
+  /** the roguelite run is over: a new one */
+  get onNewRun(): Signal;
   clear(): void;
 }

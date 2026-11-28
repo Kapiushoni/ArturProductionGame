@@ -1,4 +1,5 @@
 import { SharedUtils } from '@/game/persistence/SharedUtils';
+import { Signal } from '@/game/cb/signals/Signal';
 import { RogueliteConfig as C, type UnlockId, type UpgradeId } from '@/game/roguelite/RogueliteConfig';
 
 /**
@@ -32,6 +33,8 @@ export interface RunResult {
 
 export const Roguelite = {
   SAVE_FILE: 'cbjs_rl',
+  /** onEarn(bones added, bones of the run so far) */
+  onEarn: new Signal(),
 
   /** the mod is on (switched in the main menu, kept between sessions) */
   get enabled(): boolean {
@@ -127,11 +130,16 @@ export const Roguelite = {
   get bones(): number {
     return read('bones', 0);
   },
+  /** bones earned in the current run */
+  get runBones(): number {
+    return read('runBones', 0);
+  },
   /** bones earned (with the "greed" upgrade); returns how many were added */
   earn(amount: number): number {
     const bones = Math.round(amount * (1 + (this.level('greed') * C.upgrades.greed.percent) / 100));
     write('bones', this.bones + bones);
-    write('runBones', read('runBones', 0) + bones);
+    write('runBones', this.runBones + bones);
+    this.onEarn.emit(bones, this.runBones);
     return bones;
   },
   /** bones for an enemy beaten */

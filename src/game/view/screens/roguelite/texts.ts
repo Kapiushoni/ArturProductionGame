@@ -39,6 +39,7 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     runs: 'Забегов: $1',
     leftFight: 'Бой был брошен: забег засчитан как проигранный',
     toMenu: 'В главное меню',
+    newRun: 'Новый забег',
     ok: 'OK',
   },
   en: {
@@ -78,6 +79,7 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     runs: 'Runs: $1',
     leftFight: 'The fight was abandoned: the run is lost',
     toMenu: 'Main menu',
+    newRun: 'New run',
     ok: 'OK',
   },
   uk: {
@@ -117,6 +119,7 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     runs: 'Забігів: $1',
     leftFight: 'Бій було покинуто: забіг програно',
     toMenu: 'Головне меню',
+    newRun: 'Новий забіг',
     ok: 'OK',
   },
 };

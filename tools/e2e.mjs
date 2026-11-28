@@ -64,6 +64,13 @@ const HELPERS = () => {
         .filter((n) => G.find(n))
         .join('+') + ' [' + G.state() + ']',
     tutorialStep: () => GM.services.saveSystem.tutorialStepCompleted(),
+    /** display objects of a class (the drawn widgets of the mod have no names) */
+    allByClass(cls) {
+      const out = [];
+      (function f(o) { if (!o) return; if (o.constructor.name === cls) out.push(o); for (const c of o._ch || []) f(c); })(stage());
+      return out;
+    },
+    byClass: (cls) => E.allByClass(cls)[0] || null,
     hp: () => GM.app.game.getJinn().stats.getStat(GM.StatType.HEALTH).getValue(),
   };
 };
@@ -187,7 +194,7 @@ const ROGUELITE = [
     E.check(!GM.app.saveSystem.hasPlayed(), 'the run save is empty: continue is locked');
     GM.Roguelite.tutorialCompleted(); // (the tutorial was played in the normal game above)
   }],
-  ['a new run, one life: losing ends the run', async () => {
+  ['a new run, one life: losing starts a new run on the map', async () => {
     await E.tapUntil(/^new_game$/, () => G.state() !== 'mainMenu', 'leaving the menu');
     const t0 = Date.now();
     while (G.state() === 'intro' && Date.now() - t0 < 120000) {
@@ -201,6 +208,7 @@ const ROGUELITE = [
     await E.tapUntil(/^dungeon_1$/, () => !G.find('MapView') || G.find('TransitionWindow'), 'leaving the map');
     await E.until(() => G.find('DungeonView') && !G.find('TransitionWindow'), 'dungeon', 60000);
     E.check(GM.Roguelite.leftDuringFight, 'the run is marked as fighting');
+    E.check(E.byClass('RunHud'), 'the bones of the run at the top');
     GM.app.game.getJinn().stats.getStat(GM.StatType.HEALTH).value = 1;
     const runOver = () => { let w = null; (function f(o) { if (!o || w) return; if (o.constructor.name === 'RunOverWindow') w = o; for (const c of o._ch || []) f(c); })(dbg.player.stage); return w; };
     await E.until(runOver, 'the run over window', 120000);
@@ -208,9 +216,17 @@ const ROGUELITE = [
     let button = null;
     (function f(o) { if (!o || button) return; if (o.constructor.name === 'TextButton') button = o; for (const c of o._ch || []) f(c); })(runOver());
     await E.tapClip(button);
-    await E.until(() => G.state() === 'mainMenu' && G.find('MainMenu') && !G.find('TransitionWindow'), 'main menu', 60000);
+    await E.until(() => G.state() === 'game' && G.find('MapView') && !G.find('TransitionWindow') && !runOver(), 'the map of a new run', 60000);
+    await E.sleep(2000);
+    E.check(GM.app.game.map.biggestUnlockedLevel().dungeonId === '1', 'the new run starts at dungeon 1');
+    E.check(GM.Roguelite.runBones === 0, 'no bones yet in the new run');
+    E.check(document && E.byClass('RunHud') && E.allByClass('RunHud').length === 1, 'one bones counter');
+  }],
+  ['back to the main menu from the map', async () => {
+    await E.tapUntil(/^back$/, () => G.state() === 'mainMenu' || G.find('TransitionWindow'), 'leaving the map');
+    await E.until(() => G.state() === 'mainMenu' && !G.find('TransitionWindow'), 'main menu', 60000);
     await E.sleep(3000);
-    E.check(!GM.app.saveSystem.hasPlayed(), 'continue is locked after the run');
+    E.check(!E.byClass('RunHud'), 'no bones counter in the menu');
   }],
   ['switch the mod off: the normal game is still there', async () => {
     await G.tap(85, 25);
