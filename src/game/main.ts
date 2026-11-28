@@ -136,7 +136,12 @@ export class main extends Sprite {
     const menu = new MainMenu();
     this.currentScreen = menu;
     app.gameHolder.addChild(menu);
-    menu.onNewGame.add(Util.l(app.waitForResourcesJakeLess, [], () => this.fsmAplication.takeTransition('newGame')));
+    menu.onNewGame.add(() => {
+      const go = () => this.fsmAplication.takeTransition('newGame');
+      // no intro (a later roguelite run): this one transition screen also waits for the map's sounds
+      if (main.skipIntro) app.waitForResources(GameSounds.mapSounds, go);
+      else app.waitForResourcesJakeLess([], go);
+    });
     menu.onContinueGame.add(
       Util.l(app.waitForResources, GameSounds.mapSounds, () => this.fsmAplication.takeTransition('continueGame')),
     );
@@ -145,6 +150,10 @@ export class main extends Sprite {
   removeMainMenu() {
     as3as(this.currentScreen, MainMenu).exit();
   }
+  /** the roguelite mod shows the intro in the first run only */
+  static get skipIntro(): boolean {
+    return Roguelite.enabled && Roguelite.runs > 0;
+  }
   /** a new game: the save is reset */
   showIntro() {
     app.saveSystem.reset();
@@ -152,10 +161,10 @@ export class main extends Sprite {
       app.saveSystem.onFirstPlay();
       this.fsmAplication.takeTransition('next');
     };
-    // the roguelite mod shows the intro in the first run only
-    if (Roguelite.enabled && Roguelite.runs > 0) {
+    if (main.skipIntro) {
+      // the menu's transition screen has already loaded what the map needs: straight to the game
       this.currentScreen = null;
-      app.waitForResources(GameSounds.mapSounds, start);
+      Promise.resolve().then(start);
       return;
     }
     const intro = new Intro();

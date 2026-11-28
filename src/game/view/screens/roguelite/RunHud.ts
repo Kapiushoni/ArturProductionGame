@@ -2,7 +2,7 @@ import { Sprite } from '@/flash/as3';
 import { Tween } from '@/game/cb/utils/Tween';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { rlText } from '@/game/view/screens/roguelite/texts';
-import { COLORS, label } from '@/game/view/screens/roguelite/widgets';
+import { COLORS, GamePanel, label } from '@/game/view/screens/roguelite/widgets';
 import type { Label } from '@/game/view/screens/roguelite/widgets';
 
 /**
@@ -17,13 +17,11 @@ export class RunHud extends Sprite {
     super();
     this.mouseEnabled = false;
     this.mouseChildren = false;
-    this.graphics.lineStyle(2, COLORS.frame, 0.9);
-    this.graphics.beginFill(COLORS.panel, 0.85);
-    this.graphics.drawRoundRect(0, 0, RunHud.W, 26, 14);
+    this.addChild(new GamePanel(RunHud.W, 34, 0.45));
     this.x = (700 - RunHud.W) / 2;
     this.y = 3;
     this.total = label('', 15, COLORS.title, RunHud.W);
-    this.total.y = 4;
+    this.total.y = 8;
     this.addChild(this.total);
     this.update(0, Roguelite.runBones);
     Roguelite.onEarn.add(this.update);
@@ -35,9 +33,9 @@ export class RunHud extends Sprite {
   /** "+N" under the counter, rising and fading */
   private pop(added: number) {
     const text = label(rlText('gotBones', added), 22, COLORS.title, RunHud.W);
-    text.y = 26;
+    text.y = 34;
     this.addChild(text);
-    Tween.to(text, 1600, { y: 46, alpha: 0 }, () => text.parent?.removeChild(text));
+    Tween.to(text, 1600, { y: 54, alpha: 0 }, () => text.parent?.removeChild(text));
   }
   clear() {
     Roguelite.onEarn.remove(this.update);

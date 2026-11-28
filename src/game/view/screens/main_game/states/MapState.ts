@@ -46,9 +46,9 @@ export class MapState extends BasicPausableState {
     super.enter();
     app.soundManager.playMusic(GameSounds.MAP_MUSIC);
     if (Roguelite.enabled) {
-      this.shopButton = new TextButton(rlText('shop'), 110, 32, () => ShopScreen.open(app.tutorialHolder, true), 17);
-      this.shopButton.x = 96;
-      this.shopButton.y = 26;
+      this.shopButton = new TextButton(rlText('shop'), 120, 42, () => ShopScreen.open(app.tutorialHolder, true), 18);
+      this.shopButton.x = 92;
+      this.shopButton.y = 22;
       app.tutorialHolder.addChild(this.shopButton);
     }
   }

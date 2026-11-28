@@ -5,7 +5,7 @@ import { Stage } from '@/flash/display';
 import { ShopMerchant } from '@/game/view/screens/roguelite/ShopMerchant';
 import { layer, loadShopArt, type ShopArt } from '@/game/view/screens/roguelite/shopArt';
 import { rlText } from '@/game/view/screens/roguelite/texts';
-import { COLORS, Label, TextButton, label } from '@/game/view/screens/roguelite/widgets';
+import { COLORS, GamePanel, Label, TextButton, label } from '@/game/view/screens/roguelite/widgets';
 
 /** what is for sale: the layer of the art, and the upgrade or the unlock it sells */
 const GOODS: { art: string; id: UpgradeId | UnlockId; unlock: boolean }[] = [
@@ -101,13 +101,17 @@ export class ShopScreen extends Sprite {
       this.tags.set(good, tag);
       this.addChild(tag);
     }
-    this.bones = label('', 17, COLORS.title, 220, 'left');
-    this.bones.x = 12;
-    this.bones.y = 470;
+    const bonesPanel = new GamePanel(190, 36, 0.45);
+    bonesPanel.x = 8;
+    bonesPanel.y = 456;
+    this.addChild(bonesPanel);
+    this.bones = label('', 17, COLORS.title, 190);
+    this.bones.x = 8;
+    this.bones.y = 465;
     this.addChild(this.bones);
-    const leave = new TextButton(rlText('leave'), 100, 30, () => this.close(), 16);
-    leave.x = 590;
-    leave.y = 462;
+    const leave = new TextButton(rlText('leave'), 120, 42, () => this.close(), 18);
+    leave.x = 572;
+    leave.y = 452;
     this.addChild(leave);
     this.addChild(this.board);
     if (this.midRun) {
@@ -193,8 +197,8 @@ export class ShopScreen extends Sprite {
     }
     const buy = new TextButton(
       can ? rlText('buyFor', price) : rlText('notEnough'),
-      170,
-      30,
+      180,
+      34,
       () => {
         if (can && Roguelite.buy(good.id)) {
           this.merchant.laugh();
@@ -203,10 +207,9 @@ export class ShopScreen extends Sprite {
       },
       15,
     );
-    buy.x = x + (w - 170) / 2;
-    buy.y = y + 66;
-    buy.alpha = can ? 1 : 0.55;
-    buy.buttonMode = can;
+    buy.x = x + (w - 180) / 2;
+    buy.y = y + 63;
+    buy.enabled = can;
     this.board.addChild(buy);
   }
 

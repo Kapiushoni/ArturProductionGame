@@ -14,15 +14,15 @@ export class ModButton extends Sprite {
 
   constructor(private onChange: (on: boolean) => void) {
     super();
-    this.button = new TextButton('', 150, 34, this.toggle, 18);
+    this.button = new TextButton('', 160, 44, this.toggle, 18);
     this.addChild(this.button);
     const hint = label(rlText('modHint'), 13, COLORS.dim, 220, 'left');
     hint.x = 4;
-    hint.y = 36;
+    hint.y = 46;
     this.addChild(hint);
     this.bones = label('', 15, COLORS.title, 220, 'left');
     this.bones.x = 4;
-    this.bones.y = 52;
+    this.bones.y = 62;
     this.addChild(this.bones);
     this.refresh();
   }
@@ -35,7 +35,6 @@ export class ModButton extends Sprite {
   refresh() {
     const on = Roguelite.enabled;
     this.button.text(rlText(on ? 'modOn' : 'modOff'));
-    this.button.alpha = on ? 1 : 0.8;
     this.bones.visible = on;
     this.bones.text = rlText('bones', Roguelite.bones);
   }
