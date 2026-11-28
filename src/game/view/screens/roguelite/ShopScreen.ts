@@ -34,7 +34,11 @@ export class ShopScreen extends Sprite {
   private shown: Good = null;
   private t0 = Date.now();
 
-  constructor(private onClose: () => void) {
+  /** midRun: opened from the map, the hero upgrades bought now count from the next run */
+  constructor(
+    private onClose: () => void,
+    private midRun = false,
+  ) {
     super();
     // until the art is there: a dark veil that already takes the clicks
     this.graphics.beginFill(0x000000, 0.75);
@@ -106,6 +110,11 @@ export class ShopScreen extends Sprite {
     leave.y = 462;
     this.addChild(leave);
     this.addChild(this.board);
+    if (this.midRun) {
+      const note = label(rlText('midRunNote'), 14, COLORS.title, 700);
+      note.y = 6;
+      this.addChild(note);
+    }
     this.refresh();
     this.addEventListener(Event.ENTER_FRAME, this.animate);
   }
@@ -215,6 +224,15 @@ export class ShopScreen extends Sprite {
     this.sparkles.alpha = 0.7 + 0.3 * Math.sin(t * 5);
   };
 
+  /** opens the shop over the whole game (the top layer), calls back when it closes */
+  static open(holder: any, midRun: boolean, onClosed: () => void = () => {}) {
+    const shop: ShopScreen = new ShopScreen(() => {
+      holder.removeChild(shop);
+      onClosed();
+    }, midRun);
+    holder.addChild(shop);
+    return shop;
+  }
   private close() {
     this.removeEventListener(Event.ENTER_FRAME, this.animate);
     this.onClose();

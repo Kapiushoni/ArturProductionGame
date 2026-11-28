@@ -16,6 +16,7 @@ import { FightView } from '@/game/view/screens/main_game/dungeon/fight/FightView
 import { LostWindow } from '@/game/view/screens/main_game/dungeon/LostWindow';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
+import { ShopScreen } from '@/game/view/screens/roguelite/ShopScreen';
 import { TimeLine } from '@/game/view/screens/main_game/dungeon/TimeLine';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { Pause } from '@/game/view/screens/Pause';
@@ -154,10 +155,15 @@ export class DungeonView extends Screen {
     app.saveSystem.switched();
     // above the whole game screen (the pause layer is under the inventory): the veil also blocks the game
     const holder = app.tutorialHolder;
-    const window = new RunOverWindow(result, () => {
-      holder.removeChild(window);
-      this.dungeon.onNewRun.emit();
-    });
+    const window = new RunOverWindow(
+      result,
+      () => {
+        holder.removeChild(window);
+        this.dungeon.onNewRun.emit();
+      },
+      false,
+      () => ShopScreen.open(holder, false),
+    );
     holder.addChild(window);
   }
   dungeonWon() {

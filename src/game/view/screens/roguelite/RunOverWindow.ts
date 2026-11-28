@@ -9,7 +9,7 @@ export class RunOverWindow extends Sprite {
   static readonly H = 280;
 
   /** abandoned: the game was closed during a fight (shown in the main menu, with an OK button) */
-  constructor(result: RunResult, onMenu: () => void, abandoned = false) {
+  constructor(result: RunResult, onMenu: () => void, abandoned = false, onShop: () => void = null) {
     super();
     const W = RunOverWindow.W,
       H = RunOverWindow.H;
@@ -40,12 +40,20 @@ export class RunOverWindow extends Sprite {
     );
     line(rlText('runBones', result.bones) + '   ·   ' + rlText('bones', result.totalBones), 16, COLORS.title);
     line(rlText('runs', result.runs), 16, COLORS.dim);
-    const button = new TextButton(rlText(abandoned ? 'ok' : 'newRun'), 200, 40, () => {
+    const button = new TextButton(rlText(abandoned ? 'ok' : 'newRun'), onShop ? 170 : 200, 40, () => {
       button.mouseEnabled = false;
       onMenu();
     });
     button.x = (W - 200) / 2;
     button.y = H - 58;
     panel.addChild(button);
+    if (onShop) {
+      // two buttons side by side: the shop, then the new run
+      const shop = new TextButton(rlText('shop'), 150, 40, onShop);
+      shop.x = W / 2 - 160;
+      shop.y = H - 58;
+      button.x = W / 2 + 10;
+      panel.addChild(shop);
+    }
   }
 }

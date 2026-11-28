@@ -142,4 +142,18 @@ describe('roguelite mod', () => {
     Roguelite.startRun();
     expect(Roguelite.health).toBe(null);
   });
+
+  it('hero upgrades bought during a run count from the next run', () => {
+    Roguelite.earn(1000);
+    Roguelite.startRun();
+    Roguelite.buy('tough');
+    Roguelite.buy('greed');
+    expect(Roguelite.level('tough')).toBe(1);
+    expect(Roguelite.runLevel('tough')).toBe(0);
+    expect(Roguelite.jinnRow({ BaseHP: 50, BaseLuck: 5, BaseDefense: 2 }).BaseHP).toBe(50);
+    expect(Roguelite.earn(10)).toBe(10); // greed not yet
+    Roguelite.startRun();
+    expect(Roguelite.jinnRow({ BaseHP: 50, BaseLuck: 5, BaseDefense: 2 }).BaseHP).toBe(55);
+    expect(Roguelite.earn(10)).toBe(12);
+  });
 });

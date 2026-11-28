@@ -12,7 +12,6 @@ import { DailyBonusView } from '@/game/view/screens/DailyBonusView';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { ModButton } from '@/game/view/screens/roguelite/ModButton';
 import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
-import { ShopScreen } from '@/game/view/screens/roguelite/ShopScreen';
 import type { MouseEvent } from '@/flash/as3';
 
 export class MainMenu extends Screen {
@@ -66,19 +65,10 @@ export class MainMenu extends Screen {
   }
   /** the roguelite switch (top left); a run left in the middle of a fight is lost */
   initializeMod() {
-    const button = new ModButton(
-      () => {
-        app.saveSystem.switched();
-        this.refreshContinue();
-      },
-      () => {
-        const shop = new ShopScreen(() => {
-          this.bg.removeChild(shop);
-          button.refresh();
-        });
-        this.bg.addChild(shop);
-      },
-    );
+    const button = new ModButton(() => {
+      app.saveSystem.switched();
+      this.refreshContinue();
+    });
     button.x = 10;
     button.y = 8;
     this.bg.addChild(button);

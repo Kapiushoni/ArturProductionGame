@@ -194,21 +194,6 @@ const ROGUELITE = [
     E.check(!GM.app.saveSystem.hasPlayed(), 'the run save is empty: continue is locked');
     GM.Roguelite.tutorialCompleted(); // (the tutorial was played in the normal game above)
   }],
-  ['the bone shop: pick a good on the shelf, buy it', async () => {
-    GM.Roguelite.earn(100);
-    E.byClass('ModButton').refresh();
-    const shopButton = E.allByClass('TextButton').find((b) => b.parent === E.byClass('ModButton') && b.visible && b !== E.byClass('ModButton')._ch[0]);
-    await E.tapClip(shopButton);
-    await E.until(() => E.byClass('ShopScreen') && E.byClass('ShopScreen').art, 'the shop art', 30000);
-    const shop = E.byClass('ShopScreen');
-    const tough = [...shop.items.keys()].find((g) => g.id === 'tough');
-    await E.tapClip(shop.items.get(tough));
-    await E.until(() => shop.selected === tough, 'the good picked', 3000);
-    await E.tapClip(E.allByClass('TextButton').find((b) => b.parent === shop.board));
-    await E.until(() => GM.Roguelite.level('tough') === 1, 'bought', 3000);
-    await E.tapClip(E.allByClass('TextButton').find((b) => b.parent === shop));
-    await E.until(() => !E.byClass('ShopScreen'), 'the shop closed', 3000);
-  }],
   ['a new run, one life: losing starts a new run on the map', async () => {
     await E.tapUntil(/^new_game$/, () => G.state() !== 'mainMenu', 'leaving the menu');
     const t0 = Date.now();
@@ -220,6 +205,19 @@ const ROGUELITE = [
     await E.until(() => G.state() === 'game' && G.find('MapView') && !G.find('TransitionWindow'), 'map', 60000);
     await E.sleep(2000);
     E.check(!G.find('TutorialView') && !G.find('TutorialViewWithOk'), 'no tutorial in the run');
+    // the bone shop, from its button on the map: a hero upgrade bought now counts from the next run
+    GM.Roguelite.earn(100);
+    await E.tapClip(E.allByClass('TextButton').find((x) => x.parent === GM.app.tutorialHolder));
+    await E.until(() => E.byClass('ShopScreen') && E.byClass('ShopScreen').art, 'the shop art', 30000);
+    const shop = E.byClass('ShopScreen');
+    const tough = [...shop.items.keys()].find((g) => g.id === 'tough');
+    await E.tapClip(shop.items.get(tough));
+    await E.until(() => shop.selected === tough, 'the good picked', 3000);
+    await E.tapClip(E.allByClass('TextButton').find((x) => x.parent === shop.board));
+    await E.until(() => GM.Roguelite.level('tough') === 1, 'bought', 3000);
+    E.check(GM.Roguelite.runLevel('tough') === 0, 'from the next run');
+    await E.tapClip(E.allByClass('TextButton').find((x) => x.parent === shop));
+    await E.until(() => !E.byClass('ShopScreen'), 'the shop closed', 3000);
     await E.tapUntil(/^dungeon_1$/, () => !G.find('MapView') || G.find('TransitionWindow'), 'leaving the map');
     await E.until(() => G.find('DungeonView') && !G.find('TransitionWindow'), 'dungeon', 60000);
     E.check(GM.Roguelite.leftDuringFight, 'the run is marked as fighting');
@@ -229,7 +227,10 @@ const ROGUELITE = [
     await E.until(runOver, 'the run over window', 120000);
     E.check(GM.Roguelite.runs === 1 && GM.Roguelite.best === 1, 'the run is recorded');
     let button = null;
-    (function f(o) { if (!o || button) return; if (o.constructor.name === 'TextButton') button = o; for (const c of o._ch || []) f(c); })(runOver());
+    const buttons = [];
+    (function f(o) { if (!o) return; if (o.constructor.name === 'TextButton') buttons.push(o); for (const c of o._ch || []) f(c); })(runOver());
+    E.check(buttons.length === 2, 'shop and new run buttons');
+    button = buttons.find((x) => x.x > 150);
     await E.tapClip(button);
     await E.until(() => G.state() === 'game' && G.find('MapView') && !G.find('TransitionWindow') && !runOver(), 'the map of a new run', 60000);
     await E.sleep(2000);

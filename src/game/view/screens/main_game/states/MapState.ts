@@ -7,10 +7,15 @@ import type { GameView } from '@/game/view/screens/main_game/GameView';
 import type { Level } from '@/game/main_game/map/Level';
 import type { Map } from '@/game/main_game/map/Map';
 import { Roguelite } from '@/game/roguelite/Roguelite';
+import { ShopScreen } from '@/game/view/screens/roguelite/ShopScreen';
+import { TextButton } from '@/game/view/screens/roguelite/widgets';
+import { rlText } from '@/game/view/screens/roguelite/texts';
 import { StatType } from '@/game/main_game/character/stats/StatType';
 
 /** The game screen on the map: shows the MapView (with the newly unlocked levels), heals the jinn, map music. */
 export class MapState extends BasicPausableState {
+  /** roguelite: the shop button at the top of the map */
+  private shopButton: TextButton = null;
   /** the GameView */
   private principal: GameView;
   private mapView: MapView = null;
@@ -40,8 +45,16 @@ export class MapState extends BasicPausableState {
     }
     super.enter();
     app.soundManager.playMusic(GameSounds.MAP_MUSIC);
+    if (Roguelite.enabled) {
+      this.shopButton = new TextButton(rlText('shop'), 110, 32, () => ShopScreen.open(app.tutorialHolder, true), 17);
+      this.shopButton.x = 96;
+      this.shopButton.y = 26;
+      app.tutorialHolder.addChild(this.shopButton);
+    }
   }
   leave() {
+    this.shopButton?.parent?.removeChild(this.shopButton);
+    this.shopButton = null;
     this.mapView.close();
     this.map = null;
     super.leave();

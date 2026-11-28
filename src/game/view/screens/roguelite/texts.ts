@@ -3,6 +3,7 @@ import { lang, type Lang } from '@/port/i18n';
 /** Texts of the roguelite mod (in code: the game texts in locale.txt stay as they are). */
 const TEXTS: Record<Lang, Record<string, string>> = {
   ru: {
+    midRunNote: 'Улучшения героя — со следующего забега',
     shopSign: 'ЛАВКА',
     price: '$1 кост.',
     buyFor: 'Купить за $1',
@@ -49,6 +50,7 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     ok: 'OK',
   },
   en: {
+    midRunNote: 'Hero upgrades apply from the next run',
     shopSign: 'SHOP',
     price: '$1 bones',
     buyFor: 'Buy for $1',
@@ -95,6 +97,7 @@ const TEXTS: Record<Lang, Record<string, string>> = {
     ok: 'OK',
   },
   uk: {
+    midRunNote: 'Покращення героя — з наступного забігу',
     shopSign: 'КРАМНИЦЯ',
     price: '$1 кіст.',
     buyFor: 'Купити за $1',

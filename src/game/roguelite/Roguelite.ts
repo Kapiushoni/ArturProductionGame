@@ -60,6 +60,8 @@ export const Roguelite = {
   // ---------------- the run
   /** a new run starts (the save has just been reset) */
   startRun() {
+    // the upgrades bought during a run count from the next one: the run keeps the levels it started with
+    write('runUp', Object.fromEntries(Object.keys(C.upgrades).map((id) => [id, this.level(id as UpgradeId)])));
     write('runBones', 0);
     write('hp', null);
     write('inDungeon', false);
@@ -136,7 +138,7 @@ export const Roguelite = {
   },
   /** bones earned (with the "greed" upgrade); returns how many were added */
   earn(amount: number): number {
-    const bones = Math.round(amount * (1 + (this.level('greed') * C.upgrades.greed.percent) / 100));
+    const bones = Math.round(amount * (1 + (this.runLevel('greed') * C.upgrades.greed.percent) / 100));
     write('bones', this.bones + bones);
     write('runBones', this.runBones + bones);
     this.onEarn.emit(bones, this.runBones);
@@ -155,6 +157,10 @@ export const Roguelite = {
   // ---------------- the shop
   level(upgrade: UpgradeId): number {
     return read('up_' + upgrade, 0);
+  },
+  /** the level the current run plays with (bought before it started) */
+  runLevel(upgrade: UpgradeId): number {
+    return read('runUp', null)?.[upgrade] ?? this.level(upgrade);
   },
   maxLevel(upgrade: UpgradeId): number {
     return C.upgrades[upgrade].prices.length;
@@ -184,9 +190,9 @@ export const Roguelite = {
   jinnRow(row: any): any {
     return {
       ...row,
-      BaseHP: Math.round(Number(row.BaseHP) * (1 + (this.level('tough') * C.upgrades.tough.hpPercent) / 100)),
-      BaseLuck: Number(row.BaseLuck) + this.level('eye') * C.upgrades.eye.luck,
-      BaseDefense: Number(row.BaseDefense) + this.level('armor') * C.upgrades.armor.defense,
+      BaseHP: Math.round(Number(row.BaseHP) * (1 + (this.runLevel('tough') * C.upgrades.tough.hpPercent) / 100)),
+      BaseLuck: Number(row.BaseLuck) + this.runLevel('eye') * C.upgrades.eye.luck,
+      BaseDefense: Number(row.BaseDefense) + this.runLevel('armor') * C.upgrades.armor.defense,
     };
   },
   /** the items a run starts with ("stock" upgrade) */
