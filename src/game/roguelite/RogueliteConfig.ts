@@ -1,8 +1,9 @@
 /** All the balance numbers of the roguelite mod (hardcore). */
 export const RogueliteConfig = {
   // ---- hardcore
-  /** enemies are this many levels higher from the first dungeon ... */
-  enemyLevelBase: 1,
+  /** enemies are this many levels higher from the first dungeon ... (1 made the first dungeon unwinnable:
+   *  a level 2 enemy kills the starting jinn in 3 hits and needs 5) */
+  enemyLevelBase: 0,
   /** ... and one more every this many dungeons on the way to the boss */
   enemyLevelEvery: 5,
   /** potions (consumables) drop this much less often */
