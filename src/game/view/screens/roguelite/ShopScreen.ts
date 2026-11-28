@@ -76,8 +76,8 @@ export class ShopScreen extends Sprite {
     this.merchant.addChild(this.blink);
     this.merchant.mouseEnabled = this.merchant.mouseChildren = false;
     this.addChild(this.merchant);
-    const front = layer(art, 'front');
-    this.addChild(front);
+    // the counter, the sign and the barrel: drawn over the goods' row, but the mouse goes through to the goods
+    this.overlay('front');
     // the flame flickers from its base
     const fp = art.layout.pivots.flame;
     this.flame.addChild(layer(art, 'flame', fp));
