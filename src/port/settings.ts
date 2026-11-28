@@ -10,6 +10,7 @@ import { player } from '@/flash/player';
 import { setBusVolume, audio, SharedObject } from '@/flash/as3';
 import { lang, LANGS, setLang, type Lang } from './i18n';
 import { VERSION } from './version';
+import { app as shared } from '@/game/app';
 
 // ---------------- persisted settings ----------------
 type Settings = { music: number; sfx: number; fast: boolean };
@@ -31,7 +32,8 @@ const t = T[lang];
 
 // ---------------- game state helpers ----------------
 let app: any = null;
-const mainCls = () => app?.constructor;
+/** the layers and the game model live in the shared app object (src/game/app.ts), not on the main class */
+const mainCls = (): any => shared;
 const appState = (): string => { try { return app.fsmAplication.getActualState().getName(); } catch { return ''; } };
 const gameState = (): string => { try { return mainCls().gameHolder.gameView.fsm.getActualState().getName(); } catch { return ''; } };
 export const inBattle = () => appState() === 'game' && (gameState() === 'dungeon' || gameState() === 'boss');

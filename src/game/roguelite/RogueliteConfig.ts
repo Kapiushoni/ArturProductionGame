@@ -11,6 +11,25 @@ export const RogueliteConfig = {
   /** health healed between dungeons, % of the max (the normal game heals fully) */
   healBetween: 30,
 
+  // ---- variety: every run's dungeons differ a little (main path 1..24, not in the tutorial run)
+  variety: {
+    /** chance that an enemy gets another element (normal / ice / fire: same stats, other strengths) */
+    elementChance: 0.5,
+    /** from this dungeon an enemy's level may change by one of these */
+    levelJitterFrom: 4,
+    levelJitter: [-1, 0, 0, 1],
+    /** from this dungeon an enemy may be of the other kind (enemy1 one level up <-> enemy2 one level down) */
+    swapFrom: 12,
+    swapChance: 0.25,
+    /** loot: the items of the dungeons this many steps before and after also drop, at this part of their weight */
+    lootNeighbours: 2,
+    neighbourWeight: 0.5,
+    /** swords and shields also drop as their fire / ice versions, at this part of their weight each */
+    elementalGearWeight: 0.35,
+    /** first-time loot: drawn from the first-time loot of the dungeons this many steps around */
+    firstLootNeighbours: 2,
+  },
+
   // ---- bones
   /** per enemy beaten: base + level / perLevel, +elemental for fire / ice enemies */
   bonesPerEnemy: 1,

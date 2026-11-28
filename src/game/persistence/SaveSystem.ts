@@ -185,7 +185,15 @@ export class SaveSystem {
       this.saveClearedLevel(level.toString());
     }
     // the roguelite run starts with the items of the "stock" upgrade after the initial ones
-    const inventory = Roguelite.enabled ? [...initial.inventory, ...Roguelite.startItems()] : initial.inventory;
+    let inventory: string[] = Roguelite.enabled ? [...initial.inventory, ...Roguelite.startItems()] : initial.inventory;
+    // a roguelite run without the tutorial starts with the starting sword in hand (nothing teaches to equip it)
+    if (Roguelite.enabled && Roguelite.tutorialDone) {
+      const sword = inventory.find((id) => ItemFactory.config?.get(id)?.Category == 'W');
+      if (sword != null) {
+        this.saveGear(1, ItemFactory.getInstance().getItem(sword));
+        inventory = inventory.filter((id, i) => i != inventory.indexOf(sword));
+      }
+    }
     for (let i = 0; i < 12 && i < inventory.length; i++) {
       this.saveInventorySlot(i, ItemFactory.getInstance().getItem(inventory[i]));
     }
