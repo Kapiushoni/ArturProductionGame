@@ -1,6 +1,8 @@
-import { Event, GlowFilter, MouseEvent, Sprite } from '@/flash/as3';
+import { Event, GlowFilter, MouseEvent, Point, Sprite } from '@/flash/as3';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { RogueliteConfig, type UnlockId, type UpgradeId } from '@/game/roguelite/RogueliteConfig';
+import { Stage } from '@/flash/display';
+import { ShopMerchant } from '@/game/view/screens/roguelite/ShopMerchant';
 import { layer, loadShopArt, type ShopArt } from '@/game/view/screens/roguelite/shopArt';
 import { rlText } from '@/game/view/screens/roguelite/texts';
 import { COLORS, Label, TextButton, label } from '@/game/view/screens/roguelite/widgets';
@@ -15,13 +17,12 @@ type Good = (typeof GOODS)[number];
 /**
  * The bone shop of the roguelite mod (main menu): the merchant's shop drawn in Blender (public/assets/shop).
  * The goods on the shelves are the upgrades and unlocks: hover one to read it on the counter, click to pick it,
- * then "Buy". The merchant breathes and blinks, the candle flickers, the legendary chest sparkles.
+ * then "Buy". The merchant is alive (ShopMerchant), the candle flickers, the legendary chest sparkles.
  */
 export class ShopScreen extends Sprite {
   private art: ShopArt;
-  private merchant = new Sprite();
-  private eyes: Sprite = null;
-  private blink: Sprite = null;
+  private merchant: ShopMerchant = null;
+  private lastHover: Good = null;
   private flame = new Sprite();
   private light: Sprite = null;
   private sparkles = new Sprite();
@@ -32,7 +33,6 @@ export class ShopScreen extends Sprite {
   private selected: Good = null;
   private shown: Good = null;
   private t0 = Date.now();
-  private nextBlink = 2.5;
 
   constructor(private onClose: () => void) {
     super();
@@ -65,19 +65,14 @@ export class ShopScreen extends Sprite {
     this.sparkles.y = sp[1];
     this.sparkles.mouseEnabled = this.sparkles.mouseChildren = false;
     this.addChild(this.sparkles);
-    // the merchant, its eyes and its eyelids move together
-    this.merchant.addChild(layer(art, 'merchant'));
-    this.eyes = new Sprite();
-    this.eyes.addChild(layer(art, 'eyes'));
-    this.blink = new Sprite();
-    this.blink.addChild(layer(art, 'blink'));
-    this.blink.visible = false;
-    this.merchant.addChild(this.eyes);
-    this.merchant.addChild(this.blink);
-    this.merchant.mouseEnabled = this.merchant.mouseChildren = false;
-    this.addChild(this.merchant);
+    // the merchant behind the counter, his hands on it
+    this.merchant = new ShopMerchant(art);
+    this.addChild(this.merchant.body);
+    this.addChild(this.merchant.head);
     // the counter, the sign and the barrel: drawn over the goods' row, but the mouse goes through to the goods
     this.overlay('front');
+    this.addChild(this.merchant.handLeft);
+    this.addChild(this.merchant.handRight);
     // the flame flickers from its base
     const fp = art.layout.pivots.flame;
     this.flame.addChild(layer(art, 'flame', fp));
@@ -144,6 +139,10 @@ export class ShopScreen extends Sprite {
     this.items.get(good).filters = over || good == this.selected ? [new GlowFilter(0xffe08a, 1, 10, 10, 2)] : [];
     this.shown = over ? good : null;
     this.showBoard(over ? good : this.selected);
+    if (over && good != this.lastHover) {
+      this.lastHover = good;
+      this.merchant.talk();
+    }
   }
   private pick(good: Good) {
     if (this.selected) this.items.get(this.selected).filters = [];
@@ -188,7 +187,10 @@ export class ShopScreen extends Sprite {
       170,
       30,
       () => {
-        if (can && Roguelite.buy(good.id)) this.refresh();
+        if (can && Roguelite.buy(good.id)) {
+          this.merchant.laugh();
+          this.refresh();
+        }
       },
       15,
     );
@@ -199,16 +201,11 @@ export class ShopScreen extends Sprite {
     this.board.addChild(buy);
   }
 
-  /** the merchant breathes and blinks, the flame flickers, the sparkles turn and pulse */
+  /** the merchant lives, the flame flickers, the sparkles turn and pulse */
   private animate = () => {
     const t = (Date.now() - this.t0) / 1000;
-    this.merchant.y = 3 * Math.sin((2 * Math.PI * t) / 4);
-    if (t > this.nextBlink) {
-      const closed = t < this.nextBlink + 0.15;
-      this.blink.visible = closed;
-      this.eyes.visible = !closed;
-      if (!closed) this.nextBlink = t + 2.5 + Math.random() * 3;
-    }
+    const mouse = this.globalToLocal(new Point(Stage.mx, Stage.my));
+    this.merchant.update(t, [mouse.x, mouse.y]);
     this.flame.scaleY = 1 + 0.12 * Math.sin(t * 13) + 0.06 * Math.sin(t * 31);
     this.flame.scaleX = 1 + 0.06 * Math.sin(t * 17);
     if (this.light) this.light.alpha = 0.85 + 0.15 * Math.sin(t * 13) * Math.sin(t * 7);
