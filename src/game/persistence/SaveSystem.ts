@@ -184,9 +184,13 @@ export class SaveSystem {
     for (let level = int(initial.clearedLevel); level > 0; level--) {
       this.saveClearedLevel(level.toString());
     }
-    const inventory = initial.inventory;
+    // the roguelite run starts with the items of the "stock" upgrade after the initial ones
+    const inventory = Roguelite.enabled ? [...initial.inventory, ...Roguelite.startItems()] : initial.inventory;
     for (let i = 0; i < 12 && i < inventory.length; i++) {
       this.saveInventorySlot(i, ItemFactory.getInstance().getItem(inventory[i]));
+    }
+    if (Roguelite.enabled) {
+      Roguelite.startRun();
     }
     this.savePending();
   }

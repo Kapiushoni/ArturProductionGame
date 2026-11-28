@@ -13,6 +13,7 @@ import { LegendaryLevel } from '@/game/main_game/map/LegendaryLevel';
 import { Buttons } from '@/game/util/Buttons';
 import { Sepializer } from '@/game/util/Sepializer';
 import { Util } from '@/game/util/Util';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import { ArrowView } from '@/game/view/screens/main_game/map/ArrowView';
 import type { Level } from '@/game/main_game/map/Level';
 import type { MapState } from '@/game/view/screens/main_game/states/MapState';
@@ -104,7 +105,9 @@ export class MapView extends Screen {
             button.icon.title.title.text = level.dungeonId;
           }
         }
-        Buttons.setButtons(this.bg, [buttonName], true);
+        // roguelite: a cleared dungeon cannot be played again
+        Buttons.setButtons(this.bg, [buttonName], !Roguelite.enabled);
+        if (Roguelite.enabled) button.alpha = 0.6;
         this.putEnemies(button, level);
       } else if (level.isUnlocked()) {
         if (!level.isLegendary()) {
@@ -217,7 +220,9 @@ export class MapView extends Screen {
             button.icon.title.title.text = level.dungeonId;
           }
         }
-        Buttons.setButtons(this.bg, [buttonName], true);
+        // roguelite: a cleared dungeon cannot be played again
+        Buttons.setButtons(this.bg, [buttonName], !Roguelite.enabled);
+        if (Roguelite.enabled) button.alpha = 0.6;
         this.putEnemies(button, level);
       } else if (level.isUnlocked()) {
         button = as3as(Util.getSprite(this.bg, buttonName), MovieClip);

@@ -159,7 +159,12 @@ const SCREENS = [
     await E.sleep(1500);
     await E.tapClip(G.find('DungeonView').background.information.pause);
     await E.until(() => G.find('Pause'), 'pause menu');
-    await E.tapUntil(/^cancel$/, () => !G.find('Pause'), 'pause menu closed');
+    // the pause window's own button (the princess's tip bubble has a "cancel" too)
+    for (let i = 0; i < 20 && G.find('Pause'); i++) {
+      await E.tapClip(G.find('Pause').bg.cancel);
+      await E.sleep(1500);
+    }
+    E.check(!G.find('Pause'), 'pause menu closed');
   }],
   ['end of the fight, back to the map', async () => {
     await E.until(() => G.find('WinWindow') || G.find('LostWindow'), 'end of the fight', 150000);

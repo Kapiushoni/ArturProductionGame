@@ -5,6 +5,7 @@ import { CharacterFactory } from '@/game/main_game/character/CharacterFactory';
 import { DungeonStats } from '@/game/main_game/dungeon/DungeonStats';
 import { Fight } from '@/game/main_game/dungeon/Fight';
 import { Loot } from '@/game/main_game/dungeon/Loot';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import type { IFight } from '@/game/main_game/dungeon/IFight';
 import type { IXpCalculator } from '@/game/main_game/dungeon/IXpCalculator';
 import type { ProbabilisticSet } from '@/game/util/ProbabilisticSet';
@@ -28,6 +29,8 @@ export class Dungeon {
   /** index of the current fight */
   private current = 0;
   private fighting = false;
+  /** bones earned in this dungeon (roguelite mod) */
+  bones = 0;
   private level: Level; // map Level
   private stats: DungeonStats;
   /** the game it is played in (the jinn, the mixer) */
@@ -117,6 +120,7 @@ export class Dungeon {
   }
   wonFight() {
     this.fighting = false;
+    if (Roguelite.enabled) this.earnBones();
     if (this.current == this.fights.length - 1) {
       // the last fight: the dungeon is cleared
       this.releaseJinn();
@@ -129,6 +133,18 @@ export class Dungeon {
       services.saveSystem.saveClearedLevel(this.getId());
     } else {
       this.currentFight.leave(this.goToNextFight);
+    }
+  }
+  /** roguelite: bones for the enemy just beaten, and for the dungeon when it was the last one */
+  private earnBones() {
+    const enemy = this.currentFight.getEnemy();
+    const element = enemy.getElement();
+    const boss = this.level.dungeonId == Dungeon.BOSS_LEVEL_ID;
+    this.bones += Roguelite.earn(
+      Roguelite.bonesForEnemy(enemy.stats.getLevel(), element.isOfFire || element.isOfIce, boss),
+    );
+    if (this.current == this.fights.length - 1) {
+      this.bones += Roguelite.earn(Roguelite.bonesForDungeon(Roguelite.reached));
     }
   }
   advertiseAchievements() {

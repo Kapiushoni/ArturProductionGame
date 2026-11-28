@@ -16,6 +16,8 @@ import { FightView } from '@/game/view/screens/main_game/dungeon/fight/FightView
 import { LostWindow } from '@/game/view/screens/main_game/dungeon/LostWindow';
 import { Roguelite } from '@/game/roguelite/Roguelite';
 import { RunOverWindow } from '@/game/view/screens/roguelite/RunOverWindow';
+import { rlText } from '@/game/view/screens/roguelite/texts';
+import { COLORS, label } from '@/game/view/screens/roguelite/widgets';
 import { TimeLine } from '@/game/view/screens/main_game/dungeon/TimeLine';
 import { WinWindow } from '@/game/view/screens/main_game/dungeon/WinWindow';
 import { Pause } from '@/game/view/screens/Pause';
@@ -148,6 +150,13 @@ export class DungeonView extends Screen {
     const lostWindow = new LostWindow(this.getStats());
     this.showFinishWindow(lostWindow);
   }
+  /** roguelite: "+N bones" at the top of the screen for a few seconds */
+  showBones(bones: number) {
+    const text = label(rlText('gotBones', bones), 26, COLORS.title, 700);
+    text.y = 8;
+    app.tutorialHolder.addChild(text);
+    setTimeout(() => text.parent?.removeChild(text), 3500);
+  }
   /** roguelite: one life, the run is over */
   runOver() {
     const result = Roguelite.endRun();
@@ -162,6 +171,7 @@ export class DungeonView extends Screen {
   }
   dungeonWon() {
     this.stopMusic();
+    if (Roguelite.enabled) this.showBones(this.dungeon.getDungeon().bones);
     Buttons.setButtons(this.background.information, ['pause'], false);
     const joy = new JoyAnimation();
     this.jinnView.animate(joy);

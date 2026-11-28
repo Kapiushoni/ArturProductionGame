@@ -14,6 +14,7 @@ import type { Loot } from '@/game/main_game/dungeon/Loot';
 import type { DisplayObjectContainer } from '@/flash/as3';
 import type { MouseEvent } from '@/flash/as3';
 import type { MovieClip } from '@/flash/as3';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 
 export class WinWindow extends AnimatedScreen {
   static onShow = null;
@@ -109,6 +110,11 @@ export class WinWindow extends AnimatedScreen {
   enter(callback: Function = null) {
     super.enter(Util.l(this.showStats, callback));
     Buttons.setButtons(this.bg, ['replay', 'level_select', 'loot', 'next'], true);
+    // roguelite: only forward, no replaying a dungeon for its loot
+    if (Roguelite.enabled) {
+      Buttons.setButtons(this.bg, ['replay'], false);
+      this.bg.replay.alpha = 0.35;
+    }
     if (this.onNext == null) {
       this.bg.removeChild(this.bg['next']);
     }

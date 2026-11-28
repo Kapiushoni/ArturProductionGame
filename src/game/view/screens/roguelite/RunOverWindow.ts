@@ -6,7 +6,7 @@ import type { RunResult } from '@/game/roguelite/Roguelite';
 /** "Run over": where the run ended, the best result, and the way back to the main menu. */
 export class RunOverWindow extends Sprite {
   static readonly W = 380;
-  static readonly H = 250;
+  static readonly H = 280;
 
   /** abandoned: the game was closed during a fight (shown in the main menu, with an OK button) */
   constructor(result: RunResult, onMenu: () => void, abandoned = false) {
@@ -38,6 +38,7 @@ export class RunOverWindow extends Sprite {
       18,
       result.newRecord ? COLORS.title : COLORS.text,
     );
+    line(rlText('runBones', result.bones) + '   ·   ' + rlText('bones', result.totalBones), 16, COLORS.title);
     line(rlText('runs', result.runs), 16, COLORS.dim);
     const button = new TextButton(rlText(abandoned ? 'ok' : 'toMenu'), 200, 40, () => {
       button.mouseEnabled = false;

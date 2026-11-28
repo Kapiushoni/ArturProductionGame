@@ -6,6 +6,8 @@ import { MapView } from '@/game/view/screens/main_game/map/MapView';
 import type { GameView } from '@/game/view/screens/main_game/GameView';
 import type { Level } from '@/game/main_game/map/Level';
 import type { Map } from '@/game/main_game/map/Map';
+import { Roguelite } from '@/game/roguelite/Roguelite';
+import { StatType } from '@/game/main_game/character/stats/StatType';
 
 /** The game screen on the map: shows the MapView (with the newly unlocked levels), heals the jinn, map music. */
 export class MapState extends BasicPausableState {
@@ -26,7 +28,16 @@ export class MapState extends BasicPausableState {
     this.principal.gameHolder['map'] = this.mapView;
     this.principal.gameHolder.addChild(this.mapView);
     this.mapView.refreshUnlocked(this.map.unlockUnlocked());
-    app.game.getJinn().stats.refillHealth();
+    // the roguelite mod does not heal on the map: the run keeps the health it left the last dungeon with
+    const stats = app.game.getJinn().stats;
+    const saved = Roguelite.enabled ? Roguelite.health : null;
+    if (saved != null) {
+      const hp = stats.getStat(StatType.HEALTH);
+      hp.modifyValue(saved - hp.getValue());
+      stats.onChange.emit();
+    } else {
+      stats.refillHealth();
+    }
     super.enter();
     app.soundManager.playMusic(GameSounds.MAP_MUSIC);
   }

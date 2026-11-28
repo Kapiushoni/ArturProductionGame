@@ -6,6 +6,9 @@ import { BossDungeon } from '@/game/main_game/boss_dungeon/BossDungeon';
 import { BossDungeonView } from '@/game/view/screens/main_game/boss_dungeon/BossDungeonView';
 import { DungeonView } from '@/game/view/screens/main_game/dungeon/DungeonView';
 import { Roguelite } from '@/game/roguelite/Roguelite';
+import { RogueliteConfig } from '@/game/roguelite/RogueliteConfig';
+import { StatType } from '@/game/main_game/character/stats/StatType';
+import type { HealthStat } from '@/game/main_game/character/stats/HealthStat';
 import type { IDungeonState } from '@/game/view/screens/main_game/states/IDungeonState';
 import type { DisplayObjectContainer } from '@/flash/as3';
 import type { Dungeon } from '@/game/main_game/dungeon/Dungeon';
@@ -42,7 +45,16 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
     return this.mainView.pauseHolder;
   }
   enter() {
-    if (Roguelite.enabled) Roguelite.enterDungeon(this.reached());
+    if (Roguelite.enabled) {
+      Roguelite.enterDungeon(this.reached());
+      // the health the run had when it left the last dungeon (also after reloading the game)
+      const saved = Roguelite.health;
+      if (saved != null) {
+        const hp = this.health;
+        hp.modifyValue(saved - hp.getValue());
+        app.game.getJinn().stats.onChange.emit();
+      }
+    }
     app.game.goToDungeon(this.next_dungeon);
     this.dungeon = app.game.getDungeon();
     this.dungeon_view =
@@ -65,11 +77,22 @@ export class DungeonState extends BasicPausableState implements IDungeonState {
   setNextDungeon(level: Level) {
     this.next_dungeon = level;
   }
-  /** leaving: the jinn heals and the dungeon is closed */
+  private get health(): HealthStat {
+    return app.game.getJinn().stats.getStat(StatType.HEALTH) as HealthStat;
+  }
+  /** leaving: the jinn heals (in the roguelite mod only a part) and the dungeon is closed */
   leave() {
-    if (Roguelite.enabled) Roguelite.leaveDungeon();
     this.dungeon_view.close();
-    app.game.getJinn().stats.refillHealth();
+    if (Roguelite.enabled) {
+      Roguelite.leaveDungeon();
+      if (this.health.getValue() > 0) {
+        this.health.fill(RogueliteConfig.healBetween);
+        app.game.getJinn().stats.onChange.emit();
+        Roguelite.health = this.health.getValue();
+      }
+    } else {
+      app.game.getJinn().stats.refillHealth();
+    }
     app.game.exitDungeon();
     super.leave();
     this.dungeon = null;

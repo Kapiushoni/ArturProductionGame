@@ -3,6 +3,7 @@ import { Boss } from '@/game/main_game/boss_dungeon/Boss';
 import { CharacterConfigParser } from '@/game/main_game/character/CharacterConfigParser';
 import { Enemy } from '@/game/main_game/character/Enemy';
 import { Jinn } from '@/game/main_game/character/Jinn';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 
 /** Creates the jinn, enemies and the boss from characters.csv (name -> row). Singleton. */
 export class CharacterFactory {
@@ -35,7 +36,9 @@ export class CharacterFactory {
     return new Enemy(name, this.getConfig(name), uint(level));
   }
   getJinn(): Jinn {
-    return new Jinn('Jinn', this.getConfig('Jinn'));
+    // the roguelite mod adds the shop's upgrades to the base values
+    const row = CharacterFactory.config.get('Jinn');
+    return new Jinn('Jinn', new CharacterConfigParser(Roguelite.enabled ? Roguelite.jinnRow(row) : row));
   }
   getConfig(name: string): CharacterConfigParser {
     return new CharacterConfigParser(CharacterFactory.config.get(name));

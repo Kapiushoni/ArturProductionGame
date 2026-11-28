@@ -2,6 +2,7 @@ import { bindMethods, int, uint } from '@/flash/as3';
 import { services } from '@/game/services';
 import { LevelingStragegy } from '@/game/main_game/character/stats/LevelingStragegy';
 import { StatType } from '@/game/main_game/character/stats/StatType';
+import { Roguelite } from '@/game/roguelite/Roguelite';
 import type { Stats } from '@/game/main_game/character/stats/Stats';
 
 /** Enemy levelling: like the jinn's, plus XP reward growth and the daily "extra level" bonus. */
@@ -23,6 +24,9 @@ export class LevelingEnemies extends LevelingStragegy {
     const leveling = new LevelingEnemies(new SingletonLock());
     if (LevelingEnemies.extraLevel != null) {
       LevelingEnemies.extraLevel.apply(characterConfig, leveling);
+    }
+    if (Roguelite.enabled) {
+      leveling.extraLevel += Roguelite.enemyExtraLevel();
     }
     return leveling;
   }
